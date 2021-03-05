@@ -63,9 +63,10 @@ public class TextFormatter {
     /**
      * Create an array of evenly-spaced integers between two values. Values are calculated as floats and are then
      * rounded.
+     *
      * @param count the length of the returned array
-     * @param val1 the value to start from
-     * @param val2 the value to end at
+     * @param val1  the value to start from
+     * @param val2  the value to end at
      * @return an integer array of length count
      */
     public static int[] fade(int count, int val1, int val2) {

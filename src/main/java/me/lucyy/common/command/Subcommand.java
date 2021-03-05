@@ -22,21 +22,56 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
+/**
+ * A subcommand.
+ */
 public interface Subcommand {
+	/**
+	 * Gets the name of the subcommand. Must not contain spaces.
+	 */
 	String getName();
 
+	/**
+	 * Get the description of the subcommand. This will be shown to the user in help commands,
+	 */
 	String getDescription();
 
+	/**
+	 * Gets the usage string for this subcommand.
+	 */
 	String getUsage();
 
+	/**
+	 * Gets the permission needed to execute this subcommand
+	 * @return the permission, or null if no permission is needed
+	 */
 	String getPermission();
 
+	/**
+	 * Execute the command.
+	 * @param sender The player to run the command as.
+	 * @param target The player to act against. Note that this is different from the sender when, for example, the
+	 *               /pronouns sudo command is executed.
+	 * @param args The arguments.
+	 * @return true if the command is syntactically correct; false if not (this will print the {@link #getUsage()}
+	 * message)
+	 */
 	boolean execute(CommandSender sender, CommandSender target, String[] args);
 
+	/**
+	 * Tab-complete this command.
+	 * @param args the command's arguments so far.
+	 * @return a string list of potential options
+	 */
 	default List<String> tabComplete(String[] args) {
 		return tabComplete();
 	}
 
+	/**
+	 * Tab-complete this command.
+	 * @return a string list of potential options
+	 * @deprecated implement {@link #tabComplete(String[])} instead.
+	 */
 	default List<String> tabComplete() {
 		return null;
 	}
