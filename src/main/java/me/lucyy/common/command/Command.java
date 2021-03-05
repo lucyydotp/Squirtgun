@@ -82,11 +82,17 @@ public class Command implements CommandExecutor, TabCompleter {
 		getDefaultSubcommand().execute(sender, sender, new String[]{});
 	}
 
+	/**
+	 * Inherited from {@link CommandExecutor}. This method should probably not be called.
+	 */
 	@Override
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
 		return onCommand(sender, sender, label, args);
 	}
 
+	/**
+	 * Used as part of command handling. This method should probably not be called.
+	 */
 	public boolean onCommand(CommandSender sender, CommandSender target, String cmdName, String[] args) {
 		if (args.length < 1) {
 			showDefault(sender);
@@ -111,6 +117,9 @@ public class Command implements CommandExecutor, TabCompleter {
 		return true;
 	}
 
+	/**
+	 * Inherited from {@link CommandExecutor}. This method should probably not be called.
+	 */
 	@Override
 	public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String alias, String[] args) {
 		if (args.length == 1) {

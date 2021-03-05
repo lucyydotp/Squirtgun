@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class HsvGradientPattern implements FormatPattern {
 	Pattern pattern = Pattern.compile("\\{hsv:([A-Fa-f0-9]{6})>}(.*)\\{([A-Fa-f0-9]{2})<}");
 
-	private String fade(int hue1, int hue2, int sat, int val, String text) {
+	public static String fade(int hue1, int hue2, int sat, int val, String text) {
 
 		StringBuilder output = new StringBuilder();
 

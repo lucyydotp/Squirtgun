@@ -42,18 +42,17 @@ public class HelpSubcommand implements Subcommand {
 
 	@Override
 	public boolean execute(CommandSender sender, CommandSender target, String[] args) {
-		sender.sendMessage(provider.getAccentColour()
-				+ plugin.getName() + " v"
-				+ plugin.getDescription().getVersion()
-				+ provider.getMainColour() + " by "
-				+ provider.getAccentColour() + plugin.getDescription().getAuthors().get(0));
+		sender.sendMessage(provider.formatAccent(plugin.getName() + " v"
+				+ plugin.getDescription().getVersion())
+				+ provider.formatMain(" by ")
+				+ provider.formatAccent(plugin.getDescription().getAuthors().get(0)));
 
-		sender.sendMessage(provider.getMainColour() + "Commands:");
+		sender.sendMessage(provider.formatMain("Commands:"));
 		cmd.getUserSubcommands(sender).forEach(cmd -> {
 					if (cmd.getPermission() == null ||  sender.hasPermission(cmd.getPermission()))
-						sender.sendMessage(provider.getMainColour() + "/profile "
-								+ provider.getAccentColour() + cmd.getName()
-								+ provider.getMainColour() + " - " + cmd.getDescription());
+						sender.sendMessage(provider.formatMain("/profile ")
+								+ provider.formatAccent( cmd.getName())
+								+ provider.formatMain(" - " + cmd.getDescription()));
 				}
 		);
 		return true;
