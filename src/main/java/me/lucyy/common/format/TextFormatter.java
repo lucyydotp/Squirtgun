@@ -1,8 +1,7 @@
 package me.lucyy.common.format;
 
-import net.md_5.bungee.api.chat.BaseComponent;
+import me.lucyy.common.command.FormatProvider;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +15,33 @@ public class TextFormatter {
 
     private static final List<FormatPattern> patterns = Arrays.asList(new RgbGradientPattern(),
             new HsvGradientPattern(), new HexPattern());
+
+    /**
+     * Repeats a character to create a string.
+     * @param charToRepeat the character to repeat
+     * @param count the amount of times to repeat it
+     */
+    public static String repeat(String charToRepeat, int count) {
+        StringBuilder builder = new StringBuilder();
+        for (int x = 0; x < count; x++) builder.append(charToRepeat);
+        return builder.toString();
+    }
+
+    private static final String TITLE_SEPARATOR = "᠄"; // U+1804 Mongolian Colon - works perfectly for MC strikethrough
+    private static final int CHAT_WIDTH = 315; // leave some padding just in case
+
+    /**
+     * Creates a centre-aligned title bar for use in commands. Input is formatted using the main colour, the bars either
+     * side are formatted using the accent colour.
+     * @param in the text to use as a title
+     * @param format the format to apply to the string
+     * @return a formatted string, ready to send to the player
+     */
+    public static String formatTitle(String in, FormatProvider format) {
+        int spaceLength = (CHAT_WIDTH - TextWidthFinder.findWidth(in) - 6) / 2;
+        String line = format.formatAccent(repeat(TITLE_SEPARATOR, spaceLength / 5), "m");
+        return line + format.formatMain(" " + in) + " " + line;
+    }
 
     /**
      * Parse a string colour representation to a {@link ChatColor}.
@@ -52,12 +78,12 @@ public class TextFormatter {
      *              </ul>
      * @return the formatted text
      */
-    public static BaseComponent[] format(String input) {
+    public static String format(String input) {
         String output = input;
         for (FormatPattern pattern : patterns) {
             output = pattern.process(output);
         }
-        return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', output));
+        return ChatColor.translateAlternateColorCodes('&', output);
     }
 
     /**

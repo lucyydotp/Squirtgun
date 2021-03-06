@@ -1,5 +1,7 @@
 package me.lucyy.common.command;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+
 /**
  * Provides formatting info to a command.
  */
@@ -16,7 +18,17 @@ public interface FormatProvider {
 	 * @param input the text to format
 	 * @return the formatted text
 	 */
-	String formatMain(String input);
+	default String formatMain(String input) {
+		return formatMain(input, "");
+	}
+
+	/**
+	 * Formats text using the main colour.
+	 * @param input the text to format
+	 * @param formatters a string of vanilla formatter codes to apply, for example "lo" for bold and italic
+	 * @return the formatted text
+	 */
+	String formatMain(String input, String formatters);
 
 	/**
 	 * Get a colour sequence for use in emphasised text.
@@ -30,7 +42,17 @@ public interface FormatProvider {
 	 * @param input the text to format
 	 * @return the formatted text
 	 */
-	String formatAccent(String input);
+	default String formatAccent(String input) {
+		return formatAccent(input, "");
+	}
+
+	/**
+	 * Formats text using the accent colour.
+	 * @param input the text to format
+	 * @param formatters a string of vanilla formatter codes to apply, for example "lo" for bold and italic
+	 * @return the formatted text
+	 */
+	String formatAccent(String input, String formatters);
 
 	/**
 	 * Get a prefix, which is put before most command messages.
