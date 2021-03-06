@@ -76,6 +76,8 @@ public class TextFormatter {
      *              code - the first two characters are hue, next two are saturation, last two are value. In the closing
      *              tag the value is the finishing hue. All values are in the range 0-255 inclusive.</li>
      *              </ul>
+     *              Gradient formats support extra format tags, as a list of vanilla characters following a colon. For
+     *              example, a gradient from #FFFFFF, in bold and italic, would start {@literal {#FFFFFF:lo}>}.
      * @return the formatted text
      */
     public static String format(String input) {
