@@ -30,7 +30,7 @@ public class HsvGradientPattern implements FormatPattern {
 	}
 
 	@Override
-	public String process(String in) {
+	public String process(String in, String format) {
 		Matcher matcher = pattern.matcher(in);
 		while (matcher.find()) {
 			int hue1 = Integer.parseInt(matcher.group(1).substring(0, 2), 16);
@@ -39,7 +39,9 @@ public class HsvGradientPattern implements FormatPattern {
 
 			int hue2 = Integer.parseInt(matcher.group(4), 16);
 			String text = matcher.group(3);
-			String formats = matcher.group(2);
+			String formats = format;
+			if (formats == null) formats = matcher.group(2);
+
 
 			in = in.replace(matcher.group(), fade(hue1, hue2, sat, val, text, formats));
 		}

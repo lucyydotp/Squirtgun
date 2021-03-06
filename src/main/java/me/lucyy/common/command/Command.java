@@ -108,10 +108,10 @@ public class Command implements CommandExecutor, TabCompleter {
 
 		if (subcommand.getPermission() == null || sender.hasPermission(subcommand.getPermission())) {
 			if (!subcommand.execute(sender, target, Arrays.copyOfRange(args, 1, args.length))) {
-				sender.sendMessage(format.getPrefix() + "Usage: /" + cmdName + subcommand.getUsage());
+				sender.sendMessage(format.getPrefix() + format.formatMain("Usage: /" + cmdName + " " + subcommand.getUsage()));
 			}
 		} else {
-			sender.sendMessage(format.getPrefix() + "No permission!");
+			sender.sendMessage(format.getPrefix() + format.formatMain("No permission!"));
 		}
 
 		return true;

@@ -81,9 +81,20 @@ public class TextFormatter {
      * @return the formatted text
      */
     public static String format(String input) {
+        return format(input, null);
+    }
+
+    /**
+     * Parses a string to a set of coloured components, calculating gradients.
+     *
+     * @param input as for {@link #format(String)}
+     * @param overrides a string of vanilla formatters to add to the text
+     * @return the formatted text
+     */
+    public static String format(String input, String overrides) {
         String output = input;
         for (FormatPattern pattern : patterns) {
-            output = pattern.process(output);
+            output = pattern.process(output, overrides);
         }
         return ChatColor.translateAlternateColorCodes('&', output);
     }

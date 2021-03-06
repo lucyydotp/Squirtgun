@@ -5,7 +5,6 @@ import net.md_5.bungee.api.ChatColor;
 import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class RgbGradientPattern implements FormatPattern {
 	Pattern pattern = Pattern.compile("\\{(#[A-Fa-f0-9]{6}):?([klmno]+)?>}(.*)\\{(#[A-Fa-f0-9]{6})<}");
@@ -34,11 +33,12 @@ public class RgbGradientPattern implements FormatPattern {
 	}
 
 	@Override
-	public String process(String in) {
+	public String process(String in, String formatter) {
 		Matcher matcher = pattern.matcher(in);
 		while (matcher.find()) {
 			String col1 = matcher.group(1);
-			String formatters = matcher.group(2);
+			String formatters = formatter;
+			if (formatters == null) formatters = matcher.group(2);
 			String text = matcher.group(3);
 			String col2 = matcher.group(4);
 			in = in.replace(matcher.group(), fade(col1, col2, formatters, text));
