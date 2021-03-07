@@ -13,11 +13,13 @@ public class HelpSubcommand implements Subcommand {
     private final Command cmd;
     private final FormatProvider provider;
     private final JavaPlugin plugin;
+    private final String commandName;
 
-    public HelpSubcommand(Command cmd, FormatProvider provider, JavaPlugin plugin) {
+    public HelpSubcommand(Command cmd, FormatProvider provider, JavaPlugin plugin, String commandName) {
         this.cmd = cmd;
         this.provider = provider;
         this.plugin = plugin;
+        this.commandName = commandName;
     }
 
 
@@ -48,7 +50,7 @@ public class HelpSubcommand implements Subcommand {
         output.append(TextFormatter.formatTitle("Commands:", provider)).append("\n");
         cmd.getUserSubcommands(sender).forEach(cmd -> {
                     if (cmd.getPermission() == null || sender.hasPermission(cmd.getPermission()))
-                        output.append(provider.formatMain("/profile "))
+                        output.append(provider.formatMain("/" + commandName + " "))
                                 .append(provider.formatAccent(cmd.getName()))
                                 .append(provider.formatMain(" - " + cmd.getDescription()))
 								.append("\n");
