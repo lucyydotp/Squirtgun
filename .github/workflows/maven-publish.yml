@@ -26,3 +26,7 @@ jobs:
 
     - name: action-maven-publish
       uses: samuelmeuli/action-maven-publish@v1.4.0
+      with:
+        nexus_username: ${{ secrets.REPO_USERNAME }}
+        nexus_password: ${{ secrets.REPO_PASSWORD }}
+        server_id: lucy
