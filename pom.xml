@@ -20,6 +20,15 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>lucy</id>
+            <name>Lucy's Maven Repo</name>
+            <url>https://repo.lucyy.me/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
+         
     <build>
         <plugins>
             <plugin>
