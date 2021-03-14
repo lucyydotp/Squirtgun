@@ -17,7 +17,7 @@ public class HsvGradientPattern implements FormatPattern {
 
 		StringBuilder formatters = new StringBuilder();
 		if (formats != null) {
-			for (char character : formats.toCharArray()) formatters.append("&").append(character);
+			for (char character : formats.toLowerCase().toCharArray()) formatters.append("&").append(character);
 		}
 
 		for (int x = 0; x < text.length(); x++) {

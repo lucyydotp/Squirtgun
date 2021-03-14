@@ -57,7 +57,7 @@ public class TextFormatter {
         if (in.length() == 1) return ChatColor.getByChar(in.charAt(0));
         else if (in.length() == 7 && in.startsWith("#")) {
             try {
-                return ChatColor.of(in);
+                return ChatColor.of(in.toLowerCase());
             } catch (IllegalArgumentException e) {
                 return null;
             }

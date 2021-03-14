@@ -16,7 +16,7 @@ public class HexPattern implements FormatPattern {
 
 			StringBuilder formatters = new StringBuilder();
 			if (format != null) {
-				for (char character : format.toCharArray()) formatters.append("&").append(character);
+				for (char character : format.toLowerCase().toCharArray()) formatters.append("&").append(character);
 			}
 
 			in = in.replace(matcher.group(), TextFormatter.colourFromText(color) + formatters.toString());
