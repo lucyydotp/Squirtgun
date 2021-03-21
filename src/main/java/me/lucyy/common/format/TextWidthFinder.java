@@ -100,7 +100,7 @@ public class TextWidthFinder {
         charWidths.put('/', 5);
         charWidths.put('\\', 5);
         charWidths.put('|', 1);
-        charWidths.put('~', 5);
+        charWidths.put('~', 6);
         charWidths.put('`', 2);
         charWidths.put('.', 1);
         charWidths.put(',', 1);

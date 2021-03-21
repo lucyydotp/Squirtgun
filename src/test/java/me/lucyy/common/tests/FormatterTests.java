@@ -63,4 +63,12 @@ public class FormatterTests {
             Assertions.assertEquals(actual[x], expected[x]);
         }
     }
+
+    @Test
+    @DisplayName("Ensure text is centred properly")
+    public void testCentreText() {
+        Assertions.assertEquals(
+                "§e                                §f test 12345 §e                                ",
+        TextFormatter.centreText("test 12345", new TestFormatter(), " "));
+    }
 }
