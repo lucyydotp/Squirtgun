@@ -3,6 +3,7 @@ package me.lucyy.common.format;
 import me.lucyy.common.command.FormatProvider;
 import net.md_5.bungee.api.ChatColor;
 
+import java.text.Format;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,8 +19,9 @@ public class TextFormatter {
 
     /**
      * Repeats a character to create a string.
+     *
      * @param charToRepeat the character to repeat
-     * @param count the amount of times to repeat it
+     * @param count        the amount of times to repeat it
      */
     public static String repeat(String charToRepeat, int count) {
         StringBuilder builder = new StringBuilder();
@@ -27,19 +29,46 @@ public class TextFormatter {
         return builder.toString();
     }
 
-    private static final String TITLE_SEPARATOR = "᠄"; // U+1804 Mongolian Colon - works perfectly for MC strikethrough
-    private static final int CHAT_WIDTH = 315; // leave some padding just in case
+    //private static final String TITLE_SEPARATOR = "᠄"; // U+1804 Mongolian Colon - works perfectly for MC strikethrough
+    private static final String TITLE_SEPARATOR = " ";
+    private static final int CHAT_WIDTH = 320;
 
     /**
      * Creates a centre-aligned title bar for use in commands. Input is formatted using the main colour, the bars either
      * side are formatted using the accent colour.
-     * @param in the text to use as a title
+     *
+     * @param in     the text to use as a title
      * @param format the format to apply to the string
      * @return a formatted string, ready to send to the player
      */
     public static String formatTitle(String in, FormatProvider format) {
-        int spaceLength = (CHAT_WIDTH - TextWidthFinder.findWidth(in) - 6) / 2;
-        String line = format.formatAccent(repeat(TITLE_SEPARATOR, spaceLength / 5), "m");
+        return centreText(in, format, TITLE_SEPARATOR, "m");
+    }
+
+    /**
+     * Inserts characters either side of an input string to centre-align it in chat.
+     *
+     * @param in        the string to centre
+     * @param format    what to format the input with. Centred text is main-formatted, edges are accent-fornatted
+     * @param character the character to repeat to centre-align the text
+     * @return a formatted string containing the centred text
+     */
+    public static String centreText(String in, FormatProvider format, String character) {
+        return centreText(in, format, character, "");
+    }
+
+    /**
+     * Inserts characters either side of an input string to centre-align it in chat.
+     *
+     * @param in         the string to centre
+     * @param format     what to format the input with. Centred text is main-formatted, edges are accent-fornatted
+     * @param character  the character to repeat to centre-align the text
+     * @param formatters a list of vanilla formatter codes to apply to the edges
+     * @return a formatted string containing the centred text
+     */
+    public static String centreText(String in, FormatProvider format, String character, String formatters) {
+        int spaceLength = (CHAT_WIDTH - TextWidthFinder.findWidth(in) - 6) / 2; // take off 6 for two spaces
+        String line = format.formatAccent(repeat(character, spaceLength / TextWidthFinder.findWidth(character)), formatters);
         return line + format.formatMain(" " + in) + " " + line;
     }
 
@@ -87,7 +116,7 @@ public class TextFormatter {
     /**
      * Parses a string to a set of coloured components, calculating gradients.
      *
-     * @param input as for {@link #format(String)}
+     * @param input     as for {@link #format(String)}
      * @param overrides a string of vanilla formatters to add to the text
      * @return the formatted text
      */
