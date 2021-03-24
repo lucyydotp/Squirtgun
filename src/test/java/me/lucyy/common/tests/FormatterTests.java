@@ -71,4 +71,21 @@ public class FormatterTests {
                 "§e                                §f test 12345 §e                                ",
         TextFormatter.centreText("test 12345", new TestFormatter(), " "));
     }
+
+    @Test
+	@DisplayName("Ensure pretranslated formatters are maintained")
+	public void testPretranslated() {
+    	Assertions.assertEquals(ChatColor.GREEN + "hello world",
+				TextFormatter.format("{#ff00ff>}" + ChatColor.GREEN + "hello world" + "{ff<}"));
+	}
+
+	@Test
+	@DisplayName("Ensure pretranslated formatters are removed when disabled")
+	public void testPretranslatedDisabled() {
+		String out = generateMcFormat("00fe00") + "a"
+				+ generateMcFormat("807f80") + "b"
+				+ generateMcFormat("ff00ff") + "c";
+		Assertions.assertEquals(out,
+				TextFormatter.format("{#00fe00>}" + ChatColor.GREEN + "abc{#ff00ff<}", null, false));
+	}
 }

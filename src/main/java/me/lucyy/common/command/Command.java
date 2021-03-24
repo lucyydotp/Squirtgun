@@ -11,6 +11,7 @@ import java.util.*;
 /**
  * A root command that other subcommands stem from.
  */
+
 public class Command implements CommandExecutor, TabCompleter {
     private final FormatProvider format;
     private final HashMap<String, Subcommand> subcommands = new HashMap<>();
@@ -99,7 +100,8 @@ public class Command implements CommandExecutor, TabCompleter {
     /**
      * Used as part of command handling. This method should probably not be called.
      */
-    public boolean onCommand(CommandSender sender, CommandSender target, String cmdName, String[] args) {
+    @SuppressWarnings("SameReturnValue")
+	public boolean onCommand(CommandSender sender, CommandSender target, String cmdName, String[] args) {
         if (args.length < 1) {
             showDefault(sender);
             return true;

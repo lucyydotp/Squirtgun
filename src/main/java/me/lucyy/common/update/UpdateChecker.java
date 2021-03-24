@@ -39,7 +39,7 @@ public class UpdateChecker {
 	private final String updateMessage;
 	private final String listenerPermission;
 	private final String url;
-	private BukkitTask listenerTask;
+	private final BukkitTask listenerTask;
 
 	/**
 	 * Creates a new update checker, and schedule update checking every 3 hours.
@@ -64,6 +64,7 @@ public class UpdateChecker {
 		}.runTaskTimerAsynchronously(plugin, 0, 216000); // every 3 hours
 	}
 
+	@SuppressWarnings("UnusedReturnValue")
 	public boolean checkForUpdate() {
 		try {
 			plugin.getLogger().info("Checking for updates...");

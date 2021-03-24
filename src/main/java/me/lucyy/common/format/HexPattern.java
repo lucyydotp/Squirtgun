@@ -1,12 +1,10 @@
 package me.lucyy.common.format;
 
-import net.md_5.bungee.api.ChatColor;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HexPattern implements FormatPattern {
-	Pattern pattern = Pattern.compile("\\{(#[A-Fa-f0-9]{6})}");
+	final Pattern pattern = Pattern.compile("\\{(#[A-Fa-f0-9]{6})}");
 
 	@Override
 	public String process(String in, String format) {

@@ -41,16 +41,15 @@ public class VersionSubcommand implements Subcommand {
 
     @Override
     public boolean execute(CommandSender sender, CommandSender target, String[] args) {
-        StringBuilder output = new StringBuilder();
-        output.append(TextFormatter.formatTitle(plugin.getName(), provider)).append("\n");
-        output.append(provider.formatMain(plugin.getName() + " version "));
-        output.append(provider.formatAccent(plugin.getDescription().getVersion())).append("\n");
-        output.append(provider.formatMain("Written by "));
-        output.append(provider.formatAccent(plugin.getDescription().getAuthors().get(0))).append("\n");
-        output.append(provider.formatMain("Built with LucyCommonLib version "));
-        output.append(provider.formatAccent(CommonLibVersion.VERSION)).append("\n");
-        output.append(TextFormatter.formatTitle("*", provider));
-        sender.sendMessage(output.toString());
+		String output = TextFormatter.formatTitle(plugin.getName(), provider) + "\n" +
+				provider.formatMain(plugin.getName() + " version ") +
+				provider.formatAccent(plugin.getDescription().getVersion()) + "\n" +
+				provider.formatMain("Written by ") +
+				provider.formatAccent(plugin.getDescription().getAuthors().get(0)) + "\n" +
+				provider.formatMain("Built with LucyCommonLib version ") +
+				provider.formatAccent(CommonLibVersion.VERSION) + "\n" +
+				TextFormatter.formatTitle("*", provider);
+		sender.sendMessage(output);
         return true;
     }
 }

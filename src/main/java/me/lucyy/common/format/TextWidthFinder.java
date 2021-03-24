@@ -7,7 +7,7 @@ import java.util.Map;
  * Calculates the pixel of a string when using the default font.
  */
 public class TextWidthFinder {
-    private static Map<Character, Integer> charWidths = new HashMap<>();
+    private static final Map<Character, Integer> charWidths = new HashMap<>();
 
     static {
         charWidths.put('A', 5);

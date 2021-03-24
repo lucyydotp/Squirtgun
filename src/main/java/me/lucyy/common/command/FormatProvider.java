@@ -1,17 +1,9 @@
 package me.lucyy.common.command;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-
 /**
  * Provides formatting info to a command.
  */
 public interface FormatProvider {
-	/**
-	 * Get a colour sequence for use in body text.
-	 * @deprecated Use {@link #formatMain(String)}
-	 * @return a preformatted colour sequence
-	 */
-	String getMainColour();
 
 	/**
 	 * Formats text using the main colour.
@@ -29,13 +21,6 @@ public interface FormatProvider {
 	 * @return the formatted text
 	 */
 	String formatMain(String input, String formatters);
-
-	/**
-	 * Get a colour sequence for use in emphasised text.
-	 * @deprecated Use {@link #formatAccent(String)}
-	 * @return a preformatted colour sequence
-	 */
-	String getAccentColour();
 
 	/**
 	 * Formats text using the accent colour.

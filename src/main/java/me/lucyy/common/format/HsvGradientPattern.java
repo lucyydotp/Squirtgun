@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HsvGradientPattern implements FormatPattern {
-	Pattern pattern = Pattern.compile("\\{hsv:([A-Fa-f0-9]{6}):?([klmno]+)?>}(.*)\\{([A-Fa-f0-9]{2})<}");
+	final Pattern pattern = Pattern.compile("\\{hsv:([A-Fa-f0-9]{6}):?([klmno]+)?>}(.*)\\{([A-Fa-f0-9]{2})<}");
 
 	public static String fade(int hue1, int hue2, int sat, int val, String text, String formats) {
 

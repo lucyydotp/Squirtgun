@@ -64,15 +64,6 @@ public interface Subcommand {
 	 * @return a string list of potential options
 	 */
 	default List<String> tabComplete(String[] args) {
-		return tabComplete();
-	}
-
-	/**
-	 * Tab-complete this command.
-	 * @return a string list of potential options
-	 * @deprecated implement {@link #tabComplete(String[])} instead.
-	 */
-	default List<String> tabComplete() {
 		return null;
 	}
 }

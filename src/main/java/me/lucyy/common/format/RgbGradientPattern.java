@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RgbGradientPattern implements FormatPattern {
-	Pattern pattern = Pattern.compile("\\{(#[A-Fa-f0-9]{6}):?([klmno]+)?>}(.*)\\{(#[A-Fa-f0-9]{6})<}");
+	final Pattern pattern = Pattern.compile("\\{(#[A-Fa-f0-9]{6}):?([klmno]+)?>}(.*)\\{(#[A-Fa-f0-9]{6})<}");
 
 	public static String fade(String col1, String col2, String formats, String text) {
 		Color color1 = Color.decode(col1);
