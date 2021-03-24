@@ -99,7 +99,7 @@ public class TextFormatter {
 	 *
 	 * @param input the string to parse. The following formats are supported:
 	 *              <ul>
-	 *              <li>{@literal &c}text - vanilla format codes, using & as per bukkit conventions</li>
+	 *              <li>{@literal &c}text - vanilla format codes, using &amp; as per bukkit conventions</li>
 	 *              <li>{@literal {#FFFFFF}}text - formatted as a static hex code, similar to vanilla codes</li>
 	 *              <li>{@literal {#FFFFFF>}text{#000000<}} - RGB gradient between the two specified hex codes</li>
 	 *              <li>{@literal {hsv:FF0000>}text{FF<}} - HSV gradient. The hex value in the start tag is not an HTML
