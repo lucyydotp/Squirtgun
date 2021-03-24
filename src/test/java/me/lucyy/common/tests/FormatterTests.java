@@ -76,7 +76,7 @@ public class FormatterTests {
 	@DisplayName("Ensure pretranslated formatters are maintained")
 	public void testPretranslated() {
     	Assertions.assertEquals(ChatColor.GREEN + "hello world",
-				TextFormatter.format("{#ff00ff>}" + ChatColor.GREEN + "hello world" + "{ff<}"));
+				TextFormatter.format("{#ff00ff>}" + ChatColor.GREEN + "hello world" + "{ff<}", null, true));
 	}
 
 	@Test
@@ -86,6 +86,6 @@ public class FormatterTests {
 				+ generateMcFormat("807f80") + "b"
 				+ generateMcFormat("ff00ff") + "c";
 		Assertions.assertEquals(out,
-				TextFormatter.format("{#00fe00>}" + ChatColor.GREEN + "abc{#ff00ff<}", null, false));
+				TextFormatter.format("{#00fe00>}" + ChatColor.GREEN + "abc{#ff00ff<}"));
 	}
 }
