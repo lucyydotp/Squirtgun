@@ -3,8 +3,7 @@ package me.lucyy.common.format;
 import me.lucyy.common.command.FormatProvider;
 import net.md_5.bungee.api.ChatColor;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Formats text, supporting gradients and hex codes.
@@ -13,9 +12,23 @@ import java.util.List;
  */
 public class TextFormatter {
 
-	private static final List<FormatPattern> patterns = Arrays.asList(new RgbGradientPattern(),
-			new HsvGradientPattern(), new HexPattern());
+	private static final List<FormatPattern> patterns = new ArrayList<>();
 
+	static {
+		Map<String, ChatColor[]> blocks = new HashMap<>();
+		patterns.add(new RgbGradientPattern());
+		patterns.add(new HsvGradientPattern());
+		patterns.add(new HexPattern());
+		blocks.put("trans", new ChatColor[]{
+				TextFormatter.colourFromText("#55cdfc"),
+				TextFormatter.colourFromText("#f7a8b8"),
+				ChatColor.WHITE,
+				TextFormatter.colourFromText("#f7a8b8"),
+				TextFormatter.colourFromText("#55cdfc"),
+
+		});
+		patterns.add(new BlockedGradient(blocks));
+	}
 	/**
 	 * Repeats a character to create a string.
 	 *
