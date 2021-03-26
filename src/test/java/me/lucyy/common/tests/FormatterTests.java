@@ -92,14 +92,14 @@ public class FormatterTests {
 	@Test
     @DisplayName("Ensure block patterns work properly")
     public void testBlockPatterns() {
-        Assertions.assertEquals("§x§5§5§c§d§f§caa§x§f§7§a§8§b§8a§fa§x§f§7§a§8§b§8a§x§5§5§c§d§f§caa",
+        Assertions.assertEquals("§x§5§5§c§d§f§ca§x§f§7§a§8§b§8aa§fa§x§f§7§a§8§b§8aa§x§5§5§c§d§f§ca",
                 TextFormatter.format("{flag:trans>}aaaaaaa{flag<}"));
     }
 
     @Test
     @DisplayName("Ensure block patterns work properly when the content is shorter than the amount of colours")
     public void testShortenedGradients() {
-        Assertions.assertEquals("§x§5§5§c§d§f§ca§x§f§7§a§8§b§8a§fa§x§f§7§a§8§b§8a",
+        Assertions.assertEquals("§x§5§5§c§d§f§ca§x§f§7§a§8§b§8a§x§f§7§a§8§b§8a§x§5§5§c§d§f§ca",
                 TextFormatter.format("{flag:trans>}aaaa{flag<}"));
     }
 }

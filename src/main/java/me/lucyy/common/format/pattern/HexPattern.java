@@ -1,4 +1,7 @@
-package me.lucyy.common.format;
+package me.lucyy.common.format.pattern;
+
+import me.lucyy.common.format.TextFormatter;
+import me.lucyy.common.format.pattern.FormatPattern;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

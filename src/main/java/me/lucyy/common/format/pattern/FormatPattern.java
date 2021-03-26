@@ -1,4 +1,4 @@
-package me.lucyy.common.format;
+package me.lucyy.common.format.pattern;
 
 public interface FormatPattern {
 	default String process(String in) {

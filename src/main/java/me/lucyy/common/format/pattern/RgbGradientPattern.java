@@ -1,5 +1,7 @@
-package me.lucyy.common.format;
+package me.lucyy.common.format.pattern;
 
+import me.lucyy.common.format.TextFormatter;
+import me.lucyy.common.format.pattern.FormatPattern;
 import net.md_5.bungee.api.ChatColor;
 
 import java.awt.*;
