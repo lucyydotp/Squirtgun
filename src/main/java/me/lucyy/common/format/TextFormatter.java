@@ -56,6 +56,13 @@ public class TextFormatter {
                                 ChatColor.WHITE,
                                 TextFormatter.colourFromText("#9c59d1"),
                                 ChatColor.BLACK
+                        ),
+                        new BlockedGradient(
+                                new String[]{"pansexual", "pan"},
+                                TextFormatter.colourFromText("#ff1b8d"),
+                                TextFormatter.colourFromText("#ffda00"),
+                                TextFormatter.colourFromText("#1bb3ff")
+
                         )
                 )
         );

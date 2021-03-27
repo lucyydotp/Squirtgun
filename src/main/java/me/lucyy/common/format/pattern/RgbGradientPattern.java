@@ -11,6 +11,11 @@ import java.util.regex.Pattern;
 public class RgbGradientPattern implements FormatPattern {
 	final Pattern pattern = Pattern.compile("\\{(#[A-Fa-f0-9]{6}):?([klmno]+)?>}(.*)\\{(#[A-Fa-f0-9]{6})<}");
 
+	public static int clamp(int in) {
+		if (in > 255) return 255;
+		return Math.max(in, 0);
+	}
+
 	public static String fade(String col1, String col2, String formats, String text) {
 		Color color1 = Color.decode(col1);
 
@@ -31,7 +36,7 @@ public class RgbGradientPattern implements FormatPattern {
 
 
 		for (int x = 0; x < text.length(); x++) {
-			output.append(ChatColor.of(new Color(reds[x], greens[x], blues[x])));
+			output.append(ChatColor.of(new Color(clamp(reds[x]), clamp(greens[x]), clamp(blues[x]))));
 			output.append(formatters.toString());
 			output.append(text.charAt(x));
 		}
