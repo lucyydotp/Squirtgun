@@ -2,6 +2,7 @@ package me.lucyy.common.format.pattern;
 
 import me.lucyy.common.format.TextFormatter;
 import me.lucyy.common.format.pattern.FormatPattern;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 
 import java.awt.*;
@@ -32,7 +33,9 @@ public class HsvGradientPattern implements FormatPattern {
 	}
 
 	@Override
-	public String process(String in, String format) {
+	public Component process(String in, String format) {
+		return null;
+		/* TODO
 		Matcher matcher = pattern.matcher(in);
 		while (matcher.find()) {
 			int hue1 = Integer.parseInt(matcher.group(1).substring(0, 2), 16);
@@ -47,6 +50,6 @@ public class HsvGradientPattern implements FormatPattern {
 
 			in = in.replace(matcher.group(), fade(hue1, hue2, sat, val, text, formats));
 		}
-		return in;
+		return in;*/
 	}
 }

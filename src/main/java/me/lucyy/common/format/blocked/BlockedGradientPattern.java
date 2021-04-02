@@ -1,11 +1,11 @@
 package me.lucyy.common.format.blocked;
 
 import me.lucyy.common.format.pattern.FormatPattern;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BlockedGradientPattern implements FormatPattern {
@@ -20,7 +20,9 @@ public class BlockedGradientPattern implements FormatPattern {
     }
 
     @Override
-    public String process(String in, String overrideFormatter) {
+    public Component process(String in, String overrideFormatter) {
+        return null;
+        /* TODO
         Matcher matcher = pattern.matcher(in);
 
         while (matcher.find()) {
@@ -53,6 +55,6 @@ public class BlockedGradientPattern implements FormatPattern {
 
             in = in.replace(matcher.group(), out.toString());
         }
-        return in;
+        return in;*/
     }
 }

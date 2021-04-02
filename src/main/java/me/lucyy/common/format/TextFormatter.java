@@ -7,18 +7,25 @@ import me.lucyy.common.format.pattern.FormatPattern;
 import me.lucyy.common.format.pattern.HexPattern;
 import me.lucyy.common.format.pattern.HsvGradientPattern;
 import me.lucyy.common.format.pattern.RgbGradientPattern;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Formats text, supporting gradients and hex codes.
- * This was very heavily inspired by IridiumColorAPI
+ * This was inspired by IridiumColorAPI and CMI
  * https://github.com/Iridium-Development/IridiumColorAPI
  */
 public class TextFormatter {
 
     private static final List<FormatPattern> patterns = new ArrayList<>();
+    private static final Pattern formatterPattern = Pattern.compile("\\{[^{}]+>}.*\\{[^{}]+<}|(\\{[^{}]+})?[^{}]+");
 
     static {
         patterns.add(new RgbGradientPattern());
@@ -28,40 +35,40 @@ public class TextFormatter {
         patterns.add(new BlockedGradientPattern("flag",
                         new BlockedGradient(
                                 new String[]{"transgender", "trans"},
-                                TextFormatter.colourFromText("#55cdfc"),
-                                TextFormatter.colourFromText("#f7a8b8"),
+                                TextFormatter.colourFromTextOld("#55cdfc"),
+                                TextFormatter.colourFromTextOld("#f7a8b8"),
                                 ChatColor.WHITE,
-                                TextFormatter.colourFromText("#f7a8b8"),
-                                TextFormatter.colourFromText("#55cdfc")),
-
+                                TextFormatter.colourFromTextOld("#f7a8b8"),
+                                TextFormatter.colourFromTextOld("#55cdfc")
+                        ),
                         new BlockedGradient(
                                 new String[]{"bisexual", "bi"},
-                                TextFormatter.colourFromText("#d60270"),
-                                TextFormatter.colourFromText("#d60270"),
-                                TextFormatter.colourFromText("#9b4f96"),
-                                TextFormatter.colourFromText("#0038a8"),
-                                TextFormatter.colourFromText("#0038a8")
+                                TextFormatter.colourFromTextOld("#d60270"),
+                                TextFormatter.colourFromTextOld("#d60270"),
+                                TextFormatter.colourFromTextOld("#9b4f96"),
+                                TextFormatter.colourFromTextOld("#0038a8"),
+                                TextFormatter.colourFromTextOld("#0038a8")
                         ),
                         new BlockedGradient(
                                 "lesbian",
-                                TextFormatter.colourFromText("#D62900"),
-                                TextFormatter.colourFromText("#FF9B55"),
+                                TextFormatter.colourFromTextOld("#D62900"),
+                                TextFormatter.colourFromTextOld("#FF9B55"),
                                 ChatColor.WHITE,
-                                TextFormatter.colourFromText("#D461A6"),
-                                TextFormatter.colourFromText("#A50062")
+                                TextFormatter.colourFromTextOld("#D461A6"),
+                                TextFormatter.colourFromTextOld("#A50062")
                         ),
                         new BlockedGradient(
                                 new String[]{"nonbinary", "non-binary", "enby"},
-                                TextFormatter.colourFromText("#fff430"),
+                                TextFormatter.colourFromTextOld("#fff430"),
                                 ChatColor.WHITE,
-                                TextFormatter.colourFromText("#9c59d1"),
+                                TextFormatter.colourFromTextOld("#9c59d1"),
                                 ChatColor.BLACK
                         ),
                         new BlockedGradient(
                                 new String[]{"pansexual", "pan"},
-                                TextFormatter.colourFromText("#ff1b8d"),
-                                TextFormatter.colourFromText("#ffda00"),
-                                TextFormatter.colourFromText("#1bb3ff")
+                                TextFormatter.colourFromTextOld("#ff1b8d"),
+                                TextFormatter.colourFromTextOld("#ffda00"),
+                                TextFormatter.colourFromTextOld("#1bb3ff")
 
                         )
                 )
@@ -132,8 +139,10 @@ public class TextFormatter {
      *           <li>a 6-digit HTML hex code, prepended with # ie #ff00ff</li>
      *           </ul>
      * @return the ChatColor representation, or null if it could not be parsed
+     * @deprecated Use {@link #colourFromText(String)}
      */
-    public static ChatColor colourFromText(String in) {
+    @Deprecated
+    public static ChatColor colourFromTextOld(String in) {
         if (in.length() == 1) return ChatColor.getByChar(in.charAt(0));
         else if (in.length() == 7 && in.startsWith("#")) {
             try {
@@ -144,6 +153,24 @@ public class TextFormatter {
         }
         return null;
     }
+
+    /**
+     * TODO
+     * @param in
+     * @return
+     */
+    public static TextColor colourFromText(String in) {
+        if (in.length() == 1) return LegacyComponentSerializer.parseChar(in.charAt(0)).color();
+        else if (in.length() == 7 && in.startsWith("#")) {
+            try {
+                return TextColor.fromCSSHexString(in);
+            } catch (IllegalArgumentException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Parses a string to a set of coloured components, calculating gradients.
@@ -161,21 +188,27 @@ public class TextFormatter {
      *              Gradient formats support extra format tags, as a list of vanilla characters following a colon. For
      *              example, a gradient from #FFFFFF, in bold and italic, would start {@literal {#FFFFFF:lo}>}.
      * @return the formatted text
+     * @deprecated use {@link #format(String, String, boolean)}
      */
-    public static String format(String input) {
-        return format(input, null, false);
+    public static String formatOld(String input) {
+        return "";
+        //return format(input, null, false);
     }
 
     /**
      * Parses a string to a set of coloured components, calculating gradients.
      *
-     * @param input                   as for {@link #format(String)}
+     * @param input                   as for {@link #formatOld(String)}
      * @param overrides               a string of vanilla formatters to add to the text
      * @param usePredefinedFormatters whether to use §-prefixed codes. if true then they will take priority over LCL
      *                                formatters, if false then they will be removed prior to formatting
      * @return the formatted text
+     * @deprecated use
      */
-    public static String format(String input, String overrides, boolean usePredefinedFormatters) {
+    @Deprecated
+    public static String formatOld(String input, String overrides, boolean usePredefinedFormatters) {
+        return "";
+        /* TODO tidy this up
         if (usePredefinedFormatters && input.contains("\u00a7"))
             return ChatColor.translateAlternateColorCodes('&',
                     input.replaceAll("(?<!\\\\)\\{[^}]*}", ""));
@@ -183,7 +216,39 @@ public class TextFormatter {
         for (FormatPattern pattern : patterns) {
             output = pattern.process(output, overrides);
         }
-        return ChatColor.translateAlternateColorCodes('&', output);
+        return ChatColor.translateAlternateColorCodes('&', output);*/
+    }
+
+    /**
+     * TODO javadoc - replaces {@link #formatOld(String)}
+     * @param input
+     * @return
+     */
+    public static Component format(String input) {
+        return format(input, null, false);
+    }
+
+    /**
+     * TODO javadoc - this replaces {@link #formatOld(String, String, boolean)}
+     * @param input
+     * @param overrides
+     * @param usePredefinedFormatters
+     * @return
+     */
+    public static Component format(String input, String overrides, boolean usePredefinedFormatters) {
+        if (usePredefinedFormatters && input.contains("\u00a7")) return Component.text(input);
+        TextComponent output = Component.empty();
+        Matcher matcher = formatterPattern.matcher(input);
+        while (matcher.find()) {
+            for (FormatPattern pattern : patterns) {
+                Component component = pattern.process(matcher.group(), overrides);
+                if (component != null) {
+                    output = output.append(component);
+                    break;
+                }
+            }
+        }
+        return output;
     }
 
     /**
