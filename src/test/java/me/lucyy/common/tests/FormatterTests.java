@@ -10,15 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class FormatterTests {
-    String generateMcFormat(String in) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(ChatColor.COLOR_CHAR).append("x");
-
-        for (char stringChar : in.toCharArray()) {
-            builder.append(ChatColor.COLOR_CHAR).append(stringChar);
-        }
-        return builder.toString();
-    }
 
     String ser(Component in) {
         return GsonComponentSerializer.gson().serialize(in);
@@ -27,8 +18,8 @@ public class FormatterTests {
     @Test
     @DisplayName("Ensure that vanilla formatters with & work")
     public void testVanillaFormat() {
-        Assertions.assertEquals("" + ChatColor.GREEN + ChatColor.BOLD + "te" + ChatColor.AQUA + "st",
-                TextFormatter.format("&a&lte&bst"));
+        Assertions.assertEquals("{\"text\":\"" + ChatColor.GREEN + ChatColor.BOLD + "te" + ChatColor.AQUA + "st\"}",
+                ser(TextFormatter.format("&a&lte&bst")));
     }
 
     @Test
@@ -51,11 +42,10 @@ public class FormatterTests {
     @Test
     @DisplayName("Ensure HSV gradients are calculated correctly")
     public void testHsvGradient() {
-        String out = generateMcFormat("ff0000") + "a"
-                + generateMcFormat("ffb400") + "b"
-                + generateMcFormat("96ff00") + "c";
+        String out = "{\"extra\":[{\"color\":\"#ff0000\",\"text\":\"a\"}," +
+                "{\"color\":\"#ffb400\",\"text\":\"b\"},{\"color\":\"#95ff00\",\"text\":\"c\"}],\"text\":\"\"}";
 
-        Assertions.assertEquals(out, TextFormatter.format("{hsv:00ffff>}abc{3c<}"));
+        Assertions.assertEquals(out, ser(TextFormatter.format("{hsv:00ffff>}abc{3c<}")));
     }
 
     @Test
@@ -73,8 +63,10 @@ public class FormatterTests {
     @DisplayName("Ensure text is centred properly")
     public void testCentreText() {
         Assertions.assertEquals(
-                "§e                                §f test 12345 §e                                ",
-                TextFormatter.centreText("test 12345", new TestFormatter(), " "));
+                "{\"strikethrough\":true,\"color\":\"yellow\",\"extra\":[{\"strikethrough\":false," +
+                        "\"color\":\"white\",\"text\":\" test 12345 \"},{\"strikethrough\":true,\"color\":\"yellow\"," +
+                        "\"text\":\"                                \"}],\"text\":\"                                \"}",
+                ser(TextFormatter.formatTitle("test 12345", new TestFormatter())));
     }
 
     @Test

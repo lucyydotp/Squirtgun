@@ -1,6 +1,7 @@
 package me.lucyy.common.command;
 
 import me.lucyy.common.format.TextFormatter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -45,21 +46,24 @@ public class HelpSubcommand implements Subcommand {
 
     @Override
     public boolean execute(CommandSender sender, CommandSender target, String[] args) {
-        StringBuilder output = new StringBuilder();
+        Component comp = TextFormatter.formatTitle("Commands:", provider).append(Component.text("\n"));
 
-        output.append(TextFormatter.formatTitle("Commands:", provider)).append("\n");
-        cmd.getUserSubcommands(sender).forEach(cmd -> {
-                    if (cmd.getPermission() == null || sender.hasPermission(cmd.getPermission()))
-                        output.append(provider.formatMain("/" + commandName + " "))
-                                .append(provider.formatAccent(cmd.getName()))
-                                .append(provider.formatMain(" - " + cmd.getDescription()))
-								.append("\n");
-                }
-        );
-		output.append("\n").append(TextFormatter.formatTitle(plugin.getName() + " v"
-                + plugin.getDescription().getVersion() + " by "
-                + plugin.getDescription().getAuthors().get(0), provider));
-		sender.sendMessage(output.toString());
+        for (Subcommand cmd : cmd.getUserSubcommands(target)) {
+            if (cmd.getPermission() == null || sender.hasPermission(cmd.getPermission())) {
+                Component innerComp = provider.formatMain("/" + commandName + " ")
+                        .append(provider.formatAccent(cmd.getName()))
+                        .append(provider.formatMain(" - " + cmd.getDescription()))
+                        .append(Component.text("\n"));
+                comp = comp.append(innerComp);
+            }
+        }
+
+        comp = comp.append(
+                Component.text("\n"))
+                .append(TextFormatter.formatTitle(plugin.getName() + " v"
+                        + plugin.getDescription().getVersion() + " by "
+                        + plugin.getDescription().getAuthors().get(0), provider));
+        sender.sendMessage(comp);
         return true;
     }
 }

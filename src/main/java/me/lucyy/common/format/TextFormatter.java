@@ -10,8 +10,10 @@ import me.lucyy.common.format.pattern.RgbGradientPattern;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
+import org.w3c.dom.Text;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -99,20 +101,20 @@ public class TextFormatter {
      * @param format the format to apply to the string
      * @return a formatted string, ready to send to the player
      */
-    public static String formatTitle(String in, FormatProvider format) {
-        return centreText(in, format, TITLE_SEPARATOR, "m");
+    public static Component formatTitle(String in, FormatProvider format) {
+        return centreText(in, format, TITLE_SEPARATOR, new TextDecoration[]{TextDecoration.STRIKETHROUGH});
     }
 
     /**
      * Inserts characters either side of an input string to centre-align it in chat.
      *
      * @param in        the string to centre
-     * @param format    what to format the input with. Centred text is main-formatted, edges are accent-fornatted
+     * @param format    what to format the input with. Centred text is main-formatted, edges are accent-formatted
      * @param character the character to repeat to centre-align the text
      * @return a formatted string containing the centred text
      */
-    public static String centreText(String in, FormatProvider format, String character) {
-        return centreText(in, format, character, "");
+    public static Component centreText(String in, FormatProvider format, String character) {
+        return centreText(in, format, character, new TextDecoration[0]);
     }
 
     /**
@@ -124,10 +126,13 @@ public class TextFormatter {
      * @param formatters a list of vanilla formatter codes to apply to the edges
      * @return a formatted string containing the centred text
      */
-    public static String centreText(String in, FormatProvider format, String character, String formatters) {
+    public static Component centreText(String in, FormatProvider format, String character, TextDecoration[] formatters) {
         int spaceLength = (CHAT_WIDTH - TextWidthFinder.findWidth(in) - 6) / 2; // take off 6 for two spaces
-        String line = format.formatAccent(repeat(character, spaceLength / TextWidthFinder.findWidth(character)), formatters);
-        return line + format.formatMain(" " + in) + " " + line;
+        Component line = format.formatAccent(repeat(character, spaceLength / TextWidthFinder.findWidth(character)), formatters);
+
+        Component centre = format.formatMain(" " + in + " ");
+        for (TextDecoration deco : formatters) centre = centre.decoration(deco, false);
+        return line.append(centre).append(line);
     }
 
     /**
@@ -239,19 +244,28 @@ public class TextFormatter {
      * @return
      */
     public static Component format(String input, String overrides, boolean usePredefinedFormatters) {
-        if (usePredefinedFormatters && input.contains("\u00a7"))
-            return Component.text(input.replaceAll("(?<!\\\\)\\{[^}]*}", ""));
+        if ((usePredefinedFormatters && input.contains("\u00a7")) || input.contains("&")) {
+            return Component.text(input.replaceAll("&", "\u00a7")
+                    .replaceAll("(?<!\\\\)\\{[^}]*}", ""));
+        }
         input = input.replaceAll("\u00a7.", "");
         Component output = null;
         Matcher matcher = formatterPattern.matcher(input);
         while (matcher.find()) {
+            boolean hasBeenParsed = false;
             for (FormatPattern pattern : patterns) {
                 Component component = pattern.process(matcher.group(), overrides);
                 if (component != null) {
+                    hasBeenParsed = true;
                     if (output == null) output = component;
                     else output = output.append(component);
                     break;
                 }
+            }
+            if (!hasBeenParsed) {
+                Component component = Component.text(matcher.group());
+                if (output == null) output = component;
+                else output = output.append(component);
             }
         }
         return output;

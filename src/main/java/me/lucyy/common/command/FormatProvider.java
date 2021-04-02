@@ -1,5 +1,9 @@
 package me.lucyy.common.command;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Provides formatting info to a command.
  */
@@ -10,8 +14,8 @@ public interface FormatProvider {
 	 * @param input the text to format
 	 * @return the formatted text
 	 */
-	default String formatMain(String input) {
-		return formatMain(input, "");
+	default Component formatMain(@NotNull  String input) {
+		return formatMain(input, new TextDecoration[0]);
 	}
 
 	/**
@@ -20,15 +24,15 @@ public interface FormatProvider {
 	 * @param formatters a string of vanilla formatter codes to apply, for example "lo" for bold and italic
 	 * @return the formatted text
 	 */
-	String formatMain(String input, String formatters);
+	Component formatMain(@NotNull String input, @NotNull TextDecoration[] formatters);
 
 	/**
 	 * Formats text using the accent colour.
 	 * @param input the text to format
 	 * @return the formatted text
 	 */
-	default String formatAccent(String input) {
-		return formatAccent(input, "");
+	default Component formatAccent(@NotNull String input) {
+		return formatAccent(input, new TextDecoration[0]);
 	}
 
 	/**
@@ -37,11 +41,11 @@ public interface FormatProvider {
 	 * @param formatters a string of vanilla formatter codes to apply, for example "lo" for bold and italic
 	 * @return the formatted text
 	 */
-	String formatAccent(String input, String formatters);
+	Component formatAccent(@NotNull String input, @NotNull TextDecoration[] formatters);
 
 	/**
 	 * Get a prefix, which is put before most command messages.
 	 * @return a preformatted colour sequence
 	 */
-	String getPrefix();
+	Component getPrefix();
 }
