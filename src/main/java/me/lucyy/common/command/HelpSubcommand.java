@@ -2,6 +2,7 @@ package me.lucyy.common.command;
 
 import me.lucyy.common.format.TextFormatter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,7 +47,9 @@ public class HelpSubcommand implements Subcommand {
 
     @Override
     public boolean execute(CommandSender sender, CommandSender target, String[] args) {
-        Component comp = TextFormatter.formatTitle("Commands:", provider).append(Component.text("\n"));
+        Component comp = TextFormatter.formatTitle("Commands:", provider)
+                .append(Component.text("\n"))
+                .append(Component.empty().decoration(TextDecoration.UNDERLINED, false));
 
         for (Subcommand cmd : cmd.getUserSubcommands(target)) {
             if (cmd.getPermission() == null || sender.hasPermission(cmd.getPermission())) {
