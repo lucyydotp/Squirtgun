@@ -43,7 +43,7 @@ public class RgbGradientPattern implements FormatPattern {
 
         for (int x = 0; x < text.length(); x++) {
             TextColor color = TextColor.color(clamp(reds[x]), clamp(greens[x]), clamp(blues[x]));
-            component = component.append(Component.text(text.charAt(x)).color(color));
+            component = component.append(Component.text(text.charAt(x), color));
         }
 
         return component;

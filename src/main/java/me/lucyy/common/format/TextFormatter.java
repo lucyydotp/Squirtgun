@@ -8,7 +8,7 @@ import me.lucyy.common.format.pattern.HexPattern;
 import me.lucyy.common.format.pattern.HsvGradientPattern;
 import me.lucyy.common.format.pattern.RgbGradientPattern;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
@@ -35,40 +35,40 @@ public class TextFormatter {
         patterns.add(new BlockedGradientPattern("flag",
                         new BlockedGradient(
                                 new String[]{"transgender", "trans"},
-                                TextFormatter.colourFromTextOld("#55cdfc"),
-                                TextFormatter.colourFromTextOld("#f7a8b8"),
-                                ChatColor.WHITE,
-                                TextFormatter.colourFromTextOld("#f7a8b8"),
-                                TextFormatter.colourFromTextOld("#55cdfc")
+                                TextColor.color(0x55cdfc),
+                                TextColor.color(0xf7a8b8),
+                                NamedTextColor.WHITE,
+                                TextColor.color(0xf7a8b8),
+                                TextColor.color(0x55cdfc)
                         ),
                         new BlockedGradient(
                                 new String[]{"bisexual", "bi"},
-                                TextFormatter.colourFromTextOld("#d60270"),
-                                TextFormatter.colourFromTextOld("#d60270"),
-                                TextFormatter.colourFromTextOld("#9b4f96"),
-                                TextFormatter.colourFromTextOld("#0038a8"),
-                                TextFormatter.colourFromTextOld("#0038a8")
+                                TextColor.color(0xd60270),
+                                TextColor.color(0xd60270),
+                                TextColor.color(0x9b4f96),
+                                TextColor.color(0x0038a8),
+                                TextColor.color(0x0038a8)
                         ),
                         new BlockedGradient(
                                 "lesbian",
-                                TextFormatter.colourFromTextOld("#D62900"),
-                                TextFormatter.colourFromTextOld("#FF9B55"),
-                                ChatColor.WHITE,
-                                TextFormatter.colourFromTextOld("#D461A6"),
-                                TextFormatter.colourFromTextOld("#A50062")
+                                TextColor.color(0xD62900),
+                                TextColor.color(0xFF9B55),
+                                NamedTextColor.WHITE,
+                                TextColor.color(0xD461A6),
+                                TextColor.color(0xA50062)
                         ),
                         new BlockedGradient(
                                 new String[]{"nonbinary", "non-binary", "enby"},
-                                TextFormatter.colourFromTextOld("#fff430"),
-                                ChatColor.WHITE,
-                                TextFormatter.colourFromTextOld("#9c59d1"),
-                                ChatColor.BLACK
+                                TextColor.color(0xfff430),
+                                NamedTextColor.WHITE,
+                                TextColor.color(0x9c59d1),
+                                NamedTextColor.BLACK
                         ),
                         new BlockedGradient(
                                 new String[]{"pansexual", "pan"},
-                                TextFormatter.colourFromTextOld("#ff1b8d"),
-                                TextFormatter.colourFromTextOld("#ffda00"),
-                                TextFormatter.colourFromTextOld("#1bb3ff")
+                                TextColor.color(0xff1b8d),
+                                TextColor.color(0xffda00),
+                                TextColor.color(0x1bb3ff)
 
                         )
                 )
@@ -156,6 +156,7 @@ public class TextFormatter {
 
     /**
      * TODO
+     *
      * @param in
      * @return
      */
@@ -221,6 +222,7 @@ public class TextFormatter {
 
     /**
      * TODO javadoc - replaces {@link #formatOld(String)}
+     *
      * @param input
      * @return
      */
@@ -230,20 +232,24 @@ public class TextFormatter {
 
     /**
      * TODO javadoc - this replaces {@link #formatOld(String, String, boolean)}
+     *
      * @param input
      * @param overrides
      * @param usePredefinedFormatters
      * @return
      */
     public static Component format(String input, String overrides, boolean usePredefinedFormatters) {
-        if (usePredefinedFormatters && input.contains("\u00a7")) return Component.text(input);
-        TextComponent output = Component.empty();
+        if (usePredefinedFormatters && input.contains("\u00a7"))
+            return Component.text(input.replaceAll("(?<!\\\\)\\{[^}]*}", ""));
+        input = input.replaceAll("\u00a7.", "");
+        Component output = null;
         Matcher matcher = formatterPattern.matcher(input);
         while (matcher.find()) {
             for (FormatPattern pattern : patterns) {
                 Component component = pattern.process(matcher.group(), overrides);
                 if (component != null) {
-                    output = output.append(component);
+                    if (output == null) output = component;
+                    else output = output.append(component);
                     break;
                 }
             }

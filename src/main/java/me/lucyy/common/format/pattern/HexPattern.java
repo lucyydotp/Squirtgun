@@ -19,10 +19,9 @@ public class HexPattern implements FormatPattern {
             char c = in.charAt(i);
             if ((c < '0' || c > '9') && (c < 'A' || c > 'F') && (c < 'a' || c > 'f')) return null;
         }
-        TextColor colour = TextFormatter.colourFromText(in.substring(2, 6));
+        TextColor colour = TextFormatter.colourFromText(in.substring(1, 8));
         assert colour != null; // this is just to shut intellij up
-        return Component.text(in.substring(9))
-                .color(TextColor.color(colour));
+        return Component.text(in.substring(9), TextColor.color(colour));
     }
 
     public String processOld(String in, String format) {

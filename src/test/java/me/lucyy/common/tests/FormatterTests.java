@@ -1,6 +1,9 @@
 package me.lucyy.common.tests;
 
 import me.lucyy.common.format.TextFormatter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +20,10 @@ public class FormatterTests {
         return builder.toString();
     }
 
+    String ser(Component in) {
+        return GsonComponentSerializer.gson().serialize(in);
+    }
+
     @Test
     @DisplayName("Ensure that vanilla formatters with & work")
     public void testVanillaFormat() {
@@ -27,20 +34,18 @@ public class FormatterTests {
     @Test
     @DisplayName("Ensure that single hex colours work")
     public void testHexFormat() {
-        String expectedOut = generateMcFormat("ff00ff") + "test";
+        String expectedOut = ser(Component.text("test", TextColor.color(255, 0, 255)));
 
-        Assertions.assertEquals(expectedOut, TextFormatter.format("{#ff00ff}test"));
-        Assertions.assertEquals(expectedOut, TextFormatter.format("{#FF00FF}test"));
+        Assertions.assertEquals(expectedOut, ser(TextFormatter.format("{#ff00ff}test")));
+        Assertions.assertEquals(expectedOut, ser(TextFormatter.format("{#FF00FF}test")));
     }
 
     @Test
     @DisplayName("Ensure RGB gradients are calculated correctly")
     public void testRgbGradient() {
-        String out = generateMcFormat("00fe00") + "a"
-                + generateMcFormat("807f80") + "b"
-                + generateMcFormat("ff00ff") + "c";
-
-        Assertions.assertEquals(out, TextFormatter.format("{#00fe00>}abc{#ff00ff<}"));
+        String out = "{\"extra\":[{\"color\":\"#00fe00\",\"text\":\"a\"},{\"color\":\"#807f80\",\"text\":\"b\"},"
+                + "{\"color\":\"#ff00ff\",\"text\":\"c\"}],\"text\":\"\"}";
+        Assertions.assertEquals(out, ser(TextFormatter.format("{#00fe00>}abc{#ff00ff<}")));
     }
 
     @Test
@@ -57,7 +62,7 @@ public class FormatterTests {
     @DisplayName("Ensure fade function is working properly")
     public void testFade() {
         int[] actual = TextFormatter.fade(5, 0, 40);
-        int[] expected = new int[] {0, 10, 20, 30, 40};
+        int[] expected = new int[]{0, 10, 20, 30, 40};
 
         for (int x = 0; x < expected.length; x++) {
             Assertions.assertEquals(actual[x], expected[x]);
@@ -69,37 +74,43 @@ public class FormatterTests {
     public void testCentreText() {
         Assertions.assertEquals(
                 "§e                                §f test 12345 §e                                ",
-        TextFormatter.centreText("test 12345", new TestFormatter(), " "));
+                TextFormatter.centreText("test 12345", new TestFormatter(), " "));
     }
 
     @Test
-	@DisplayName("Ensure pretranslated formatters are maintained")
-	public void testPretranslated() {
-    	Assertions.assertEquals(ChatColor.GREEN + "hello world",
-				TextFormatter.format("{#ff00ff>}" + ChatColor.GREEN + "hello world" + "{ff<}", null, true));
-	}
+    @DisplayName("Ensure pretranslated formatters are maintained")
+    public void testPretranslated() {
+        Assertions.assertEquals("{\"text\":\"§ahello world\"}",
+                ser(TextFormatter.format("{#ff00ff>}" + ChatColor.GREEN + "hello world" + "{#00ff00<}",
+                        null, true)));
+    }
 
-	@Test
-	@DisplayName("Ensure pretranslated formatters are removed when disabled")
-	public void testPretranslatedDisabled() {
-		String out = generateMcFormat("00fe00") + "a"
-				+ generateMcFormat("807f80") + "b"
-				+ generateMcFormat("ff00ff") + "c";
-		Assertions.assertEquals(out,
-				TextFormatter.format("{#00fe00>}" + ChatColor.GREEN + "abc{#ff00ff<}"));
-	}
+    @Test
+    @DisplayName("Ensure pretranslated formatters are removed when disabled")
+    public void testPretranslatedDisabled() {
+        String out = "{\"extra\":[{\"color\":\"#00fe00\",\"text\":\"a\"},{\"color\":\"#807f80\",\"text\":\"b\"}," +
+                "{\"color\":\"#ff00ff\",\"text\":\"c\"}],\"text\":\"\"}";
+        Assertions.assertEquals(out,
+                ser(TextFormatter.format("{#00fe00>}" + ChatColor.GREEN + "abc{#ff00ff<}")));
+    }
 
-	@Test
+    @Test
     @DisplayName("Ensure block patterns work properly")
     public void testBlockPatterns() {
-        Assertions.assertEquals("§x§5§5§c§d§f§ca§x§f§7§a§8§b§8aa§fa§x§f§7§a§8§b§8aa§x§5§5§c§d§f§ca",
-                TextFormatter.format("{flag:trans>}aaaaaaa{flag<}"));
+        Assertions.assertEquals(
+                "{\"color\":\"#55cdfc\",\"extra\":[{\"color\":\"#f7a8b8\",\"text\":\"12\"}," +
+                        "{\"color\":\"white\",\"text\":\"3\"},{\"color\":\"#f7a8b8\",\"text\":\"45\"}," +
+                        "{\"color\":\"#55cdfc\",\"text\":\"6\"}],\"text\":\"0\"}",
+                ser(TextFormatter.format("{flag:trans>}0123456{flag<}")));
     }
 
     @Test
     @DisplayName("Ensure block patterns work properly when the content is shorter than the amount of colours")
-    public void testShortenedGradients() {
-        Assertions.assertEquals("§x§5§5§c§d§f§ca§x§f§7§a§8§b§8a§x§f§7§a§8§b§8a§x§5§5§c§d§f§ca",
-                TextFormatter.format("{flag:trans>}aaaa{flag<}"));
+    public void testShortenedBlockPatterns() {
+        Assertions.assertEquals(
+                "{\"color\":\"#55cdfc\",\"extra\":[{\"color\":\"#f7a8b8\",\"text\":\"1\"}," +
+                        "{\"color\":\"white\",\"text\":\"\"},{\"color\":\"#f7a8b8\",\"text\":\"2\"}," +
+                        "{\"color\":\"#55cdfc\",\"text\":\"3\"}],\"text\":\"0\"}",
+                ser(TextFormatter.format("{flag:trans>}0123{flag<}")));
     }
 }
