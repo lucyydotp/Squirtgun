@@ -90,9 +90,9 @@ public class FormatterTests {
     @DisplayName("Ensure block patterns work properly")
     public void testBlockPatterns() {
         Assertions.assertEquals(
-                "{\"color\":\"#55cdfc\",\"extra\":[{\"color\":\"#f7a8b8\",\"text\":\"12\"}," +
+                "{\"extra\":[{\"color\":\"#55cdfc\",\"text\":\"0\"},{\"color\":\"#f7a8b8\",\"text\":\"12\"}," +
                         "{\"color\":\"white\",\"text\":\"3\"},{\"color\":\"#f7a8b8\",\"text\":\"45\"}," +
-                        "{\"color\":\"#55cdfc\",\"text\":\"6\"}],\"text\":\"0\"}",
+                        "{\"color\":\"#55cdfc\",\"text\":\"6\"}],\"text\":\"\"}",
                 ser(TextFormatter.format("{flag:trans>}0123456{flag<}")));
     }
 
@@ -100,9 +100,9 @@ public class FormatterTests {
     @DisplayName("Ensure block patterns work properly when the content is shorter than the amount of colours")
     public void testShortenedBlockPatterns() {
         Assertions.assertEquals(
-                "{\"color\":\"#55cdfc\",\"extra\":[{\"color\":\"#f7a8b8\",\"text\":\"1\"}," +
+                "{\"extra\":[{\"color\":\"#55cdfc\",\"text\":\"0\"},{\"color\":\"#f7a8b8\",\"text\":\"1\"}," +
                         "{\"color\":\"white\",\"text\":\"\"},{\"color\":\"#f7a8b8\",\"text\":\"2\"}," +
-                        "{\"color\":\"#55cdfc\",\"text\":\"3\"}],\"text\":\"0\"}",
+                        "{\"color\":\"#55cdfc\",\"text\":\"3\"}],\"text\":\"\"}",
                 ser(TextFormatter.format("{flag:trans>}0123{flag<}")));
     }
 }

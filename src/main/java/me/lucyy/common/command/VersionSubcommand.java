@@ -47,12 +47,14 @@ public class VersionSubcommand implements Subcommand {
                 .append(Component.text("\n"));
 
 
+        Component nl = Component.text("\n");
+
         comp = comp.append(provider.formatMain(plugin.getName() + " version "))
-        .append(provider.formatAccent(plugin.getDescription().getVersion() + "\n"))
+        .append(provider.formatAccent(plugin.getDescription().getVersion())).append(nl)
         .append(provider.formatMain("Written by "))
-        .append(provider.formatAccent(plugin.getDescription().getAuthors().get(0) + "\n"))
+        .append(provider.formatAccent(plugin.getDescription().getAuthors().get(0))).append(nl)
         .append(provider.formatMain("Built with LucyCommonLib version "))
-		.append(provider.formatAccent(CommonLibVersion.VERSION + "\n"))
+		.append(provider.formatAccent(CommonLibVersion.VERSION)).append(nl)
         .append(TextFormatter.formatTitle("*", provider));
 
 		sender.sendMessage(comp);

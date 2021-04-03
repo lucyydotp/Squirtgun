@@ -35,7 +35,7 @@ public class BlockedGradientPattern implements FormatPattern {
 
         String label = matcher.group(1);
 
-        Component component = null;
+        Component component = Component.empty();
         String formats = overrideFormatter == null ? matcher.group(2) : overrideFormatter;
         if (formats != null) {
             for (char c : formats.toCharArray()) {
@@ -57,9 +57,7 @@ public class BlockedGradientPattern implements FormatPattern {
         for (int i = 0; i < points.size(); i++) {
             String text = i + 1 == points.size() ?
                     content.substring(points.get(i)) : safeSubstr(content, points.get(i), points.get(i + 1));
-            Component newComp = Component.text(text, cols[i]);
-            if (component == null) component = newComp;
-            else component = component.append(newComp);
+            component = component.append(Component.text(text, cols[i]));
         }
         return component;
     }
