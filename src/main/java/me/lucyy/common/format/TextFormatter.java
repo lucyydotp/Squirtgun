@@ -71,6 +71,27 @@ public class TextFormatter {
                                 TextColor.color(0xffda00),
                                 TextColor.color(0x1bb3ff)
 
+                        ),
+                        new BlockedGradient(
+                                new String[]{"asexual", "ace"},
+                                NamedTextColor.BLACK,
+                                TextColor.color(0xa3a3a3),
+                                NamedTextColor.WHITE,
+                                TextColor.color(0x810082)
+                        ),
+                        new BlockedGradient(
+                                "genderqueer",
+                                TextColor.color(0xb77fdd),
+                                NamedTextColor.WHITE,
+                                TextColor.color(0x48821e)
+                        ),
+                        new BlockedGradient(
+                                new String[]{"genderfluid", "fluid"},
+                                TextColor.color(0xff76a3),
+                                NamedTextColor.WHITE,
+                                TextColor.color(0xbf11d7),
+                                NamedTextColor.BLACK,
+                                TextColor.color(0x303cbe)
                         )
                 )
         );
