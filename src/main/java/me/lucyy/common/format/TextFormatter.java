@@ -8,6 +8,7 @@ import me.lucyy.common.format.pattern.HexPattern;
 import me.lucyy.common.format.pattern.HsvGradientPattern;
 import me.lucyy.common.format.pattern.RgbGradientPattern;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -114,6 +115,19 @@ public class TextFormatter {
     private static final int CHAT_WIDTH = 320;
 
     /**
+     * Inverts a component, flipping the extra components and adding the original component on the end.
+     */
+    public static Component invert(Component component) {
+        List<Component> comps = new ArrayList<>();
+        for (int i = component.children().size() - 1; i >= 0; i--) {
+            comps.add(component.children().get(i));
+        }
+        comps.add(component.children(new ArrayList<>()));
+
+        return comps.get(0).children(comps.subList(1, comps.size()));
+    }
+
+    /**
      * Creates a centre-aligned title bar for use in commands. Input is formatted using the main colour, the bars either
      * side are formatted using the accent colour.
      *
@@ -152,7 +166,7 @@ public class TextFormatter {
 
         Component centre = format.formatMain(" " + in + " ");
         for (TextDecoration deco : formatters) centre = centre.decoration(deco, false);
-        return line.append(centre).append(line);
+        return line.append(centre).append(invert(line));
     }
 
     /**
@@ -193,7 +207,6 @@ public class TextFormatter {
      *              Gradient formats support extra format tags, as a list of vanilla characters following a colon. For
      *              example, a gradient from #FFFFFF, in bold and italic, would start {@literal {#FFFFFF:lo}>}.
      * @return the formatted text
-     * @deprecated use {@link #format(String, String, boolean)}
      */
     public static Component format(String input) {
         return format(input, null, false);
