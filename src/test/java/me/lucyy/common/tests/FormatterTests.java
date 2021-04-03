@@ -1,63 +1,58 @@
 package me.lucyy.common.tests;
 
 import me.lucyy.common.format.TextFormatter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class FormatterTests {
-    String generateMcFormat(String in) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(ChatColor.COLOR_CHAR).append("x");
 
-        for (char stringChar : in.toCharArray()) {
-            builder.append(ChatColor.COLOR_CHAR).append(stringChar);
-        }
-        return builder.toString();
+    String ser(Component in) {
+        return GsonComponentSerializer.gson().serialize(in);
     }
 
     @Test
     @DisplayName("Ensure that vanilla formatters with & work")
     public void testVanillaFormat() {
-        Assertions.assertEquals("" + ChatColor.GREEN + ChatColor.BOLD + "te" + ChatColor.AQUA + "st",
-                TextFormatter.format("&a&lte&bst"));
+        Assertions.assertEquals("{\"text\":\"" + ChatColor.GREEN + ChatColor.BOLD + "te" + ChatColor.AQUA + "st\"}",
+                ser(TextFormatter.format("&a&lte&bst")));
     }
 
     @Test
     @DisplayName("Ensure that single hex colours work")
     public void testHexFormat() {
-        String expectedOut = generateMcFormat("ff00ff") + "test";
+        String expectedOut = ser(Component.text("test", TextColor.color(255, 0, 255)));
 
-        Assertions.assertEquals(expectedOut, TextFormatter.format("{#ff00ff}test"));
-        Assertions.assertEquals(expectedOut, TextFormatter.format("{#FF00FF}test"));
+        Assertions.assertEquals(expectedOut, ser(TextFormatter.format("{#ff00ff}test")));
+        Assertions.assertEquals(expectedOut, ser(TextFormatter.format("{#FF00FF}test")));
     }
 
     @Test
     @DisplayName("Ensure RGB gradients are calculated correctly")
     public void testRgbGradient() {
-        String out = generateMcFormat("00fe00") + "a"
-                + generateMcFormat("807f80") + "b"
-                + generateMcFormat("ff00ff") + "c";
-
-        Assertions.assertEquals(out, TextFormatter.format("{#00fe00>}abc{#ff00ff<}"));
+        String out = "{\"extra\":[{\"color\":\"#00fe00\",\"text\":\"a\"},{\"color\":\"#807f80\",\"text\":\"b\"},"
+                + "{\"color\":\"#ff00ff\",\"text\":\"c\"}],\"text\":\"\"}";
+        Assertions.assertEquals(out, ser(TextFormatter.format("{#00fe00>}abc{#ff00ff<}")));
     }
 
     @Test
     @DisplayName("Ensure HSV gradients are calculated correctly")
     public void testHsvGradient() {
-        String out = generateMcFormat("ff0000") + "a"
-                + generateMcFormat("ffb400") + "b"
-                + generateMcFormat("96ff00") + "c";
+        String out = "{\"extra\":[{\"color\":\"#ff0000\",\"text\":\"a\"}," +
+                "{\"color\":\"#ffb400\",\"text\":\"b\"},{\"color\":\"#95ff00\",\"text\":\"c\"}],\"text\":\"\"}";
 
-        Assertions.assertEquals(out, TextFormatter.format("{hsv:00ffff>}abc{3c<}"));
+        Assertions.assertEquals(out, ser(TextFormatter.format("{hsv:00ffff>}abc{3c<}")));
     }
 
     @Test
     @DisplayName("Ensure fade function is working properly")
     public void testFade() {
         int[] actual = TextFormatter.fade(5, 0, 40);
-        int[] expected = new int[] {0, 10, 20, 30, 40};
+        int[] expected = new int[]{0, 10, 20, 30, 40};
 
         for (int x = 0; x < expected.length; x++) {
             Assertions.assertEquals(actual[x], expected[x]);
@@ -68,24 +63,46 @@ public class FormatterTests {
     @DisplayName("Ensure text is centred properly")
     public void testCentreText() {
         Assertions.assertEquals(
-                "§e                                §f test 12345 §e                                ",
-        TextFormatter.centreText("test 12345", new TestFormatter(), " "));
+                "{\"strikethrough\":true,\"color\":\"yellow\",\"extra\":[{\"strikethrough\":false," +
+                        "\"color\":\"white\",\"text\":\" test 12345 \"},{\"strikethrough\":true,\"color\":\"yellow\"," +
+                        "\"text\":\"                                \"}],\"text\":\"                                \"}",
+                ser(TextFormatter.formatTitle("test 12345", new TestFormatter())));
     }
 
     @Test
-	@DisplayName("Ensure pretranslated formatters are maintained")
-	public void testPretranslated() {
-    	Assertions.assertEquals(ChatColor.GREEN + "hello world",
-				TextFormatter.format("{#ff00ff>}" + ChatColor.GREEN + "hello world" + "{ff<}", null, true));
-	}
+    @DisplayName("Ensure pretranslated formatters are maintained")
+    public void testPretranslated() {
+        Assertions.assertEquals("{\"text\":\"§ahello world\"}",
+                ser(TextFormatter.format("{#ff00ff>}" + ChatColor.GREEN + "hello world" + "{#00ff00<}",
+                        null, true)));
+    }
 
-	@Test
-	@DisplayName("Ensure pretranslated formatters are removed when disabled")
-	public void testPretranslatedDisabled() {
-		String out = generateMcFormat("00fe00") + "a"
-				+ generateMcFormat("807f80") + "b"
-				+ generateMcFormat("ff00ff") + "c";
-		Assertions.assertEquals(out,
-				TextFormatter.format("{#00fe00>}" + ChatColor.GREEN + "abc{#ff00ff<}"));
-	}
+    @Test
+    @DisplayName("Ensure pretranslated formatters are removed when disabled")
+    public void testPretranslatedDisabled() {
+        String out = "{\"extra\":[{\"color\":\"#00fe00\",\"text\":\"a\"},{\"color\":\"#807f80\",\"text\":\"b\"}," +
+                "{\"color\":\"#ff00ff\",\"text\":\"c\"}],\"text\":\"\"}";
+        Assertions.assertEquals(out,
+                ser(TextFormatter.format("{#00fe00>}" + ChatColor.GREEN + "abc{#ff00ff<}")));
+    }
+
+    @Test
+    @DisplayName("Ensure block patterns work properly")
+    public void testBlockPatterns() {
+        Assertions.assertEquals(
+                "{\"color\":\"#55cdfc\",\"extra\":[{\"color\":\"#f7a8b8\",\"text\":\"12\"}," +
+                        "{\"color\":\"white\",\"text\":\"3\"},{\"color\":\"#f7a8b8\",\"text\":\"45\"}," +
+                        "{\"color\":\"#55cdfc\",\"text\":\"6\"}],\"text\":\"0\"}",
+                ser(TextFormatter.format("{flag:trans>}0123456{flag<}")));
+    }
+
+    @Test
+    @DisplayName("Ensure block patterns work properly when the content is shorter than the amount of colours")
+    public void testShortenedBlockPatterns() {
+        Assertions.assertEquals(
+                "{\"color\":\"#55cdfc\",\"extra\":[{\"color\":\"#f7a8b8\",\"text\":\"1\"}," +
+                        "{\"color\":\"white\",\"text\":\"\"},{\"color\":\"#f7a8b8\",\"text\":\"2\"}," +
+                        "{\"color\":\"#55cdfc\",\"text\":\"3\"}],\"text\":\"0\"}",
+                ser(TextFormatter.format("{flag:trans>}0123{flag<}")));
+    }
 }
