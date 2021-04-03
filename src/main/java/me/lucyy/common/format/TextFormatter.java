@@ -12,8 +12,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
-import org.w3c.dom.Text;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -24,6 +22,7 @@ import java.util.regex.Pattern;
  * This was inspired by IridiumColorAPI and CMI
  * https://github.com/Iridium-Development/IridiumColorAPI
  */
+@SuppressWarnings("unused")
 public class TextFormatter {
 
     private static final List<FormatPattern> patterns = new ArrayList<>();
@@ -136,7 +135,7 @@ public class TextFormatter {
     }
 
     /**
-     * Parse a string colour representation to a {@link ChatColor}.
+     * Parse a string colour representation to a {@link TextColor}.
      *
      * @param in a string representation, either as:
      *           <ul>
@@ -144,29 +143,9 @@ public class TextFormatter {
      *           <li>a 6-digit HTML hex code, prepended with # ie #ff00ff</li>
      *           </ul>
      * @return the ChatColor representation, or null if it could not be parsed
-     * @deprecated Use {@link #colourFromText(String)}
-     */
-    @Deprecated
-    public static ChatColor colourFromTextOld(String in) {
-        if (in.length() == 1) return ChatColor.getByChar(in.charAt(0));
-        else if (in.length() == 7 && in.startsWith("#")) {
-            try {
-                return ChatColor.of(in.toLowerCase());
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * TODO
-     *
-     * @param in
-     * @return
      */
     public static TextColor colourFromText(String in) {
-        if (in.length() == 1) return LegacyComponentSerializer.parseChar(in.charAt(0)).color();
+        if (in.length() == 1) return Objects.requireNonNull(LegacyComponentSerializer.parseChar(in.charAt(0))).color();
         else if (in.length() == 7 && in.startsWith("#")) {
             try {
                 return TextColor.fromCSSHexString(in);
@@ -176,7 +155,6 @@ public class TextFormatter {
         }
         return null;
     }
-
 
     /**
      * Parses a string to a set of coloured components, calculating gradients.
@@ -196,52 +174,18 @@ public class TextFormatter {
      * @return the formatted text
      * @deprecated use {@link #format(String, String, boolean)}
      */
-    public static String formatOld(String input) {
-        return "";
-        //return format(input, null, false);
-    }
-
-    /**
-     * Parses a string to a set of coloured components, calculating gradients.
-     *
-     * @param input                   as for {@link #formatOld(String)}
-     * @param overrides               a string of vanilla formatters to add to the text
-     * @param usePredefinedFormatters whether to use §-prefixed codes. if true then they will take priority over LCL
-     *                                formatters, if false then they will be removed prior to formatting
-     * @return the formatted text
-     * @deprecated use
-     */
-    @Deprecated
-    public static String formatOld(String input, String overrides, boolean usePredefinedFormatters) {
-        return "";
-        /* TODO tidy this up
-        if (usePredefinedFormatters && input.contains("\u00a7"))
-            return ChatColor.translateAlternateColorCodes('&',
-                    input.replaceAll("(?<!\\\\)\\{[^}]*}", ""));
-        String output = ChatColor.stripColor(input);
-        for (FormatPattern pattern : patterns) {
-            output = pattern.process(output, overrides);
-        }
-        return ChatColor.translateAlternateColorCodes('&', output);*/
-    }
-
-    /**
-     * TODO javadoc - replaces {@link #formatOld(String)}
-     *
-     * @param input
-     * @return
-     */
     public static Component format(String input) {
         return format(input, null, false);
     }
 
     /**
-     * TODO javadoc - this replaces {@link #formatOld(String, String, boolean)}
+     * Parses a string to a set of coloured components, calculating gradients.
      *
-     * @param input
-     * @param overrides
-     * @param usePredefinedFormatters
-     * @return
+     * @param input                   as for {@link #format(String)}
+     * @param overrides               a string of vanilla formatters to add to the text
+     * @param usePredefinedFormatters whether to use §-prefixed codes. if true then they will take priority over LCL
+     *                                formatters, if false then they will be removed prior to formatting
+     * @return the formatted text
      */
     public static Component format(String input, String overrides, boolean usePredefinedFormatters) {
         if ((usePredefinedFormatters && input.contains("\u00a7")) || input.contains("&")) {
