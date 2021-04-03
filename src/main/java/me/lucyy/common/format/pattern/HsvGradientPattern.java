@@ -15,6 +15,12 @@ import java.util.regex.Pattern;
 public class HsvGradientPattern implements FormatPattern {
     final Pattern pattern = Pattern.compile("\\{hsv:([A-Fa-f0-9]{6}):?([klmno]+)?>}(.*)\\{([A-Fa-f0-9]{2})<}");
 
+    private static float clamp(float in) {
+        if (in > 1f) return 1f;
+        if (in < 0) return 0;
+        return in;
+    }
+
     public static Component fade(int hue1, int hue2, int sat, int val, String text, String formats) {
         Component component = Component.empty();
 
@@ -30,7 +36,8 @@ public class HsvGradientPattern implements FormatPattern {
         }
 
         for (int x = 0; x < text.length(); x++) {
-            TextColor color = TextColor.color(HSVLike.of(hues[x] / 255f, sat / 255f, val / 255f));
+            TextColor color = TextColor.color(HSVLike.of(
+                    clamp(hues[x] / 255f) % 1, clamp(sat / 255f), clamp(val / 255f)));
             component = component.append(Component.text(text.charAt(x), color));
         }
 

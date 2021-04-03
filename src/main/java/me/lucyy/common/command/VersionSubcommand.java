@@ -2,6 +2,7 @@ package me.lucyy.common.command;
 
 import me.lucyy.common.CommonLibVersion;
 import me.lucyy.common.format.TextFormatter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,15 +42,20 @@ public class VersionSubcommand implements Subcommand {
 
     @Override
     public boolean execute(CommandSender sender, CommandSender target, String[] args) {
-		String output = TextFormatter.formatTitle(plugin.getName(), provider) + "\n" +
-				provider.formatMain(plugin.getName() + " version ") +
-				provider.formatAccent(plugin.getDescription().getVersion()) + "\n" +
-				provider.formatMain("Written by ") +
-				provider.formatAccent(plugin.getDescription().getAuthors().get(0)) + "\n" +
-				provider.formatMain("Built with LucyCommonLib version ") +
-				provider.formatAccent(CommonLibVersion.VERSION) + "\n" +
-				TextFormatter.formatTitle("*", provider);
-		sender.sendMessage(output);
+        Component comp = Component.empty()
+                .append(TextFormatter.formatTitle(plugin.getName(), provider))
+                .append(Component.text("\n"));
+
+
+        comp = comp.append(provider.formatMain(plugin.getName() + " version "))
+        .append(provider.formatAccent(plugin.getDescription().getVersion() + "\n"))
+        .append(provider.formatMain("Written by "))
+        .append(provider.formatAccent(plugin.getDescription().getAuthors().get(0) + "\n"))
+        .append(provider.formatMain("Built with LucyCommonLib version "))
+		.append(provider.formatAccent(CommonLibVersion.VERSION + "\n"))
+        .append(TextFormatter.formatTitle("*", provider));
+
+		sender.sendMessage(comp);
         return true;
     }
 }
