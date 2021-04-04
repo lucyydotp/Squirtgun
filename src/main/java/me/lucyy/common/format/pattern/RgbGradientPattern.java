@@ -3,7 +3,6 @@ package me.lucyy.common.format.pattern;
 import me.lucyy.common.format.TextFormatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.regex.Matcher;
@@ -23,13 +22,6 @@ public class RgbGradientPattern implements FormatPattern {
         TextColor color1 = TextColor.fromCSSHexString(col1);
         assert color1 != null;
 
-        if (formats != null) {
-            for (char c : formats.toCharArray()) {
-                //noinspection ConstantConditions - the char is checked in regex
-                component = component.decorate(LegacyComponentSerializer.parseChar(c).decoration());
-            }
-        }
-
         // special case for single-length characters
         if (text.length() == 1) return component.append(Component.text(text).color(color1));
 
@@ -46,7 +38,7 @@ public class RgbGradientPattern implements FormatPattern {
             component = component.append(Component.text(text.charAt(x), color));
         }
 
-        return component;
+        return TextFormatter.applyLegacyDecorations(component, formats); // TODO test this
     }
 
     @Override

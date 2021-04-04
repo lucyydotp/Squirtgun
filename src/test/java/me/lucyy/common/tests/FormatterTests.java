@@ -18,7 +18,8 @@ public class FormatterTests {
     @Test
     @DisplayName("Ensure that vanilla formatters with & work")
     public void testVanillaFormat() {
-        Assertions.assertEquals("{\"text\":\"" + ChatColor.GREEN + ChatColor.BOLD + "te" + ChatColor.AQUA + "st\"}",
+        Assertions.assertEquals("{\"extra\":[{\"bold\":true,\"color\":\"green\",\"text\":\"te\"}," +
+                        "{\"color\":\"aqua\",\"text\":\"st\"}],\"text\":\"\"}",
                 ser(TextFormatter.format("&a&lte&bst")));
     }
 
@@ -72,7 +73,7 @@ public class FormatterTests {
     @Test
     @DisplayName("Ensure pretranslated formatters are maintained")
     public void testPretranslated() {
-        Assertions.assertEquals("{\"text\":\"§ahello world\"}",
+        Assertions.assertEquals("{\"color\":\"green\",\"text\":\"hello world\"}",
                 ser(TextFormatter.format("{#ff00ff>}" + ChatColor.GREEN + "hello world" + "{#00ff00<}",
                         null, true)));
     }

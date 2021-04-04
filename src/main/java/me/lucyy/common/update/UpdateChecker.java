@@ -56,6 +56,12 @@ public class UpdateChecker {
 		this.listenerPermission = listenerPermission;
 		Bukkit.getPluginManager().registerEvents(new UpdateListener(this), plugin);
 
+		if (plugin.getDescription().getVersion().endsWith("SNAPSHOT")) {
+			plugin.getLogger().warning("Development version detected, skipping update check.");
+			listenerTask = null;
+			return;
+		}
+
 		listenerTask = new BukkitRunnable() {
 			@Override
 			public void run() {
