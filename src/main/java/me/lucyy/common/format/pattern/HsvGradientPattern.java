@@ -1,14 +1,10 @@
 package me.lucyy.common.format.pattern;
 
 import me.lucyy.common.format.TextFormatter;
-import me.lucyy.common.format.pattern.FormatPattern;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.util.HSVLike;
-import net.md_5.bungee.api.ChatColor;
 
-import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,16 +20,7 @@ public class HsvGradientPattern implements FormatPattern {
     public static Component fade(int hue1, int hue2, int sat, int val, String text, String formats) {
         Component component = Component.empty();
 
-        StringBuilder output = new StringBuilder();
-
         int[] hues = TextFormatter.fade(text.length(), hue1, hue2);
-
-        if (formats != null) {
-            for (char c : formats.toCharArray()) {
-                //noinspection ConstantConditions - the char is checked in regex
-                component = component.decorate(LegacyComponentSerializer.parseChar(c).decoration());
-            }
-        }
 
         for (int x = 0; x < text.length(); x++) {
             TextColor color = TextColor.color(HSVLike.of(
@@ -41,7 +28,7 @@ public class HsvGradientPattern implements FormatPattern {
             component = component.append(Component.text(text.charAt(x), color));
         }
 
-        return component;
+        return TextFormatter.applyLegacyDecorations(component, formats); // TODO test this
     }
 
     @Override

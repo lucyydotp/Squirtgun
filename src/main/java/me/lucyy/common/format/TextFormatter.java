@@ -3,16 +3,16 @@ package me.lucyy.common.format;
 import me.lucyy.common.command.FormatProvider;
 import me.lucyy.common.format.blocked.BlockedGradient;
 import me.lucyy.common.format.blocked.BlockedGradientPattern;
-import me.lucyy.common.format.pattern.FormatPattern;
-import me.lucyy.common.format.pattern.HexPattern;
-import me.lucyy.common.format.pattern.HsvGradientPattern;
-import me.lucyy.common.format.pattern.RgbGradientPattern;
+import me.lucyy.common.format.pattern.*;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyFormat;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -33,6 +33,7 @@ public class TextFormatter {
         patterns.add(new RgbGradientPattern());
         patterns.add(new HsvGradientPattern());
         patterns.add(new HexPattern());
+        patterns.add(new LegacyAmpersandPattern());
 
         patterns.add(new BlockedGradientPattern("flag",
                         new BlockedGradient(
@@ -104,8 +105,9 @@ public class TextFormatter {
      * @param charToRepeat the character to repeat
      * @param count        the amount of times to repeat it
      */
-    public static String repeat(String charToRepeat, int count) {
-        StringBuilder builder = new StringBuilder();
+    @Contract(pure = true)
+    public static String repeat(@NotNull final String charToRepeat, final int count) {
+        final StringBuilder builder = new StringBuilder();
         for (int x = 0; x < count; x++) builder.append(charToRepeat);
         return builder.toString();
     }
@@ -117,8 +119,9 @@ public class TextFormatter {
     /**
      * Inverts a component, flipping the extra components and adding the original component on the end.
      */
-    public static Component invert(Component component) {
-        List<Component> comps = new ArrayList<>();
+    @Contract(pure = true)
+    public static Component invert(final Component component) {
+        final List<Component> comps = new ArrayList<>();
         for (int i = component.children().size() - 1; i >= 0; i--) {
             comps.add(component.children().get(i));
         }
@@ -135,7 +138,8 @@ public class TextFormatter {
      * @param format the format to apply to the string
      * @return a formatted string, ready to send to the player
      */
-    public static Component formatTitle(String in, FormatProvider format) {
+    @Contract(pure = true)
+    public static Component formatTitle(@NotNull final String in, @NotNull final FormatProvider format) {
         return centreText(in, format, TITLE_SEPARATOR, new TextDecoration[]{TextDecoration.STRIKETHROUGH});
     }
 
@@ -147,7 +151,9 @@ public class TextFormatter {
      * @param character the character to repeat to centre-align the text
      * @return a formatted string containing the centred text
      */
-    public static Component centreText(String in, FormatProvider format, String character) {
+    @Contract(pure = true)
+    public static Component centreText(@NotNull final String in, @NotNull final FormatProvider format,
+									   @NotNull String character) {
         return centreText(in, format, character, new TextDecoration[0]);
     }
 
@@ -160,9 +166,13 @@ public class TextFormatter {
      * @param formatters a list of vanilla formatter codes to apply to the edges
      * @return a formatted string containing the centred text
      */
-    public static Component centreText(String in, FormatProvider format, String character, TextDecoration[] formatters) {
-        int spaceLength = (CHAT_WIDTH - TextWidthFinder.findWidth(in) - 6) / 2; // take off 6 for two spaces
-        Component line = format.formatAccent(repeat(character, spaceLength / TextWidthFinder.findWidth(character)), formatters);
+    @Contract(pure = true)
+    public static Component centreText(@NotNull final String in, @NotNull final FormatProvider format,
+                                       @NotNull final String character, @NotNull final TextDecoration[] formatters) {
+        final int spaceLength = (CHAT_WIDTH - TextWidthFinder.findWidth(in) - 6) / 2; // take off 6 for two spaces
+        final Component line = format.formatAccent(
+                repeat(character, spaceLength / TextWidthFinder.findWidth(character)),
+                formatters);
 
         Component centre = format.formatMain(" " + in + " ");
         for (TextDecoration deco : formatters) centre = centre.decoration(deco, false);
@@ -179,7 +189,8 @@ public class TextFormatter {
      *           </ul>
      * @return the ChatColor representation, or null if it could not be parsed
      */
-    public static TextColor colourFromText(String in) {
+    @Contract(pure = true)
+    public static @Nullable TextColor colourFromText(@NotNull final String in) {
         if (in.length() == 1) return Objects.requireNonNull(LegacyComponentSerializer.parseChar(in.charAt(0))).color();
         else if (in.length() == 7 && in.startsWith("#")) {
             try {
@@ -193,7 +204,8 @@ public class TextFormatter {
 
     /**
      * Parses a string to a set of coloured components, calculating gradients.
-     * By default, any colours already in the string will be overridden
+     * By default, any section-coded legacy colours in the string will be removed. Ampersand-coded colours will be
+     * parsed into components. This behaviour can be changed with {@link #format(String, String, boolean)}
      *
      * @param input the string to parse. The following formats are supported:
      *              <ul>
@@ -203,12 +215,16 @@ public class TextFormatter {
      *              <li>{@literal {hsv:FF0000>}text{FF<}} - HSV gradient. The hex value in the start tag is not an HTML
      *              code - the first two characters are hue, next two are saturation, last two are value. In the closing
      *              tag the value is the finishing hue. All values are in the range 0-255 inclusive.</li>
+	 *              <li>{@literal {flag:some-kind-of-flag>}text{flag<}} - blocked flags. Still WIP, more info to come
+	 *              Soon&trade;. Currently supports miscellaneous common pride flags.</li>
      *              </ul>
      *              Gradient formats support extra format tags, as a list of vanilla characters following a colon. For
      *              example, a gradient from #FFFFFF, in bold and italic, would start {@literal {#FFFFFF:lo}>}.
+     *
      * @return the formatted text
      */
-    public static Component format(String input) {
+    @Contract(pure = true)
+    public static Component format(@NotNull final String input) {
         return format(input, null, false);
     }
 
@@ -221,10 +237,12 @@ public class TextFormatter {
      *                                formatters, if false then they will be removed prior to formatting
      * @return the formatted text
      */
-    public static Component format(String input, String overrides, boolean usePredefinedFormatters) {
-        if ((usePredefinedFormatters && input.contains("\u00a7")) || input.contains("&")) {
-            return Component.text(input.replaceAll("&", "\u00a7")
-                    .replaceAll("(?<!\\\\)\\{[^}]*}", ""));
+    @Contract(pure = true)
+    public static Component format(@NotNull String input, @Nullable final String overrides,
+								   final boolean usePredefinedFormatters) {
+        if ((usePredefinedFormatters && input.contains("\u00a7"))) {
+            return LegacyComponentSerializer.legacySection().deserialize(input.replaceAll("(?<!\\\\)\\{[^}]*}",
+					""));
         }
         input = input.replaceAll("\u00a7.", "");
         Component output = null;
@@ -258,10 +276,11 @@ public class TextFormatter {
      * @param val2  the value to end at
      * @return an integer array of length count
      */
-    public static int[] fade(int count, int val1, int val2) {
-        float step = (val2 - val1) / (float) (count - 1);
+    @Contract(pure = true)
+    public static int[] fade(final int count, final int val1, final int val2) {
+        final float step = (val2 - val1) / (float) (count - 1);
 
-        int[] output = new int[count];
+        final int[] output = new int[count];
 
         for (int x = 0; x < count; x++) {
             float result = (val1) + step * x;
@@ -270,5 +289,26 @@ public class TextFormatter {
             output[x] = Math.round(result);
         }
         return output;
+    }
+
+    /**
+     * Apply a string of legacy decoration codes to a component.
+     *
+     * @param in          the component to apply decorations to
+     * @param decorations a list of legacy decorations to apply ie "lo" will apply bold and italic
+     * @throws IllegalArgumentException if a decoration provided is invalid
+     */
+    @Contract(pure = true)
+    public static Component applyLegacyDecorations(@NotNull final Component in, @Nullable final String decorations) {
+        if (decorations == null) return in;
+        Component out = in;
+        for (char c : decorations.toCharArray()) {
+            final LegacyFormat format = LegacyComponentSerializer.parseChar(c);
+            if (format == null) throw new IllegalArgumentException("Invalid char " + c);
+            final TextDecoration deco = format.decoration();
+            if (deco == null) throw new IllegalArgumentException("Char " + c + " is not a decorator");
+            out = out.decorate(deco);
+        }
+        return out;
     }
 }
