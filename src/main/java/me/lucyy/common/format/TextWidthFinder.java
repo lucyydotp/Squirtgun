@@ -112,7 +112,7 @@ public class TextWidthFinder {
      * @param input the string to calculate
      * @return the pixel countc
      */
-    public static int findWidth(String input) {
+    public static int findWidth(final String input) {
         int out = 0;
         for (char character : input.toCharArray()) {
             out += charWidths.getOrDefault(character, 5) + 1;

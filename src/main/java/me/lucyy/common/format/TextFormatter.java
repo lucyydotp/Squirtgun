@@ -106,8 +106,8 @@ public class TextFormatter {
      * @param count        the amount of times to repeat it
      */
     @Contract(pure = true)
-    public static String repeat(@NotNull String charToRepeat, int count) {
-        StringBuilder builder = new StringBuilder();
+    public static String repeat(@NotNull final String charToRepeat, final int count) {
+        final StringBuilder builder = new StringBuilder();
         for (int x = 0; x < count; x++) builder.append(charToRepeat);
         return builder.toString();
     }
@@ -120,8 +120,8 @@ public class TextFormatter {
      * Inverts a component, flipping the extra components and adding the original component on the end.
      */
     @Contract(pure = true)
-    public static Component invert(Component component) {
-        List<Component> comps = new ArrayList<>();
+    public static Component invert(final Component component) {
+        final List<Component> comps = new ArrayList<>();
         for (int i = component.children().size() - 1; i >= 0; i--) {
             comps.add(component.children().get(i));
         }
@@ -139,7 +139,7 @@ public class TextFormatter {
      * @return a formatted string, ready to send to the player
      */
     @Contract(pure = true)
-    public static Component formatTitle(@NotNull String in, @NotNull FormatProvider format) {
+    public static Component formatTitle(@NotNull final String in, @NotNull final FormatProvider format) {
         return centreText(in, format, TITLE_SEPARATOR, new TextDecoration[]{TextDecoration.STRIKETHROUGH});
     }
 
@@ -152,7 +152,8 @@ public class TextFormatter {
      * @return a formatted string containing the centred text
      */
     @Contract(pure = true)
-    public static Component centreText(@NotNull String in, @NotNull FormatProvider format, @NotNull String character) {
+    public static Component centreText(@NotNull final String in, @NotNull final FormatProvider format,
+									   @NotNull String character) {
         return centreText(in, format, character, new TextDecoration[0]);
     }
 
@@ -166,10 +167,10 @@ public class TextFormatter {
      * @return a formatted string containing the centred text
      */
     @Contract(pure = true)
-    public static Component centreText(@NotNull String in, @NotNull FormatProvider format,
-                                       @NotNull String character, @NotNull TextDecoration[] formatters) {
-        int spaceLength = (CHAT_WIDTH - TextWidthFinder.findWidth(in) - 6) / 2; // take off 6 for two spaces
-        Component line = format.formatAccent(
+    public static Component centreText(@NotNull final String in, @NotNull final FormatProvider format,
+                                       @NotNull final String character, @NotNull final TextDecoration[] formatters) {
+        final int spaceLength = (CHAT_WIDTH - TextWidthFinder.findWidth(in) - 6) / 2; // take off 6 for two spaces
+        final Component line = format.formatAccent(
                 repeat(character, spaceLength / TextWidthFinder.findWidth(character)),
                 formatters);
 
@@ -189,7 +190,7 @@ public class TextFormatter {
      * @return the ChatColor representation, or null if it could not be parsed
      */
     @Contract(pure = true)
-    public static @Nullable TextColor colourFromText(@NotNull String in) {
+    public static @Nullable TextColor colourFromText(@NotNull final String in) {
         if (in.length() == 1) return Objects.requireNonNull(LegacyComponentSerializer.parseChar(in.charAt(0))).color();
         else if (in.length() == 7 && in.startsWith("#")) {
             try {
@@ -221,7 +222,7 @@ public class TextFormatter {
      * @return the formatted text
      */
     @Contract(pure = true)
-    public static Component format(@NotNull String input) {
+    public static Component format(@NotNull final String input) {
         return format(input, null, false);
     }
 
@@ -235,9 +236,11 @@ public class TextFormatter {
      * @return the formatted text
      */
     @Contract(pure = true)
-    public static Component format(@NotNull String input, @Nullable String overrides, boolean usePredefinedFormatters) {
+    public static Component format(@NotNull String input, @Nullable final String overrides,
+								   final boolean usePredefinedFormatters) {
         if ((usePredefinedFormatters && input.contains("\u00a7"))) {
-            return LegacyComponentSerializer.legacySection().deserialize(input.replaceAll("(?<!\\\\)\\{[^}]*}", ""));
+            return LegacyComponentSerializer.legacySection().deserialize(input.replaceAll("(?<!\\\\)\\{[^}]*}",
+					""));
         }
         input = input.replaceAll("\u00a7.", "");
         Component output = null;
@@ -272,10 +275,10 @@ public class TextFormatter {
      * @return an integer array of length count
      */
     @Contract(pure = true)
-    public static int[] fade(int count, int val1, int val2) {
-        float step = (val2 - val1) / (float) (count - 1);
+    public static int[] fade(final int count, final int val1, final int val2) {
+        final float step = (val2 - val1) / (float) (count - 1);
 
-        int[] output = new int[count];
+        final int[] output = new int[count];
 
         for (int x = 0; x < count; x++) {
             float result = (val1) + step * x;
@@ -294,13 +297,13 @@ public class TextFormatter {
      * @throws IllegalArgumentException if a decoration provided is invalid
      */
     @Contract(pure = true)
-    public static Component applyLegacyDecorations(@NotNull Component in, @Nullable String decorations) {
+    public static Component applyLegacyDecorations(@NotNull final Component in, @Nullable final String decorations) {
         if (decorations == null) return in;
         Component out = in;
         for (char c : decorations.toCharArray()) {
-            LegacyFormat format = LegacyComponentSerializer.parseChar(c);
+            final LegacyFormat format = LegacyComponentSerializer.parseChar(c);
             if (format == null) throw new IllegalArgumentException("Invalid char " + c);
-            TextDecoration deco = format.decoration();
+            final TextDecoration deco = format.decoration();
             if (deco == null) throw new IllegalArgumentException("Char " + c + " is not a decorator");
             out = out.decorate(deco);
         }
