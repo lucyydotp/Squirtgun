@@ -215,6 +215,8 @@ public class TextFormatter {
      *              <li>{@literal {hsv:FF0000>}text{FF<}} - HSV gradient. The hex value in the start tag is not an HTML
      *              code - the first two characters are hue, next two are saturation, last two are value. In the closing
      *              tag the value is the finishing hue. All values are in the range 0-255 inclusive.</li>
+	 *              <li>{@literal {flag:some-kind-of-flag>}text{flag<}} - blocked flags. Still WIP, more info to come
+	 *              Soon&trade;. Currently supports miscellaneous common pride flags.</li>
      *              </ul>
      *              Gradient formats support extra format tags, as a list of vanilla characters following a colon. For
      *              example, a gradient from #FFFFFF, in bold and italic, would start {@literal {#FFFFFF:lo}>}.
