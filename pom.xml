@@ -6,7 +6,7 @@
 
     <groupId>me.lucyy</groupId>
     <artifactId>LucyCommonLib</artifactId>
-    <version>1.4.3-SNAPSHOT</version>
+    <version>1.4.3</version>
     <packaging>jar</packaging>
 
     <properties>
