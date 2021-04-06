@@ -70,6 +70,12 @@ public class UpdateChecker {
 		}.runTaskTimerAsynchronously(plugin, 0, 216000); // every 3 hours
 	}
 
+	/**
+	 * Executes a blocking request to check for an update. In the event of failure, a warning
+	 * will be printed to the console.
+	 *
+	 * @return whether an update is available. Should the check fail, returns false
+	 */
 	@SuppressWarnings("UnusedReturnValue")
 	public boolean checkForUpdate() {
 		try {
@@ -103,12 +109,16 @@ public class UpdateChecker {
 	}
 
 	/**
-	 * @return whether there is an update available. Note that this will not check for updates, only return a cached result
+	 * @return whether there is an update available. Note that this will not check for updates,
+	 * only return a cached result.
 	 */
 	public boolean isUpdateAvailable() {
 		return updateAvailable;
 	}
 
+	/**
+	 * @return the listener permission as set in the constructor
+	 */
 	public String getListenerPermission() {
 		return listenerPermission;
 	}
