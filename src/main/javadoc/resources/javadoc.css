@@ -2,7 +2,7 @@
  * Javadoc style sheet
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Work+Sans&display=swap');
 @import "resources/prism.css";
 
 /*
@@ -15,7 +15,8 @@
 body {
     background-color: #2b2b2b;
     color: white;
-    font-size: 14px;
+    font-size: 16px;
+    font-family: "Work Sans", sans-serif;
     margin: 0;
     padding: 0;
     height: 100%;
