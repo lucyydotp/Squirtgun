@@ -18,6 +18,8 @@
 
 package me.lucyy.common.update;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -31,12 +33,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 /**
- * Update checking mechanism for Spigot plugins.
+ * Update checking mechanism base class.
  */
-public class UpdateChecker {
+public abstract class UpdateChecker {
 	private boolean updateAvailable;
 	private final JavaPlugin plugin;
-	private final String updateMessage;
+	private final Component updateMessage;
 	private final String listenerPermission;
 	private final String url;
 	private final BukkitTask listenerTask;
@@ -49,7 +51,7 @@ public class UpdateChecker {
 	 * @param updateMessage      the message to show in console and to players with the listener permission on join
 	 * @param listenerPermission if a player holds this permission and an update is available, they will be sent the update message in chat
 	 */
-	public UpdateChecker(JavaPlugin plugin, String url, String updateMessage, String listenerPermission) {
+	protected UpdateChecker(JavaPlugin plugin, String url, Component updateMessage, String listenerPermission) {
 		this.url = url;
 		this.plugin = plugin;
 		this.updateMessage = updateMessage;
@@ -71,6 +73,15 @@ public class UpdateChecker {
 	}
 
 	/**
+	 * Check if the result of a request indicates an update is available.
+	 *
+	 * @param input the string result of a HTTP GET request from the URL provided to the constructor
+	 * @return whether the data provided shows an update available. In the event of an error, a warning
+	 * should be printed to the console and this should return false.
+	 */
+	protected abstract boolean checkDataForUpdate(String input);
+
+	/**
 	 * Executes a blocking request to check for an update. In the event of failure, a warning
 	 * will be printed to the console.
 	 *
@@ -88,9 +99,9 @@ public class UpdateChecker {
 					new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8)
 			).lines().collect(Collectors.joining("\n"));
 
-			if (!text.equals(plugin.getDescription().getVersion())) {
+			if (checkDataForUpdate(text)) {
 				updateAvailable = true;
-				plugin.getLogger().warning(getUpdateMessage());
+				plugin.getLogger().warning(PlainComponentSerializer.plain().serialize(getUpdateMessage()));
 				listenerTask.cancel();
 				return true;
 			} else plugin.getLogger().info("No update available.");
@@ -104,7 +115,7 @@ public class UpdateChecker {
 	/**
 	 * @return the update message as set in the constructor
 	 */
-	public String getUpdateMessage() {
+	public Component getUpdateMessage() {
 		return updateMessage;
 	}
 
@@ -112,7 +123,7 @@ public class UpdateChecker {
 	 * @return whether there is an update available. Note that this will not check for updates,
 	 * only return a cached result.
 	 */
-	public boolean isUpdateAvailable() {
+	public boolean checkDataForUpdate() {
 		return updateAvailable;
 	}
 
@@ -121,5 +132,12 @@ public class UpdateChecker {
 	 */
 	public String getListenerPermission() {
 		return listenerPermission;
+	}
+
+	/**
+	 * @return the plugin associated with this checker
+	 */
+	public JavaPlugin getPlugin() {
+		return plugin;
 	}
 }

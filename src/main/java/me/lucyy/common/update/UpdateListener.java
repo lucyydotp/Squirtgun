@@ -31,7 +31,7 @@ class UpdateListener implements Listener {
 
 	@EventHandler
 	public void on(PlayerJoinEvent e) {
-		if(checker.isUpdateAvailable() && e.getPlayer().hasPermission(checker.getListenerPermission()))
+		if(checker.checkDataForUpdate() && e.getPlayer().hasPermission(checker.getListenerPermission()))
 			e.getPlayer().sendMessage(checker.getUpdateMessage());
 	}
 }
