@@ -1,6 +1,7 @@
 package me.lucyy.common.command;
 
 import me.lucyy.common.CommonLibVersion;
+import me.lucyy.common.format.Platform;
 import me.lucyy.common.format.TextFormatter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -57,7 +58,7 @@ public class VersionSubcommand implements Subcommand {
 		.append(provider.formatAccent(CommonLibVersion.VERSION)).append(nl)
         .append(TextFormatter.formatTitle("*", provider));
 
-		sender.sendMessage(comp);
+		Platform.send(sender, comp);
         return true;
     }
 }

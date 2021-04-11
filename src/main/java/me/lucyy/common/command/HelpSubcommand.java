@@ -1,5 +1,6 @@
 package me.lucyy.common.command;
 
+import me.lucyy.common.format.Platform;
 import me.lucyy.common.format.TextFormatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -66,7 +67,7 @@ public class HelpSubcommand implements Subcommand {
                 .append(TextFormatter.formatTitle(plugin.getName() + " v"
                         + plugin.getDescription().getVersion() + " by "
                         + plugin.getDescription().getAuthors().get(0), provider));
-        sender.sendMessage(comp);
+		Platform.send(sender, comp);
         return true;
     }
 }

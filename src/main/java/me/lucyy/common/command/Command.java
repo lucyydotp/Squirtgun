@@ -1,5 +1,6 @@
 package me.lucyy.common.command;
 
+import me.lucyy.common.format.Platform;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -116,12 +117,12 @@ public class Command implements CommandExecutor, TabCompleter {
 
         if (subcommand.getPermission() == null || sender.hasPermission(subcommand.getPermission())) {
             if (!subcommand.execute(sender, target, Arrays.copyOfRange(args, 1, args.length))) {
-                sender.sendMessage(format.getPrefix()
+            	Platform.send(sender, format.getPrefix()
                         .append(format.formatMain("Usage: /" + cmdName + " " + subcommand.getUsage()))
                 );
             }
         } else {
-            sender.sendMessage(format.getPrefix().append(format.formatMain("No permission!")));
+			Platform.send(sender, format.getPrefix().append(format.formatMain("No permission!")));
         }
 
         return true;

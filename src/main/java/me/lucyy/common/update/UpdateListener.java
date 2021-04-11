@@ -18,6 +18,7 @@
 
 package me.lucyy.common.update;
 
+import me.lucyy.common.format.Platform;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -32,6 +33,6 @@ class UpdateListener implements Listener {
 	@EventHandler
 	public void on(PlayerJoinEvent e) {
 		if(checker.checkDataForUpdate() && e.getPlayer().hasPermission(checker.getListenerPermission()))
-			e.getPlayer().sendMessage(checker.getUpdateMessage());
+			Platform.send(e.getPlayer(), checker.getUpdateMessage());
 	}
 }
