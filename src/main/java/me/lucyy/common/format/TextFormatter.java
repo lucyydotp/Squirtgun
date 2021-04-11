@@ -244,7 +244,7 @@ public class TextFormatter {
     public static Component format(@NotNull String input, @Nullable final String overrides,
 								   final boolean usePredefinedFormatters) {
         if ((usePredefinedFormatters && input.contains("\u00a7"))) {
-            return LegacyComponentSerializer.legacySection().deserialize(input.replaceAll("(?<!\\\\)\\{[^}]*}",
+            return LegacyComponentSerializer.legacySection().deserialize(input.replaceAll("(?<!\\\\)(\\{[^}]*}|&[0-9A-Fa-fK-Ok-o])",
 					""));
         }
         input = input.replaceAll("\u00a7.", "");
