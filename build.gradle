@@ -37,15 +37,23 @@ description = 'LucyCommonLib'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 publishing {
-    repositories {
-        maven {
-            name = "maven"
-            url = uri("https://repo.lucyy.me/repository/maven-" + version.endsWith('SNAPSHOT') ? "snapshots" : "releases")
+    publications {
+        javaMaven(MavenPublication) {
+            from components.java
         }
     }
-    publications {
-        mavenPublish(MavenPublication) {
-            from components.java
+    repositories {
+        maven {
+            name = "lucy"
+            if (version.endsWith("SNAPSHOT")) {
+                url "https://repo.lucyy.me/repository/maven-snapshots"
+            } else {
+                url "https://repo.lucyy.me/repository/maven-releases"
+            }
+            credentials {
+                username "insert some username here"
+                password "removed for obvious reasons"
+            }
         }
     }
 }
