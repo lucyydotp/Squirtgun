@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 
 // intellij complains about this class a lot
 public class CommonLibVersion {
-    public static final String VERSION = "${project.version}" + getAuthMode();
+    public static final String VERSION = "@VERSION@" + getAuthMode();
 
     private static String getAuthMode() {
         boolean onlineMode = Bukkit.getOnlineMode();

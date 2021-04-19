@@ -1,0 +1,70 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "paper"
+        url = uri('https://papermc.io/repo/repository/maven-public/')
+    }
+
+    maven {
+        name = "sonatype"
+        url = uri('https://oss.sonatype.org/content/repositories/snapshots/')
+    }
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
+
+    testImplementation 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    testImplementation 'net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT'
+    testImplementation 'net.kyori:adventure-api:4.7.0'
+
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT'
+    compileOnly 'net.kyori:adventure-api:4.7.0'
+}
+
+group = 'me.lucyy'
+version = '1.6.1-SNAPSHOT'
+description = 'LucyCommonLib'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+publishing {
+    repositories {
+        maven {
+            name = "maven"
+            url = uri("https://repo.lucyy.me/repository/maven-" + version.endsWith('SNAPSHOT') ? "snapshots" : "releases")
+        }
+    }
+    publications {
+        mavenPublish(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task processSource(type: Sync) {
+    from sourceSets.main.java
+    inputs.property 'version', version
+    filter(ReplaceTokens, tokens: [VERSION: version])
+    into "$buildDir/src"
+}
+
+compileJava {
+    source = processSource.outputs
+}
+
+test {
+    useJUnitPlatform()
+}
