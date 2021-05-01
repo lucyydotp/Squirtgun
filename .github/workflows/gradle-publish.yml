@@ -29,7 +29,7 @@ jobs:
         ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.OSSRH_SIGNING_PASSWORD }}
         ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME }}
         ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD }}
-      run: ./gradlew build deploy
+      run: ./gradlew build publish
 
     - name: Deploy javadocs
       uses: peaceiris/actions-gh-pages@v3
