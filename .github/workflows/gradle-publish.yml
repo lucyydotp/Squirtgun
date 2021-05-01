@@ -21,7 +21,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Set release version env variable
-      run: ./gradlew printVersion -q --console=plain | grep -oP 'VERSION=\K.*' >> $GITHUB_ENV
+      run: ./gradlew printVersion -q --console=plain | grep -P 'VERSION=\K.*' >> $GITHUB_ENV
 
     - name: Build and publish with Gradle
       env:
@@ -37,4 +37,4 @@ jobs:
         deploy_key: ${{ secrets.JAVADOC_DEPLOY_KEY }}
         external_repository: lucyy-mc/javadocs
         publish_dir: ./target/site/apidocs
-        destination_dir: lucycommonlib/${{ env.RELEASE_VERSION }}
+        destination_dir: lucycommonlib/${{ env.VERSION }}
