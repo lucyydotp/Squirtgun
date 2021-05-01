@@ -21,7 +21,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Set release version env variable
-      run: echo "RELEASE_VERSION=$(./gradlew printVersion -q)" >> $GITHUB_ENV
+      run: echo "RELEASE_VERSION=$(./gradlew printVersion -q --console=plain)" >> $GITHUB_ENV
 
     - name: Build and publish with Gradle
       env:
