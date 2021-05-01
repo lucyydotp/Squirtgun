@@ -8,7 +8,7 @@ plugins {
 
 
 group = "me.lucyy"
-version = "1.6.1"
+version = "1.6.1-1"
 description = "LucyCommonLib"
 
 java {
@@ -82,6 +82,9 @@ publishing {
 }
 
 signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications["mavenJava"])
 }
 
@@ -109,4 +112,8 @@ tasks {
             }
         }
     }
+}
+
+task("printVersion") {
+    println(project.version)
 }
