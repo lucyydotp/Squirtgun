@@ -31,7 +31,7 @@ public final class HsvGradientPattern implements FormatPattern {
 
 		for (int x = 0; x < text.length(); x++) {
 			TextColor color = TextColor.color(HSVLike.of(
-					clamp(hues[x] / 255f) % 1, clamp(sat / 255f), clamp(val / 255f)));
+				clamp(hues[x] / 255f) % 1, clamp(sat / 255f), clamp(val / 255f)));
 			component = component.append(Component.text(text.charAt(x), color));
 		}
 

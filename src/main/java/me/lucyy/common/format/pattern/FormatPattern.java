@@ -11,7 +11,7 @@ public interface FormatPattern {
 	/**
 	 * Parses the given string to a component.
 	 *
-	 * @param in the string to parse
+	 * @param in                 the string to parse
 	 * @param formattersOverride a string containing vanilla formatters, ie 'lo', to apply to the text
 	 * @return the component, or null if the string doesnt match the format
 	 */

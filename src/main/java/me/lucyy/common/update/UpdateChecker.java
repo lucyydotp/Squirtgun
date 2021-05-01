@@ -96,7 +96,7 @@ public abstract class UpdateChecker {
 			if (con.getResponseCode() != 200) throw new Exception();
 
 			String text = new BufferedReader(
-					new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8)
+				new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8)
 			).lines().collect(Collectors.joining("\n"));
 
 			if (checkDataForUpdate(text)) {

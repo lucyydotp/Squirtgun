@@ -13,52 +13,52 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class VersionSubcommand implements Subcommand {
 
-    private final FormatProvider provider;
-    private final JavaPlugin plugin;
+	private final FormatProvider provider;
+	private final JavaPlugin plugin;
 
-    public VersionSubcommand(FormatProvider provider, JavaPlugin plugin) {
-        this.provider = provider;
-        this.plugin = plugin;
-    }
+	public VersionSubcommand(FormatProvider provider, JavaPlugin plugin) {
+		this.provider = provider;
+		this.plugin = plugin;
+	}
 
-    @Override
-    public String getName() {
-        return "version";
-    }
+	@Override
+	public String getName() {
+		return "version";
+	}
 
-    @Override
-    public String getDescription() {
-        return "Shows version information.";
-    }
+	@Override
+	public String getDescription() {
+		return "Shows version information.";
+	}
 
-    @Override
-    public String getUsage() {
-        return "version";
-    }
+	@Override
+	public String getUsage() {
+		return "version";
+	}
 
-    @Override
-    public String getPermission() {
-        return null;
-    }
+	@Override
+	public String getPermission() {
+		return null;
+	}
 
-    @Override
-    public boolean execute(CommandSender sender, CommandSender target, String[] args) {
-        Component comp = Component.empty()
-                .append(TextFormatter.formatTitle(plugin.getName(), provider))
-                .append(Component.text("\n"));
+	@Override
+	public boolean execute(CommandSender sender, CommandSender target, String[] args) {
+		Component comp = Component.empty()
+			.append(TextFormatter.formatTitle(plugin.getName(), provider))
+			.append(Component.text("\n"));
 
 
-        Component nl = Component.text("\n");
+		Component nl = Component.text("\n");
 
-        comp = comp.append(provider.formatMain(plugin.getName() + " version "))
-        .append(provider.formatAccent(plugin.getDescription().getVersion())).append(nl)
-        .append(provider.formatMain("Written by "))
-        .append(provider.formatAccent(plugin.getDescription().getAuthors().get(0))).append(nl)
-        .append(provider.formatMain("Built with LucyCommonLib version "))
-		.append(provider.formatAccent(CommonLibVersion.VERSION)).append(nl)
-        .append(TextFormatter.formatTitle("*", provider));
+		comp = comp.append(provider.formatMain(plugin.getName() + " version "))
+			.append(provider.formatAccent(plugin.getDescription().getVersion())).append(nl)
+			.append(provider.formatMain("Written by "))
+			.append(provider.formatAccent(plugin.getDescription().getAuthors().get(0))).append(nl)
+			.append(provider.formatMain("Built with LucyCommonLib version "))
+			.append(provider.formatAccent(CommonLibVersion.VERSION)).append(nl)
+			.append(TextFormatter.formatTitle("*", provider));
 
 		Platform.send(sender, comp);
-        return true;
-    }
+		return true;
+	}
 }

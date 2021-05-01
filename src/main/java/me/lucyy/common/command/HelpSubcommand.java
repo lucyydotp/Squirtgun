@@ -3,7 +3,6 @@ package me.lucyy.common.command;
 import me.lucyy.common.format.Platform;
 import me.lucyy.common.format.TextFormatter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,61 +12,61 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class HelpSubcommand implements Subcommand {
 
-    private final Command cmd;
-    private final FormatProvider provider;
-    private final JavaPlugin plugin;
-    private final String commandName;
+	private final Command cmd;
+	private final FormatProvider provider;
+	private final JavaPlugin plugin;
+	private final String commandName;
 
-    public HelpSubcommand(Command cmd, FormatProvider provider, JavaPlugin plugin, String commandName) {
-        this.cmd = cmd;
-        this.provider = provider;
-        this.plugin = plugin;
-        this.commandName = commandName;
-    }
+	public HelpSubcommand(Command cmd, FormatProvider provider, JavaPlugin plugin, String commandName) {
+		this.cmd = cmd;
+		this.provider = provider;
+		this.plugin = plugin;
+		this.commandName = commandName;
+	}
 
 
-    @Override
-    public String getName() {
-        return "help";
-    }
+	@Override
+	public String getName() {
+		return "help";
+	}
 
-    @Override
-    public String getDescription() {
-        return "List all subcommands for the plugin.";
-    }
+	@Override
+	public String getDescription() {
+		return "List all subcommands for the plugin.";
+	}
 
-    @Override
-    public String getUsage() {
-        return "help";
-    }
+	@Override
+	public String getUsage() {
+		return "help";
+	}
 
-    @Override
-    public String getPermission() {
-        return null;
-    }
+	@Override
+	public String getPermission() {
+		return null;
+	}
 
-    @Override
-    public boolean execute(CommandSender sender, CommandSender target, String[] args) {
-        Component comp = Component.empty()
-                .append(TextFormatter.formatTitle("Commands:", provider))
-                .append(Component.text("\n"));
+	@Override
+	public boolean execute(CommandSender sender, CommandSender target, String[] args) {
+		Component comp = Component.empty()
+			.append(TextFormatter.formatTitle("Commands:", provider))
+			.append(Component.text("\n"));
 
-        for (Subcommand cmd : cmd.getUserSubcommands(target)) {
-            if (cmd.getPermission() == null || sender.hasPermission(cmd.getPermission())) {
-                Component innerComp = provider.formatMain("/" + commandName + " ")
-                        .append(provider.formatAccent(cmd.getName()))
-                        .append(provider.formatMain(" - " + cmd.getDescription()))
-                        .append(Component.text("\n"));
-                comp = comp.append(innerComp);
-            }
-        }
+		for (Subcommand cmd : cmd.getUserSubcommands(target)) {
+			if (cmd.getPermission() == null || sender.hasPermission(cmd.getPermission())) {
+				Component innerComp = provider.formatMain("/" + commandName + " ")
+					.append(provider.formatAccent(cmd.getName()))
+					.append(provider.formatMain(" - " + cmd.getDescription()))
+					.append(Component.text("\n"));
+				comp = comp.append(innerComp);
+			}
+		}
 
-        comp = comp.append(
-                Component.text("\n"))
-                .append(TextFormatter.formatTitle(plugin.getName() + " v"
-                        + plugin.getDescription().getVersion() + " by "
-                        + plugin.getDescription().getAuthors().get(0), provider));
+		comp = comp.append(
+			Component.text("\n"))
+			.append(TextFormatter.formatTitle(plugin.getName() + " v"
+				+ plugin.getDescription().getVersion() + " by "
+				+ plugin.getDescription().getAuthors().get(0), provider));
 		Platform.send(sender, comp);
-        return true;
-    }
+		return true;
+	}
 }

@@ -25,7 +25,6 @@ import java.util.UUID;
  */
 public class UuidUtils {
 	/**
-
 	 * Converts a UUID to a string, removing hyphens.
 	 *
 	 * @param uuid the UUID to convert to a string
@@ -44,8 +43,8 @@ public class UuidUtils {
 	 */
 	public static UUID fromString(String name) {
 		return UUID.fromString(name.replaceFirst(
-				"(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
-				"$1-$2-$3-$4-$5")
+			"(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+			"$1-$2-$3-$4-$5")
 		);
 	}
 }

@@ -11,16 +11,18 @@ public interface FormatProvider {
 
 	/**
 	 * Formats text using the main colour.
+	 *
 	 * @param input the text to format
 	 * @return the formatted text
 	 */
-	default Component formatMain(@NotNull  String input) {
+	default Component formatMain(@NotNull String input) {
 		return formatMain(input, new TextDecoration[0]);
 	}
 
 	/**
 	 * Formats text using the main colour.
-	 * @param input the text to format
+	 *
+	 * @param input      the text to format
 	 * @param formatters a string of vanilla formatter codes to apply, for example "lo" for bold and italic
 	 * @return the formatted text
 	 */
@@ -28,6 +30,7 @@ public interface FormatProvider {
 
 	/**
 	 * Formats text using the accent colour.
+	 *
 	 * @param input the text to format
 	 * @return the formatted text
 	 */
@@ -37,7 +40,8 @@ public interface FormatProvider {
 
 	/**
 	 * Formats text using the accent colour.
-	 * @param input the text to format
+	 *
+	 * @param input      the text to format
 	 * @param formatters a string of vanilla formatter codes to apply, for example "lo" for bold and italic
 	 * @return the formatted text
 	 */
@@ -45,6 +49,7 @@ public interface FormatProvider {
 
 	/**
 	 * Get a prefix, which is put before most command messages.
+	 *
 	 * @return a preformatted colour sequence
 	 */
 	Component getPrefix();

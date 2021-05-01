@@ -43,16 +43,18 @@ public interface Subcommand {
 
 	/**
 	 * Gets the permission needed to execute this subcommand
+	 *
 	 * @return the permission, or null if no permission is needed
 	 */
 	String getPermission();
 
 	/**
 	 * Execute the command.
+	 *
 	 * @param sender The player to run the command as.
 	 * @param target The player to act against. Note that this is different from the sender when, for example, the
 	 *               /pronouns sudo command is executed.
-	 * @param args The arguments.
+	 * @param args   The arguments.
 	 * @return true if the command is syntactically correct; false if not (this will print the {@link #getUsage()}
 	 * message)
 	 */
@@ -60,6 +62,7 @@ public interface Subcommand {
 
 	/**
 	 * Tab-complete this command.
+	 *
 	 * @param args the command's arguments so far.
 	 * @return a string list of potential options
 	 */

@@ -32,7 +32,7 @@ class UpdateListener implements Listener {
 
 	@EventHandler
 	public void on(PlayerJoinEvent e) {
-		if(checker.checkDataForUpdate() && e.getPlayer().hasPermission(checker.getListenerPermission()))
+		if (checker.checkDataForUpdate() && e.getPlayer().hasPermission(checker.getListenerPermission()))
 			Platform.send(e.getPlayer(), checker.getUpdateMessage());
 	}
 }

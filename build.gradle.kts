@@ -8,7 +8,7 @@ plugins {
 
 
 group = "me.lucyy"
-version = "1.6.1-1"
+version = "1.7.0-SNAPSHOT"
 description = "LucyCommonLib"
 
 java {

@@ -17,6 +17,7 @@ code, textarea {
 pre[class*="language-"], pre.prism-live {
     background: #2B2B2B;
 }
+
 code[class*="language-"] {
     color: #f7e6ff;
     text-shadow: none;
@@ -38,6 +39,7 @@ textarea {
 .token.annotation {
     color: #f799ff !important;
 }
+
 .token.punctuation {
     color: #998a99;
 }
@@ -80,6 +82,7 @@ textarea {
 .token.function {
     color: #99b8ff;
 }
+
 .token.class-name {
     color: #ffcc99;
 }
@@ -94,6 +97,7 @@ textarea {
 .token.bold {
     font-weight: bold;
 }
+
 .token.italic {
     font-style: italic;
 }
@@ -101,6 +105,7 @@ textarea {
 .token.entity {
     cursor: help;
 }
+
 pre[class*="language-"].line-numbers {
     position: relative;
     padding-left: 3.8em;

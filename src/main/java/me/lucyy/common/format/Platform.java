@@ -1,14 +1,15 @@
 package me.lucyy.common.format;
 
 import me.lucyy.common.CommonLibVersion;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 
 public class Platform {
 	private static Platform instance;
+
 	public static Platform getInstance() {
 		return instance;
 	}

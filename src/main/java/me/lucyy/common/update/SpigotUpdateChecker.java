@@ -35,7 +35,7 @@ public class SpigotUpdateChecker extends UpdateChecker {
 	 */
 	public SpigotUpdateChecker(JavaPlugin plugin, int pluginId, Component updateMessage, String listenerPermission) {
 		super(plugin, "https://api.spigotmc.org/legacy/update.php?resource=" + pluginId,
-				updateMessage, listenerPermission);
+			updateMessage, listenerPermission);
 	}
 
 	@Override
