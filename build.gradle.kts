@@ -116,5 +116,5 @@ tasks {
 }
 
 task("printVersion") {
-    println(project.version)
+    println("VERSION=" + project.version)
 }
