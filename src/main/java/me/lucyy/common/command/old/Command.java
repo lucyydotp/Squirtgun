@@ -1,18 +1,17 @@
-package me.lucyy.common.command;
+package me.lucyy.common.command.old;
 
+import me.lucyy.common.command.FormatProvider;
 import me.lucyy.common.format.Platform;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 
 /**
  * A root command that other subcommands stem from.
+ * @deprecated
  */
-
 public class Command implements CommandExecutor, TabCompleter {
 	private final FormatProvider format;
 	private final HashMap<String, Subcommand> subcommands = new HashMap<>();
@@ -142,19 +141,5 @@ public class Command implements CommandExecutor, TabCompleter {
 		Subcommand subcmd = getUserSubcommandsMap(sender).get(args[0]);
 		if (subcmd == null) return null;
 		return subcmd.tabComplete(args);
-	}
-
-	/**
-	 * Returns a list of player names starting with the input, case insensitive.
-	 *
-	 * @param name the partial name to check for
-	 * @return a list of names that match. An empty list if none were found.
-	 */
-	public static List<String> tabCompleteNames(String name) {
-		List<String> out = new ArrayList<>();
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			if (player.getName().toUpperCase().startsWith(name.toUpperCase(Locale.ROOT))) out.add(player.getName());
-		}
-		return out;
 	}
 }

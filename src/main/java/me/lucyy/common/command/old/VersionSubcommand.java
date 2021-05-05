@@ -1,6 +1,7 @@
-package me.lucyy.common.command;
+package me.lucyy.common.command.old;
 
 import me.lucyy.common.CommonLibVersion;
+import me.lucyy.common.command.FormatProvider;
 import me.lucyy.common.format.Platform;
 import me.lucyy.common.format.TextFormatter;
 import net.kyori.adventure.text.Component;
@@ -10,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * A builtin subcommand that shows the version of the plugin, alongside authors and
  * LucyCommonLib version.
+ * @deprecated
  */
 public class VersionSubcommand implements Subcommand {
 

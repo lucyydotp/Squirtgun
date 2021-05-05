@@ -16,7 +16,7 @@
  * along with ProFiles.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.lucyy.common.command;
+package me.lucyy.common.command.old;
 
 import org.bukkit.command.CommandSender;
 
@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * A subcommand.
+ * @deprecated
  */
 public interface Subcommand {
 	/**

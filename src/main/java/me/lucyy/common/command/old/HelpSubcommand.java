@@ -1,5 +1,6 @@
-package me.lucyy.common.command;
+package me.lucyy.common.command.old;
 
+import me.lucyy.common.command.FormatProvider;
 import me.lucyy.common.format.Platform;
 import me.lucyy.common.format.TextFormatter;
 import net.kyori.adventure.text.Component;
@@ -9,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * A builtin subcommand that will print the plugin name, version, author, and a
  * list of subcommands with their descriptions.
+ * @deprecated
  */
 public class HelpSubcommand implements Subcommand {
 

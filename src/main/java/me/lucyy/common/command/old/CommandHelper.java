@@ -1,4 +1,4 @@
-package me.lucyy.common.command;
+package me.lucyy.common.command.old;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * @deprecated
+ */
 public class CommandHelper {
 
 	/**

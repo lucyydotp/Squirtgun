@@ -8,12 +8,14 @@ plugins {
 
 
 group = "me.lucyy"
-version = "1.7.0-SNAPSHOT"
+version = "2.0.0-SNAPSHOT"
 description = "LucyCommonLib"
 
 java {
     withJavadocJar()
     withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
 repositories {
