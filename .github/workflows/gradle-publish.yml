@@ -37,4 +37,4 @@ jobs:
         deploy_key: ${{ secrets.JAVADOC_DEPLOY_KEY }}
         external_repository: lucyy-mc/javadocs
         publish_dir: ./target/site/apidocs
-        destination_dir: lucycommonlib/${{ env.VERSION }}
+        destination_dir: squirtgun/${{ env.VERSION }}
