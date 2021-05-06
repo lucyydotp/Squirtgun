@@ -19,6 +19,7 @@
 package me.lucyy.squirtgun.update;
 
 import me.lucyy.squirtgun.platform.Platform;
+import me.lucyy.squirtgun.platform.scheduler.Task;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import java.io.BufferedReader;
@@ -37,7 +38,7 @@ public abstract class UpdateChecker {
 	private final Component updateMessage;
 	private final String listenerPermission;
 	private final String url;
-	private final BukkitTask listenerTask;
+	private final Task listenerTask;
 
 	/**
 	 * Creates a new update checker, and schedule update checking every 3 hours.
@@ -61,12 +62,13 @@ public abstract class UpdateChecker {
 			return;
 		}
 
-		listenerTask = new BukkitRunnable() {
-			@Override
-			public void run() {
-				checkForUpdate();
-			}
-		}.runTaskTimerAsynchronously(plugin, 0, 216000); // every 3 hours
+		listenerTask = Task.builder()
+				.async()
+				.interval(216000)   // every 3 hours
+				.action(x -> checkForUpdate())
+				.build();
+
+		plugin.getTaskScheduler().start(listenerTask);
 	}
 
 	/**
@@ -77,6 +79,13 @@ public abstract class UpdateChecker {
 	 * should be printed to the console and this should return false.
 	 */
 	protected abstract boolean checkDataForUpdate(String input);
+
+	/**
+	 * Gets the platform that this checker is associated with.
+	 */
+	protected Platform getPlatform() {
+		return plugin;
+	}
 
 	/**
 	 * Executes a blocking request to check for an update. In the event of failure, a warning
@@ -99,7 +108,7 @@ public abstract class UpdateChecker {
 			if (checkDataForUpdate(text)) {
 				updateAvailable = true;
 				plugin.getLogger().warning(LegacyComponentSerializer.legacySection().serialize(getUpdateMessage()));
-				listenerTask.cancel();
+				plugin.getTaskScheduler().cancel(listenerTask);
 				return true;
 			} else plugin.getLogger().info("No update available.");
 

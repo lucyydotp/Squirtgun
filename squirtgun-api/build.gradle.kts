@@ -21,6 +21,8 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 
     testImplementation("net.kyori:adventure-api:4.7.0")
+    testImplementation("net.kyori:adventure-text-serializer-gson:4.7.0")
+    testImplementation("net.kyori:adventure-text-serializer-legacy:4.7.0")
 
     compileOnly("net.kyori:adventure-api:4.7.0")
     compileOnly("net.kyori:adventure-text-serializer-gson:4.7.0")

@@ -1,5 +1,6 @@
 package me.lucyy.squirtgun.platform;
 
+import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -15,6 +16,8 @@ public interface Platform {
 	String getPluginVersion();
 
 	AuthMode getAuthMode();
+
+	TaskScheduler getTaskScheduler();
 
 	void registerEventListener(EventListener listener);
 

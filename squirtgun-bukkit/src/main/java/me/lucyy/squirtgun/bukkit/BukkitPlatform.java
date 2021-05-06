@@ -20,11 +20,6 @@ public abstract class BukkitPlatform implements Platform {
 	}
 
 	@Override
-	public String getName() {
-		return plugin.getName();
-	}
-
-	@Override
 	public AuthMode getAuthMode() {
 		boolean onlineMode = Bukkit.getOnlineMode();
 		try {

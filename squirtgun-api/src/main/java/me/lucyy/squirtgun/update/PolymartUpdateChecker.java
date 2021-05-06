@@ -30,7 +30,7 @@ public class PolymartUpdateChecker extends UpdateChecker {
 		JsonObject object = parser.parse(input).getAsJsonObject();
 		JsonObject response = object.getAsJsonObject("response");
 		if (!response.get("success").getAsBoolean()) {
-			getPlugin().getLogger().severe("Failed to access Polymart to check for updates! Please report this " +
+			getPlatform().getLogger().severe("Failed to access Polymart to check for updates! Please report this " +
 				"to the plugin developer.");
 			return false;
 		}
@@ -39,6 +39,6 @@ public class PolymartUpdateChecker extends UpdateChecker {
 			.getAsJsonObject("latest")
 			.get("version").getAsString();
 
-		return !getPlugin().getDescription().getVersion().equals(version);
+		return !getPlatform().getPluginVersion().equals(version);
 	}
 }

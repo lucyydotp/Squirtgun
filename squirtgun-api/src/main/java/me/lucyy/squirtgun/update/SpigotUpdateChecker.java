@@ -18,8 +18,8 @@
 
 package me.lucyy.squirtgun.update;
 
+import me.lucyy.squirtgun.platform.Platform;
 import net.kyori.adventure.text.Component;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Update checking mechanism for Spigot plugins.
@@ -33,14 +33,14 @@ public class SpigotUpdateChecker extends UpdateChecker {
 	 * @param updateMessage      the message to show in console and to players with the listener permission on join
 	 * @param listenerPermission if a player holds this permission and an update is available, they will be sent the update message in chat
 	 */
-	public SpigotUpdateChecker(JavaPlugin plugin, int pluginId, Component updateMessage, String listenerPermission) {
+	public SpigotUpdateChecker(Platform plugin, int pluginId, Component updateMessage, String listenerPermission) {
 		super(plugin, "https://api.spigotmc.org/legacy/update.php?resource=" + pluginId,
 			updateMessage, listenerPermission);
 	}
 
 	@Override
 	protected boolean checkDataForUpdate(String input) {
-		return getPlugin().getDescription().getVersion().equals(input);
+		return getPlatform().getPluginVersion().equals(input);
 	}
 }
 
