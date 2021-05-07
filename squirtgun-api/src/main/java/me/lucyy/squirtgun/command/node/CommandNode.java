@@ -1,6 +1,6 @@
 package me.lucyy.squirtgun.command.node;
 
-import me.lucyy.squirtgun.command.CommandContext;
+import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -35,8 +35,11 @@ public interface CommandNode<T> {
 	 */
 	@Nullable String getPermission();
 
+
 	/**
 	 * Gets the command's arguments, in order.
+	 *
+	 * @param context the command context - this may be ignored if not needed
 	 */
-	@NotNull List<CommandArgument<?>> getArguments();
+	@NotNull List<CommandArgument<?>> getArguments(CommandContext<T> context);
 }

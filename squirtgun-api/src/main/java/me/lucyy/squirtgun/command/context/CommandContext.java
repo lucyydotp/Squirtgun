@@ -1,5 +1,6 @@
-package me.lucyy.squirtgun.command;
+package me.lucyy.squirtgun.command.context;
 
+import me.lucyy.squirtgun.command.FormatProvider;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,6 +1,6 @@
 package me.lucyy.squirtgun.command.argument;
 
-import me.lucyy.squirtgun.command.CommandContext;
+import me.lucyy.squirtgun.command.context.CommandContext;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Queue;
@@ -26,13 +26,14 @@ public interface CommandArgument<T> {
 	 * @param args a queue of strings containing the raw arguments. Pop as many as needed and no more.
 	 * @return the parsed string value of this argument.
 	 */
-	T getValue(Queue<String> args);
+	String getValue(Queue<String> args);
 
 	/**
 	 * Tab-completes this node.
 	 *
 	 * @param context the command context built so far
+	 * @param value the partial value to tabcomplete
 	 * @return a string list of tabcomplete entries, or null if no entries are needed
 	 */
-	@Nullable List<String> tabComplete(CommandContext<T> context);
+	@Nullable List<String> tabComplete(CommandContext<?> context, String value);
 }

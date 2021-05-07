@@ -1,11 +1,14 @@
 package me.lucyy.squirtgun.command.argument;
 
-import me.lucyy.squirtgun.command.CommandContext;
+import me.lucyy.squirtgun.command.context.CommandContext;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
+/**
+ * An argument that accepts a single string from a list.
+ */
 public class ListArgument extends AbstractArgument<String> {
 	private final List<String> values;
 
@@ -21,9 +24,7 @@ public class ListArgument extends AbstractArgument<String> {
 	}
 
 	@Override
-	@SuppressWarnings("ConstantConditions") // value of self should never be null when tabcompleting
-	public @Nullable List<String> tabComplete(CommandContext<String> context) {
-		String value = context.getArgumentValue(this);
+	public @Nullable List<String> tabComplete(CommandContext<?> context, String value) {
 		return values.stream()
 				.filter(x -> x.startsWith(value))
 				.collect(Collectors.toList());
