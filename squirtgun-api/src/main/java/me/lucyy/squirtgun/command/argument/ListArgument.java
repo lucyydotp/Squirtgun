@@ -24,9 +24,11 @@ public class ListArgument extends AbstractArgument<String> {
 	}
 
 	@Override
-	public @Nullable List<String> tabComplete(CommandContext<?> context, String value) {
+	public @Nullable List<String> tabComplete(Queue<String> value) {
+		String top = value.poll();
+		if (top == null) return null;
 		return values.stream()
-				.filter(x -> x.startsWith(value))
+				.filter(x -> x.startsWith(top))
 				.collect(Collectors.toList());
 	}
 }

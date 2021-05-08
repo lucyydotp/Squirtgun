@@ -2,7 +2,6 @@ package me.lucyy.squirtgun.command.node;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import me.lucyy.squirtgun.command.argument.ArgumentChain;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.argument.ListArgument;
@@ -42,16 +41,15 @@ public class SubcommandNode<T> implements CommandNode<T> {
 	}
 
 	@Override
-	@NotNull
-	public ArgumentChain.@NotNull Builder<T> getArguments(ArgumentChain.Builder<T> builder) {
-		return builder.then(argument)
-				.then(x -> {
-					CommandNode<T> node = getNode(x.getArgumentValue(argument));
-					if (node != null) return node.getArguments(builder); // TODO this is completely broken
-					return null;
-				});
+	public @NotNull List<CommandArgument<?>> getArguments() {
+		return ImmutableList.of(argument);
 	}
 
+	@Override
+	public @Nullable CommandNode<T> next(CommandContext<T> context) {
+		String name = context.getArgumentValue(argument);
+		return name == null ? null : getNode(name);
+	}
 
 	private Component helpMessage() {
 		return Component.text("help message"); // TODO

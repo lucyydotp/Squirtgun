@@ -1,7 +1,5 @@
 package me.lucyy.squirtgun.command.node;
 
-import com.sun.org.apache.xpath.internal.Arg;
-import me.lucyy.squirtgun.command.argument.ArgumentChain;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import net.kyori.adventure.text.Component;
@@ -39,9 +37,16 @@ public interface CommandNode<T> {
 
 
 	/**
-	 * Appends this command's arguments to the chain.
-	 *
-	 * @param builder the builder to append arguments to
+	 * Gets this command's arguments.
 	 */
-	@NotNull ArgumentChain.Builder<T> getArguments(ArgumentChain.Builder<T> builder);
+	@NotNull List<CommandArgument<?>> getArguments();
+
+	/**
+	 * Returns the node following this node.
+	 *
+	 * @return the next node in the chain, or if this is the end of the chain, null
+	 */
+	default @Nullable CommandNode<T> next(CommandContext<T> context) {
+		return null;
+	}
 }

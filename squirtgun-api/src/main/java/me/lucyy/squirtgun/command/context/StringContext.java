@@ -14,21 +14,47 @@ public class StringContext<T> implements CommandContext<T> {
 
 	private final FormatProvider provider;
 	private final T target;
-	private List<CommandArgument<?>> arguments;
-	private final Map<CommandArgument<?>, Object> argValues = new LinkedHashMap<>();
-	private final CommandNode<T> node;
+	private final String raw;
+	private final LinkedHashMap<CommandArgument<?>, Object> argValues = new LinkedHashMap<>();
+	private final CommandNode<T> root;
+
+	private void populateArguments(CommandNode<T> node, Queue<String> raw) {
+		for (CommandArgument<?> arg : node.getArguments()) {
+			argValues.put(arg, arg.getValue(raw));
+		}
+		CommandNode<T> next = node.next(this);
+		if (next == null) return;
+
+		populateArguments(next, raw);
+	}
+
+	private List<String> tabCompleteNode(CommandNode<T> node, Queue<String> raw) {
+		@Nullable List<String> result = null;
+		for (CommandArgument<?> arg : node.getArguments()) {
+			result = arg.tabComplete(raw);
+			if (result == null) return null;
+		}
+
+		if (result == null) return null;
+
+		CommandNode<T> next = node.next(this);
+		if (next != null) return tabCompleteNode(next, raw);
+
+		if (!raw.isEmpty()) return null;
+			return result;
+	}
+
+	private Queue<String> getArgsAsList(String value) {
+		return new LinkedList<>(Arrays.asList(value.split(" ")));
+	}
 
 	public StringContext(FormatProvider provider, T target, CommandNode<T> node, String value) {
+		this.raw = value;
 		this.provider = provider;
+		this.root = node;
 		this.target = target;
-		this.node = node;
 
-		Queue<String> argsSet = new LinkedList<>(Arrays.asList(value.split(" ")));
-
-		this.arguments = node.getArguments(this);
-		for (CommandArgument<?> arg : arguments) {
-			argValues.put(arg, arg.getValue(argsSet));
-		}
+		populateArguments(node, getArgsAsList(value));
 	}
 
 	@Override
@@ -36,14 +62,9 @@ public class StringContext<T> implements CommandContext<T> {
 		return target;
 	}
 
-	@Override
-	public @Nullable CommandArgument<?> getHeadArgument() {
-		arguments = node.getArguments(this);
-		if (arguments.size() == 0) return null;
-		return arguments.get(arguments.size() - 1);
-	}
 
 	@Override
+	@SuppressWarnings("unchecked") // safety is ensured by logic
 	public @Nullable <U> U getArgumentValue(CommandArgument<U> name) {
 		return (U) argValues.get(name);
 	}
@@ -51,5 +72,10 @@ public class StringContext<T> implements CommandContext<T> {
 	@Override
 	public @NotNull FormatProvider getFormat() {
 		return provider;
+	}
+
+	@Override
+	public List<String> tabComplete() {
+		return tabCompleteNode(root, getArgsAsList(raw));
 	}
 }

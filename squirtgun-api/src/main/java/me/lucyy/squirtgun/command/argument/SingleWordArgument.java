@@ -19,13 +19,12 @@ public final class SingleWordArgument extends AbstractArgument<String> {
 
 	@Override
 	public String getValue(Queue<String> args) {
-		String value = args.peek();
-		Objects.requireNonNull(value);
-		return value;
+		return args.poll();
 	}
 
 	@Override
-	public @NotNull List<String> tabComplete(CommandContext<?> context, String value) {
+	public @NotNull List<String> tabComplete(Queue<String> value) {
+		value.poll();
 		return ImmutableList.of("<" + getName() + ">");
 	}
 

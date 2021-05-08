@@ -26,14 +26,13 @@ public interface CommandArgument<T> {
 	 * @param args a queue of strings containing the raw arguments. Pop as many as needed and no more.
 	 * @return the parsed string value of this argument.
 	 */
-	String getValue(Queue<String> args);
+	T getValue(Queue<String> args);
 
 	/**
 	 * Tab-completes this node.
 	 *
-	 * @param context the command context built so far
-	 * @param value the partial value to tabcomplete
-	 * @return a string list of tabcomplete entries, or null if no entries are needed
+	 * @param args a queue of strings containing the raw arguments. Pop as many as needed and no more.
+	 * @return the tabcompleted value of this node, or if not applicable, null
 	 */
-	@Nullable List<String> tabComplete(CommandContext<?> context, String value);
+	@Nullable List<String> tabComplete(Queue<String> args);
 }
