@@ -44,8 +44,8 @@ public class StringContext<T> implements CommandContext<T> {
 	}
 
 	@Override
-	public @Nullable String getArgumentValue(String name) {
-		return argValues.get(name);
+	public @Nullable <U> U getArgumentValue(CommandArgument<U> name) {
+		return (U) argValues.get(name);
 	}
 
 	@Override

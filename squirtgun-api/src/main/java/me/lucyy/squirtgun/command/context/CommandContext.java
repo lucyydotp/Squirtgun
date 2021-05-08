@@ -1,6 +1,7 @@
 package me.lucyy.squirtgun.command.context;
 
 import me.lucyy.squirtgun.command.FormatProvider;
+import me.lucyy.squirtgun.command.argument.ArgumentChain;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,20 +20,19 @@ public interface CommandContext<T> {
 	T getTarget();
 
 	/**
-	 * Gets the head argument.
-	 *
-	 * @return the last argument. If this command is currently being tabcompleted, returns the argument the user is
-	 * currently typing out, or if the user is not tabcompleting a valid argument, null.
+	 * Gets the context's argument chain.
 	 */
-	@Nullable CommandArgument<?> getHeadArgument();
+	@NotNull
+	ArgumentChain<T> getArgumentChain();
 
 	/**
-	 * Gets an argument's value.
+	 * Gets the value of an argument.
 	 *
 	 * @param argument the argument to get the value for
-	 * @return the value if it's been specified, otherwise null
+	 * @return the value if available - if unset then null
 	 */
-	@Nullable <U> U getArgumentValue(CommandArgument<U> argument);
+	@Nullable
+	<U> U getArgumentValue(CommandArgument<U> argument);
 
 	/**
 	 * Gets the format provider to use in message decoration.
