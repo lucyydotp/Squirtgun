@@ -27,7 +27,7 @@ public class Task {
 
 		public Builder delay(int delay) {
 			Preconditions.checkArgument(interval > 0, "Delay was not greater than 0");
-			this.interval = delay;
+			this.delay = delay;
 			return this;
 		}
 

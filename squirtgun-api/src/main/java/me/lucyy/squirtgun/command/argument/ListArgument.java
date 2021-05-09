@@ -1,6 +1,5 @@
 package me.lucyy.squirtgun.command.argument;
 
-import me.lucyy.squirtgun.command.context.CommandContext;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Queue;
@@ -20,7 +19,7 @@ public class ListArgument extends AbstractArgument<String> {
 	@Override
 	public String getValue(Queue<String> args) {
 		String val = args.poll();
-		return values.contains(val) ? val : null;
+		return val != null && values.contains(val) ? val : null;
 	}
 
 	@Override

@@ -28,24 +28,15 @@ public class StringContext<T> implements CommandContext<T> {
 		populateArguments(next, raw);
 	}
 
-	private List<String> tabCompleteNode(CommandNode<T> node, Queue<String> raw) {
-		@Nullable List<String> result = null;
-		for (CommandArgument<?> arg : node.getArguments()) {
-			result = arg.tabComplete(raw);
-			if (result == null) return null;
-		}
-
-		if (result == null) return null;
-
+	private List<CommandArgument<?>> buildArgTree(CommandNode<T> node, List<CommandArgument<?>> args) {
+		args.addAll(node.getArguments());
 		CommandNode<T> next = node.next(this);
-		if (next != null) return tabCompleteNode(next, raw);
-
-		if (!raw.isEmpty()) return null;
-			return result;
+		if (next != null) buildArgTree(next, args);
+		return args;
 	}
 
 	private Queue<String> getArgsAsList(String value) {
-		return new LinkedList<>(Arrays.asList(value.split(" ")));
+		return new LinkedList<>(Arrays.asList(value.split(" ", -1)));
 	}
 
 	public StringContext(FormatProvider provider, T target, CommandNode<T> node, String value) {
@@ -76,6 +67,17 @@ public class StringContext<T> implements CommandContext<T> {
 
 	@Override
 	public List<String> tabComplete() {
-		return tabCompleteNode(root, getArgsAsList(raw));
+		Queue<String> rawQueue = getArgsAsList(raw);
+		List<List<String>> results = new ArrayList<>();
+		List<CommandArgument<?>> argTree = buildArgTree(root, new ArrayList<>());
+
+		int argIdx = 0;
+		while (!rawQueue.isEmpty()) {
+			if (argIdx >= argTree.size()) return null;
+			CommandArgument<?> arg = argTree.get(argIdx);
+			results.add(arg.tabComplete(rawQueue));
+			argIdx++;
+		}
+		return results.get(results.size() - 1);
 	}
 }
