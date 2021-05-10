@@ -11,6 +11,11 @@ import java.util.stream.Collectors;
 public class ListArgument extends AbstractArgument<String> {
 	private final List<String> values;
 
+	/**
+	 * @param name this argument's name
+	 * @param description this argument's description
+	 * @param values a set of acceptable values for this argument
+	 */
 	public ListArgument(String name, String description, List<String> values) {
 		super(name, description);
 		this.values = values;

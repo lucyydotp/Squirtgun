@@ -2,6 +2,10 @@ package me.lucyy.squirtgun.format.blocked;
 
 import net.kyori.adventure.text.format.TextColor;
 
+/**
+ * A blocked gradient - somewhat akin to a striped flag, represents solid and
+ * evenly-distributed blocks of colour.
+ */
 public class BlockedGradient {
 	private final TextColor[] cols;
 	private final String[] names;

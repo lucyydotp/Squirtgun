@@ -1,6 +1,7 @@
 package me.lucyy.squirtgun.command.argument;
 
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Queue;
 
@@ -11,11 +12,15 @@ public interface CommandArgument<T> {
 
 	/**
 	 * Gets this argument's name.
+	 *
+	 * @return the name
 	 */
 	String getName();
 
 	/**
-	 * Gets this argument's description for use in help commands.
+	 * Gets this argument's description for use in help commands. This should be a simple, one-line sentence.
+	 *
+	 * @return the description
 	 */
 	String getDescription();
 
