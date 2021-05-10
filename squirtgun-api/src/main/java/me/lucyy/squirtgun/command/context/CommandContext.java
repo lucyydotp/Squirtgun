@@ -7,9 +7,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * A command context.
+ * The context a command is executed in, containing data such as the command target
+ * and the arguments provided to it so far.
+ * Also responsible for tabcompletion.
  *
- * @param <T>
+ * @param <T> the subject type.
  * @since 2.0.0
  */
 public interface CommandContext<T> {
@@ -35,7 +37,6 @@ public interface CommandContext<T> {
 
 	/**
 	 * Gets the string to be shown in the tabcompleter.
-	 * @return
 	 */
 	@Nullable List<String> tabComplete();
 }

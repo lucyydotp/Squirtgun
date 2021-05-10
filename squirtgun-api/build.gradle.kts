@@ -23,6 +23,7 @@ dependencies {
     testImplementation("net.kyori:adventure-api:4.7.0")
     testImplementation("net.kyori:adventure-text-serializer-gson:4.7.0")
     testImplementation("net.kyori:adventure-text-serializer-legacy:4.7.0")
+    testImplementation("com.google.guava:guava:30.1.1-jre")
 
     compileOnly("net.kyori:adventure-api:4.7.0")
     compileOnly("net.kyori:adventure-text-serializer-gson:4.7.0")

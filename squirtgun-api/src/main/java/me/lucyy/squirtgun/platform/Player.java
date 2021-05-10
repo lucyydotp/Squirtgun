@@ -1,9 +1,8 @@
 package me.lucyy.squirtgun.platform;
 
-import net.kyori.adventure.audience.Audience;
 import java.util.UUID;
 
-public interface Player extends Audience {
+public interface Player extends Commander {
 	UUID getUuid();
 
 	String getUsername();
