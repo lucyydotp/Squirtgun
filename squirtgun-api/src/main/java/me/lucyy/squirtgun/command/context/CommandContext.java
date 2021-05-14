@@ -31,6 +31,11 @@ public interface CommandContext<T> {
 	<U> U getArgumentValue(CommandArgument<U> argument);
 
 	/**
+	 * Gets the raw input given to this context.
+	 */
+	String getRaw();
+
+	/**
 	 * Gets the format provider to use in message decoration.
 	 */
 	@NotNull FormatProvider getFormat();

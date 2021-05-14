@@ -3,6 +3,10 @@ import org.apache.tools.ant.filters.ReplaceTokens
 group = "me.lucyy"
 description = "LucyCommonLib"
 
+plugins {
+    signing
+}
+
 java {
     withJavadocJar()
     withSourcesJar()

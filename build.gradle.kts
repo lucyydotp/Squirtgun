@@ -1,5 +1,5 @@
 subprojects {
-    version = "1.0.0-SNAPSHOT"
+    version = "2.0.0-SNAPSHOT"
     group = "me.lucyy"
 
     apply<JavaPlugin>()

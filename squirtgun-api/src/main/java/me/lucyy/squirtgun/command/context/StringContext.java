@@ -61,6 +61,11 @@ public class StringContext<T> implements CommandContext<T> {
 	}
 
 	@Override
+	public String getRaw() {
+		return raw;
+	}
+
+	@Override
 	public @NotNull FormatProvider getFormat() {
 		return provider;
 	}
