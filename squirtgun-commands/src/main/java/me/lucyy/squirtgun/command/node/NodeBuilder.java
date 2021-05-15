@@ -23,17 +23,20 @@ public class NodeBuilder<T extends PermissionHolder> {
 	private static class BuiltCommandNode<T extends PermissionHolder> implements CommandNode<T> {
 
 		private final String name;
+		private final String description;
 		private final @Nullable String permission;
 		private final Function<CommandContext<T>, @Nullable Component> executes;
 		private final @Nullable CommandNode<T> next;
 		private final List<CommandArgument<?>> arguments;
 
 		private BuiltCommandNode(String name,
+								 String description,
 								 @Nullable String permission,
 								 Function<CommandContext<T>, @Nullable Component> executes,
 								 @Nullable CommandNode<T> next,
 								 List<CommandArgument<?>> arguments) {
 			this.name = name;
+			this.description = description;
 			this.permission = permission;
 			this.executes = executes;
 			this.next = next;
@@ -48,6 +51,11 @@ public class NodeBuilder<T extends PermissionHolder> {
 		@Override
 		public @NotNull String getName() {
 			return name;
+		}
+
+		@Override
+		public String getDescription() {
+			return description;
 		}
 
 		@Override
@@ -67,6 +75,7 @@ public class NodeBuilder<T extends PermissionHolder> {
 	}
 
 	private String name;
+	private String description;
 	private String permission;
 	private Function<CommandContext<T>, @Nullable Component> executes;
 	private CommandNode<T> next;
@@ -82,6 +91,17 @@ public class NodeBuilder<T extends PermissionHolder> {
 	public NodeBuilder<T> name(@NotNull String name) {
 		Preconditions.checkNotNull(name, "Name must not be null");
 		this.name = name;
+		return this;
+	}
+
+	/**
+	 * Sets this node's description.
+	 *
+	 * @param description the new description to set - this should be a short, 1-line sentence
+	 * @return this
+	 */
+	public NodeBuilder<T> description(@NotNull String description) {
+		this.description = description;
 		return this;
 	}
 
@@ -137,6 +157,6 @@ public class NodeBuilder<T extends PermissionHolder> {
 	 * @return a node built from the specified parameters.
 	 */
 	public CommandNode<T> build() {
-		return new BuiltCommandNode<>(name, permission, executes, next, arguments);
+		return new BuiltCommandNode<>(name, description, permission, executes, next, arguments);
 	}
 }

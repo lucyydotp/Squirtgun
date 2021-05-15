@@ -6,14 +6,16 @@ package me.lucyy.squirtgun.command.argument;
 public abstract class AbstractArgument<T> implements CommandArgument<T> {
 	private final String name;
 	private final String description;
+	private final boolean optional;
 
 	/**
 	 * @param name the argument's name
 	 * @param description the argument's description
 	 */
-	protected AbstractArgument(String name, String description) {
+	protected AbstractArgument(String name, String description, boolean isOptional) {
 		this.name = name;
 		this.description = description;
+		this.optional = false;
 	}
 
 	@Override
@@ -24,5 +26,15 @@ public abstract class AbstractArgument<T> implements CommandArgument<T> {
 	@Override
 	public final String getDescription() {
 		return description;
+	}
+
+	@Override
+	public boolean isOptional() {
+		return optional;
+	}
+
+	@Override
+	public String toString() {
+		return isOptional() ? "[" + getName() + "]" :  "<" + getName() + ">";
 	}
 }

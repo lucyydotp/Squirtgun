@@ -17,7 +17,8 @@ import java.util.List;
 public interface CommandNode<T extends PermissionHolder> {
 
 	/**
-	 * Execute this node.
+	 * Execute this node. This will only be executed if there are no further nodes
+	 * in the chain.
 	 *
 	 * @param context the context that this command was executed in
 	 * @return a component to optionally 
@@ -30,7 +31,13 @@ public interface CommandNode<T extends PermissionHolder> {
 	@NotNull String getName();
 
 	/**
-	 * Gets the permission needed to execute this node.
+	 * Gets this node's description for use in help commands. This should be a simple,
+	 * one-line sentence.
+	 */
+	String getDescription();
+
+	/**
+	 * Gets the permission needed to execute this node or any children.
 	 *
 	 * @return the permission, or null if no permission is needed
 	 */

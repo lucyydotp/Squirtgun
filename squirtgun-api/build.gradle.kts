@@ -1,6 +1,5 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-group = "me.lucyy"
 description = "squirtgun-api"
 
 plugins {

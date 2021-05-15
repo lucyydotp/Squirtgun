@@ -1,8 +1,8 @@
 package me.lucyy.squirtgun.command.context;
 
-import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.node.CommandNode;
+import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.platform.PermissionHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +18,7 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 	private final String raw;
 	private final LinkedHashMap<CommandArgument<?>, Object> argValues = new LinkedHashMap<>();
 	private final CommandNode<T> root;
+	private CommandNode<T> tail;
 
 	private void populateArguments(CommandNode<T> node, Queue<String> raw) {
 		for (CommandArgument<?> arg : node.getArguments()) {
@@ -26,10 +27,19 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 		CommandNode<T> next = node.next(this);
 		if (next == null) return;
 
+		String perm = next.getPermission();
+		if (perm != null && !getTarget().hasPermission(perm)) return;
+
+		tail = next;
+
 		populateArguments(next, raw);
 	}
 
 	private List<CommandArgument<?>> buildArgTree(CommandNode<T> node, List<CommandArgument<?>> args) {
+
+		String perm = node.getPermission();
+		if (perm != null && !getTarget().hasPermission(perm)) return args;
+
 		args.addAll(node.getArguments());
 		CommandNode<T> next = node.next(this);
 		if (next != null) buildArgTree(next, args);
@@ -85,5 +95,10 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 			argIdx++;
 		}
 		return results.get(results.size() - 1);
+	}
+
+	@Override
+	public CommandNode<T> getTail() {
+		return tail;
 	}
 }

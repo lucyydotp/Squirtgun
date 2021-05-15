@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableSet;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.argument.ListArgument;
+import me.lucyy.squirtgun.format.FormatProvider;
+import me.lucyy.squirtgun.format.TextFormatter;
 import me.lucyy.squirtgun.platform.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +38,7 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 		this.permission = permission;
 		argument = new ListArgument("subcommand",
 				"The subcommand to execute",
+				true,
 				this.childNodes.stream().map(CommandNode::getName).collect(Collectors.toList()));
 	}
 
@@ -60,19 +63,31 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 
 	@Override
 	public @Nullable Component execute(CommandContext<T> context) {
-		String subcommand = context.getArgumentValue(argument);
-		Objects.requireNonNull(subcommand);
-		CommandNode<T> node = getNode(subcommand);
+		FormatProvider format = context.getFormat();
+		Component out = Component.empty()
+				.append(TextFormatter.formatTitle("Command Help", format))
+				.append(Component.newline());
 
-		if (node == null) return helpMessage();
+		for (CommandNode<?> node : childNodes) {
+			out = out.append(format.formatAccent(node.getName()))
+					.append(format.formatMain(" - " + node.getDescription()))
+					.append(Component.newline());
+		}
 
-		return node.execute(context);
+		out = out.append(TextFormatter.formatTitle("*", context.getFormat()));
+
+		return out;
 	}
 
 	@Override
 	public @NotNull String getName() {
 		return name;
 	}
+
+	@Override
+	public String getDescription() {
+		return null;
+	} // TODO
 
 	@Override
 	public @Nullable String getPermission() {

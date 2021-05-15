@@ -14,10 +14,11 @@ public class ListArgument extends AbstractArgument<String> {
 	/**
 	 * @param name this argument's name
 	 * @param description this argument's description
+	 * @param isOptional whether this argument will be displayed as optional
 	 * @param values a set of acceptable values for this argument
 	 */
-	public ListArgument(String name, String description, List<String> values) {
-		super(name, description);
+	public ListArgument(String name, String description, boolean isOptional, List<String> values) {
+		super(name, description, isOptional);
 		this.values = values;
 	}
 

@@ -1,5 +1,6 @@
 package me.lucyy.squirtgun.command.context;
 
+import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.platform.PermissionHolder;
@@ -46,4 +47,9 @@ public interface CommandContext<T extends PermissionHolder> {
 	 * Gets the string to be shown in the tabcompleter.
 	 */
 	@Nullable List<String> tabComplete();
+
+	/**
+	 * Gets the last node in the chain that has been reached.
+	 */
+	CommandNode<T> getTail();
 }

@@ -1,5 +1,6 @@
 package me.lucyy.squirtgun.command.argument;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -39,4 +40,9 @@ public interface CommandArgument<T> {
 	 * @return the tabcompleted value of this node, or if not applicable, null
 	 */
 	@Nullable List<String> tabComplete(Queue<String> args);
+
+	/**
+	 * Gets whether this argument is optional or not. This should not change how the argument behaves.
+	 */
+	boolean isOptional();
 }

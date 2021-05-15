@@ -27,6 +27,7 @@ public abstract class BukkitPlatform implements Platform {
 				return AuthMode.BUNGEE;
 			}
 		} catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignored) {
+			// probably running craftbukkit, we can safely ignore these
 		}
 		return onlineMode ? AuthMode.ONLINE : AuthMode.OFFLINE;
 	}

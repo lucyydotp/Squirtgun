@@ -14,9 +14,10 @@ public final class SingleWordArgument extends AbstractArgument<String> {
 	/**
 	 * @param name        the argument's name
 	 * @param description the argument's description
+	 * @param isOptional  whether the argument is optional
 	 */
-	public SingleWordArgument(String name, String description) {
-		super(name, description);
+	public SingleWordArgument(String name, String description, boolean isOptional) {
+		super(name, description, isOptional);
 	}
 
 	@Override
