@@ -1,6 +1,6 @@
 package me.lucyy.squirtgun.tests;
 
-import me.lucyy.squirtgun.command.FormatProvider;
+import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.format.TextFormatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

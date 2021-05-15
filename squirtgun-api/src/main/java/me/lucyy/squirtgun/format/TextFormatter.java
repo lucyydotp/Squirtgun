@@ -1,6 +1,6 @@
 package me.lucyy.squirtgun.format;
 
-import me.lucyy.squirtgun.command.FormatProvider;
+import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.format.blocked.BlockedGradient;
 import me.lucyy.squirtgun.format.blocked.BlockedGradientPattern;
 import me.lucyy.squirtgun.format.pattern.*;

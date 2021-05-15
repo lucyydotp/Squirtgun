@@ -1,4 +1,4 @@
-package me.lucyy.squirtgun.command;
+package me.lucyy.squirtgun.format;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;

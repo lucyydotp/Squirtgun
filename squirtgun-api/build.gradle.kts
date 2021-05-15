@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 group = "me.lucyy"
-description = "LucyCommonLib"
+description = "squirtgun-api"
 
 plugins {
     signing
@@ -101,6 +101,7 @@ tasks {
     }
 
     withType<Javadoc> {
+        /* jdk 16 broke my stylesheet :(
         val opts = options as StandardJavadocDocletOptions
         opts.stylesheetFile = File("${project.projectDir}/src/main/javadoc/resources/javadoc.css")
         opts.addBooleanOption("-allow-script-in-comments", true)
@@ -111,7 +112,7 @@ tasks {
                 into("${buildDir}/docs/javadoc/resources")
                 include("prism.js", "prism.css")
             }
-        }
+        }*/
     }
 }
 

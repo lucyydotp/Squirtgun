@@ -1,11 +1,9 @@
 package me.lucyy.squirtgun.platform;
 
-import net.kyori.adventure.audience.Audience;
-
 /**
  * An entity capable of holding permissions and executing commands.
  */
-public interface Commander extends Audience {
+public interface PermissionHolder {
 
 	/**
 	 * Gets whether the target holds the provided permission.

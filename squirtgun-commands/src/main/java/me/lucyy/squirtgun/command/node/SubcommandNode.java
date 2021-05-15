@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.argument.ListArgument;
+import me.lucyy.squirtgun.platform.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
  * A node that tab completes and acts as a splitter for other nodes.
  * TODO
  */
-public class SubcommandNode<T> implements CommandNode<T> {
+public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T> {
 
 	private final Set<? extends CommandNode<T>> childNodes;
 	private final String name;

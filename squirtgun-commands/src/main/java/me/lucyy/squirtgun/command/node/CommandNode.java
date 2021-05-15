@@ -2,6 +2,7 @@ package me.lucyy.squirtgun.command.node;
 
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
+import me.lucyy.squirtgun.platform.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +14,7 @@ import java.util.List;
  *
  * @since 2.0.0
  */
-public interface CommandNode<T> {
+public interface CommandNode<T extends PermissionHolder> {
 
 	/**
 	 * Execute this node.
@@ -33,8 +34,9 @@ public interface CommandNode<T> {
 	 *
 	 * @return the permission, or null if no permission is needed
 	 */
-	@Nullable String getPermission();
-
+	default @Nullable String getPermission() {
+		return null;
+	}
 
 	/**
 	 * Gets this command's arguments.

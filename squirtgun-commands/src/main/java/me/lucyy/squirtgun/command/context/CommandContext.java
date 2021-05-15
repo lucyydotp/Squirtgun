@@ -1,7 +1,8 @@
 package me.lucyy.squirtgun.command.context;
 
-import me.lucyy.squirtgun.command.FormatProvider;
+import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
+import me.lucyy.squirtgun.platform.PermissionHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  * @param <T> the subject type.
  * @since 2.0.0
  */
-public interface CommandContext<T> {
+public interface CommandContext<T extends PermissionHolder> {
 
 	/**
 	 * Gets this command context's target.
@@ -38,7 +39,8 @@ public interface CommandContext<T> {
 	/**
 	 * Gets the format provider to use in message decoration.
 	 */
-	@NotNull FormatProvider getFormat();
+	@NotNull
+	FormatProvider getFormat();
 
 	/**
 	 * Gets the string to be shown in the tabcompleter.

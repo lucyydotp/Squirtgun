@@ -3,6 +3,7 @@ package me.lucyy.squirtgun.command.node;
 import com.google.common.base.Preconditions;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.context.CommandContext;
+import me.lucyy.squirtgun.platform.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,9 +18,9 @@ import java.util.function.Function;
  *
  * @param <T> the type to expect from the command context
  */
-public class NodeBuilder<T> {
+public class NodeBuilder<T extends PermissionHolder> {
 
-	private static class BuiltCommandNode<T> implements CommandNode<T> {
+	private static class BuiltCommandNode<T extends PermissionHolder> implements CommandNode<T> {
 
 		private final String name;
 		private final @Nullable String permission;

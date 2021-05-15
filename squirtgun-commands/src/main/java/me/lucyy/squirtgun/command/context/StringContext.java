@@ -1,16 +1,17 @@
 package me.lucyy.squirtgun.command.context;
 
-import me.lucyy.squirtgun.command.FormatProvider;
+import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.node.CommandNode;
+import me.lucyy.squirtgun.platform.PermissionHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 /**
- * This needs some serious optimisation and is only intended as a POC
+ * A command context based on a raw string.
  */
-public class StringContext<T> implements CommandContext<T> {
+public class StringContext<T extends PermissionHolder> implements CommandContext<T> {
 
 	private final FormatProvider provider;
 	private final T target;
