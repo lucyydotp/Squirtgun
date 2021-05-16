@@ -28,7 +28,6 @@ public final class SingleWordArgument extends AbstractArgument<String> {
 	@Override
 	public @NotNull List<String> tabComplete(Queue<String> value) {
 		value.poll();
-		return ImmutableList.of("<" + getName() + ">");
+		return ImmutableList.of(toString());
 	}
-
 }

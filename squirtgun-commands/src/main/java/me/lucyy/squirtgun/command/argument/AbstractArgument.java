@@ -15,7 +15,7 @@ public abstract class AbstractArgument<T> implements CommandArgument<T> {
 	protected AbstractArgument(String name, String description, boolean isOptional) {
 		this.name = name;
 		this.description = description;
-		this.optional = false;
+		this.optional = isOptional;
 	}
 
 	@Override
