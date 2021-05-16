@@ -34,6 +34,16 @@ public interface CommandContext<T extends PermissionHolder> {
 	<U> U getArgumentValue(CommandArgument<U> argument);
 
 	/**
+	 * Gets the value of an argument by name.
+	 *
+	 * @param name the name of the argument to get the value for
+	 * @return the value if available, if unset then null.
+	 * @throws IllegalArgumentException if the name given is not a registered argument
+	 */
+	@Nullable
+	Object getArgumentValue(String name);
+
+	/**
 	 * Gets the raw input given to this context.
 	 */
 	String getRaw();

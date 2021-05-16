@@ -23,7 +23,7 @@ public interface Platform {
 
 	void unregisterEventListener(EventListener listener);
 
-	Player getPlayer(UUID uuid);
+	SquirtgunPlayer getPlayer(UUID uuid);
 
-	Player getPlayer(String name);
+	SquirtgunPlayer getPlayer(String name);
 }

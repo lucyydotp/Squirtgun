@@ -4,7 +4,7 @@ import net.kyori.adventure.audience.Audience;
 
 import java.util.UUID;
 
-public interface Player extends PermissionHolder, Audience {
+public interface SquirtgunPlayer extends PermissionHolder, Audience {
 	UUID getUuid();
 
 	String getUsername();

@@ -20,7 +20,7 @@ package me.lucyy.squirtgun.update;
 
 import me.lucyy.squirtgun.platform.EventListener;
 import me.lucyy.squirtgun.platform.Platform;
-import me.lucyy.squirtgun.platform.Player;
+import me.lucyy.squirtgun.platform.SquirtgunPlayer;
 import java.util.UUID;
 
 class UpdateListener extends EventListener {
@@ -35,7 +35,7 @@ class UpdateListener extends EventListener {
 	@Override
 	public void onPlayerJoin(UUID uuid) {
 		super.onPlayerJoin(uuid);
-		Player player = platform.getPlayer(uuid);
+		SquirtgunPlayer player = platform.getPlayer(uuid);
 		if (checker.checkDataForUpdate() && platform.getPlayer(uuid).hasPermission(checker.getListenerPermission()))
 			player.sendMessage(checker.getUpdateMessage());
 	}

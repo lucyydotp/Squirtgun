@@ -61,6 +61,17 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
     }
 
     @Override
+    public @Nullable Object getArgumentValue(String name) {
+        Optional<CommandArgument<?>> argument = argValues.keySet().stream()
+                .filter(arg -> arg.getName().equals(name))
+                .findFirst();
+        if (!argument.isPresent()) {
+            throw new IllegalArgumentException(String.format("Argument %s does not exist", name));
+        }
+        return getArgumentValue(argument.get());
+    }
+
+    @Override
     public String getRaw() {
         return raw;
     }
