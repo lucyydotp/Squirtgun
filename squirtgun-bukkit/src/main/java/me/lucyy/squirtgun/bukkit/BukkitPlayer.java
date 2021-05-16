@@ -60,7 +60,7 @@ public class BukkitPlayer implements SquirtgunPlayer {
 
     @Override
     public void setGamemode(Gamemode mode) {
-        if (parent instanceof Player player) {
+        if (parent instanceof Player) {
             org.bukkit.GameMode bukkitMode = gamemodeMap.entrySet().stream()
                     .filter(k -> k.getValue() == mode)
                     .map(Map.Entry::getKey)
@@ -68,7 +68,7 @@ public class BukkitPlayer implements SquirtgunPlayer {
 
             // both enums are fully mapped so this is safe
             Objects.requireNonNull(bukkitMode);
-            player.setGameMode(bukkitMode);
+	        ((Player) parent).setGameMode(bukkitMode);
         }
     }
 }
