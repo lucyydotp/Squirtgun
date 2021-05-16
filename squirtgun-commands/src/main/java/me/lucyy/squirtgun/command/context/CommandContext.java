@@ -4,6 +4,7 @@ import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.platform.PermissionHolder;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
@@ -47,6 +48,11 @@ public interface CommandContext<T extends PermissionHolder> {
 	 * Gets the string to be shown in the tabcompleter.
 	 */
 	@Nullable List<String> tabComplete();
+
+	/**
+	 * Executes the context.
+	 */
+	Component execute();
 
 	/**
 	 * Gets the last node in the chain that has been reached.

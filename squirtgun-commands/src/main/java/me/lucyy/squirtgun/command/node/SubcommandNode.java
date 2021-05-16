@@ -57,10 +57,6 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 		return name == null ? null : getNode(name);
 	}
 
-	private Component helpMessage() {
-		return Component.text("help message"); // TODO
-	}
-
 	@Override
 	public @Nullable Component execute(CommandContext<T> context) {
 		FormatProvider format = context.getFormat();

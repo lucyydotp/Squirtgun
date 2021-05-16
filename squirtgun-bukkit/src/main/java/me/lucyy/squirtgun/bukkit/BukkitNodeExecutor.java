@@ -29,8 +29,8 @@ public class BukkitNodeExecutor implements TabExecutor {
 	                         @NotNull Command command,
 	                         @NotNull String label,
 	                         @NotNull String[] args) {
-		Component ret = node.execute(new StringContext<>(formatter,
-				new BukkitSenderWrapper(sender), node, String.join(" ", args)));
+		Component ret = new StringContext<>(formatter,
+				new BukkitSenderWrapper(sender), node, String.join(" ", args)).execute();
 		if (ret != null) {
 			sender.sendMessage(ret);
 		}

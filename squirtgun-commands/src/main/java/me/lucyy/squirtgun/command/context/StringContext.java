@@ -4,6 +4,7 @@ import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.platform.PermissionHolder;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
@@ -21,6 +22,7 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 	private CommandNode<T> tail;
 
 	private void populateArguments(CommandNode<T> node, Queue<String> raw) {
+		tail = node;
 		for (CommandArgument<?> arg : node.getArguments()) {
 			argValues.put(arg, arg.getValue(raw));
 		}
@@ -30,20 +32,7 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 		String perm = next.getPermission();
 		if (perm != null && !getTarget().hasPermission(perm)) return;
 
-		tail = next;
-
 		populateArguments(next, raw);
-	}
-
-	private List<CommandArgument<?>> buildArgTree(CommandNode<T> node, List<CommandArgument<?>> args) {
-
-		String perm = node.getPermission();
-		if (perm != null && !getTarget().hasPermission(perm)) return args;
-
-		args.addAll(node.getArguments());
-		CommandNode<T> next = node.next(this);
-		if (next != null) buildArgTree(next, args);
-		return args;
 	}
 
 	private Queue<String> getArgsAsList(String value) {
@@ -85,7 +74,7 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 	public List<String> tabComplete() {
 		Queue<String> rawQueue = getArgsAsList(raw);
 		List<List<String>> results = new ArrayList<>();
-		List<CommandArgument<?>> argTree = buildArgTree(root, new ArrayList<>());
+		List<CommandArgument<?>> argTree = new ArrayList<>(argValues.keySet());
 
 		int argIdx = 0;
 		while (!rawQueue.isEmpty()) {
@@ -95,6 +84,11 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 			argIdx++;
 		}
 		return results.get(results.size() - 1);
+	}
+
+	@Override
+	public Component execute() {
+		return getTail().execute(this);
 	}
 
 	@Override
