@@ -14,11 +14,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
+/**
+ * Wraps a {@link CommandNode} so it can be executed by a Bukkit server.
+ */
 public class BukkitNodeExecutor implements TabExecutor {
 
 	private final CommandNode<PermissionHolder> node;
 	private final FormatProvider formatter;
 
+	/**
+	 * @param node      the root command node to execute
+	 * @param formatter the command sender to pass to the context
+	 */
 	public BukkitNodeExecutor(CommandNode<PermissionHolder> node, FormatProvider formatter) {
 		this.node = node;
 		this.formatter = formatter;

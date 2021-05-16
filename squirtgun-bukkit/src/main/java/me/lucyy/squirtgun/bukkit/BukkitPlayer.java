@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * SquirtgunPlayer implementation for Bukkit.
+ */
 public class BukkitPlayer implements SquirtgunPlayer {
 
     private final OfflinePlayer parent;
