@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 /**
  * A Platform implementation for Bukkit.
  */
-@Beta
 public class BukkitPlatform implements Platform {
 
 	private final JavaPlugin plugin;
