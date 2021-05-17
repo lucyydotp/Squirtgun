@@ -17,7 +17,8 @@ public class OnlinePlayerArgument extends AbstractArgument<SquirtgunPlayer> {
 
 	@Override
 	public SquirtgunPlayer getValue(Queue<String> args) {
-		return null;
+		String name = args.poll();
+		return name == null ? null :  platform.getPlayer(name);
 	}
 
 	@Override
