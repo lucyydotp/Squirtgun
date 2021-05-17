@@ -9,8 +9,10 @@ import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * A Platform implementation for Bukkit.
@@ -75,10 +77,16 @@ public class BukkitPlatform implements Platform {
 		return new BukkitPlayer(Bukkit.getOfflinePlayer(uuid));
 	}
 
-
 	@Override
 	@SuppressWarnings("deprecation") // blame the orange hash man. :(
 	public SquirtgunPlayer getPlayer(String name) {
 		return new BukkitPlayer(Bukkit.getOfflinePlayer(name));
+	}
+
+	@Override
+	public List<SquirtgunPlayer> getOnlinePlayers() {
+		return Bukkit.getOnlinePlayers().stream()
+				.map(BukkitPlayer::new)
+				.collect(Collectors.toList());
 	}
 }

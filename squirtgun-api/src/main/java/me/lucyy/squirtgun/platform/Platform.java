@@ -1,6 +1,7 @@
 package me.lucyy.squirtgun.platform;
 
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -26,4 +27,6 @@ public interface Platform {
 	SquirtgunPlayer getPlayer(UUID uuid);
 
 	SquirtgunPlayer getPlayer(String name);
+
+	List<SquirtgunPlayer> getOnlinePlayers();
 }
