@@ -6,7 +6,9 @@ import me.lucyy.squirtgun.command.context.StringContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.platform.PermissionHolder;
+import me.lucyy.squirtgun.platform.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -32,14 +34,21 @@ public class BukkitNodeExecutor implements TabExecutor {
 	}
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender,
+	public boolean onCommand(@NotNull CommandSender bukkitSender,
 	                         @NotNull Command command,
 	                         @NotNull String label,
 	                         @NotNull String[] args) {
+		PermissionHolder sender;
+		if (bukkitSender instanceof OfflinePlayer) {
+			sender = new BukkitPlayer((OfflinePlayer) bukkitSender);
+		} else {
+			sender = new BukkitSenderWrapper(bukkitSender);
+		}
+
 		Component ret = new StringContext<>(formatter,
-				new BukkitSenderWrapper(sender), node, String.join(" ", args)).execute();
+				sender, node, String.join(" ", args)).execute();
 		if (ret != null) {
-			sender.sendMessage(ret);
+			bukkitSender.sendMessage(ret);
 		}
 		return true;
 	}

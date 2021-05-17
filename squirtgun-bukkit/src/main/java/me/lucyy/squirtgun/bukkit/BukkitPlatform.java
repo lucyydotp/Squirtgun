@@ -1,6 +1,5 @@
 package me.lucyy.squirtgun.bukkit;
 
-import com.google.common.annotations.Beta;
 import me.lucyy.squirtgun.platform.AuthMode;
 import me.lucyy.squirtgun.platform.EventListener;
 import me.lucyy.squirtgun.platform.Platform;

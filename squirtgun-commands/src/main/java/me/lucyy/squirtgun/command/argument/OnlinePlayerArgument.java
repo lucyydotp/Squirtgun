@@ -22,7 +22,7 @@ public class OnlinePlayerArgument extends AbstractArgument<SquirtgunPlayer> {
 
 	@Override
 	public @Nullable List<String> tabComplete(Queue<String> args) {
-		String name = args.peek();
+		String name = args.poll();
 		return name == null ? null : platform.getOnlinePlayers()
 				.stream()
 				.map(SquirtgunPlayer::getUsername)

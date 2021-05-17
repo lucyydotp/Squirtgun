@@ -12,8 +12,9 @@ import me.lucyy.squirtgun.platform.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,11 +30,17 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 	private final CommandArgument<String> argument;
 
 	@SafeVarargs
-	public SubcommandNode(@NotNull String name, @Nullable String permission, CommandNode<T>... childNodes) {
+	public SubcommandNode(@NotNull String name, @Nullable String permission,
+	                      boolean addHelpNode, CommandNode<T>... childNodes) {
 		Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
 		Preconditions.checkNotNull(name, "Name must not be null");
 
-		this.childNodes = ImmutableSet.copyOf(childNodes);
+		Set<CommandNode<T>> nodes = new HashSet<>(Arrays.asList(childNodes));
+		if (addHelpNode) {
+			nodes.add(new SubcommandHelpNode<>(this));
+		}
+
+		this.childNodes = nodes;
 		this.name = name;
 		this.permission = permission;
 		argument = new ListArgument("subcommand",
@@ -49,6 +56,10 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 	@Override
 	public @NotNull List<CommandArgument<?>> getArguments() {
 		return ImmutableList.of(argument);
+	}
+
+	public Set<? extends CommandNode<T>> getNodes() {
+		return childNodes;
 	}
 
 	@Override
