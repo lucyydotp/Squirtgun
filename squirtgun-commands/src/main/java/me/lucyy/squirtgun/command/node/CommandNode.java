@@ -6,6 +6,7 @@ import me.lucyy.squirtgun.platform.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,9 +47,11 @@ public interface CommandNode<T extends PermissionHolder> {
 	}
 
 	/**
-	 * Gets this command's arguments.
+	 * Gets this command's arguments. By default, returns an empty list.
 	 */
-	@NotNull List<CommandArgument<?>> getArguments();
+	default @NotNull List<CommandArgument<?>> getArguments() {
+		return Collections.emptyList();
+	}
 
 	/**
 	 * Returns the node following this node.
