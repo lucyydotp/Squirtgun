@@ -16,104 +16,109 @@ import java.util.stream.Collectors;
  */
 public class StringContext<T extends PermissionHolder> implements CommandContext<T> {
 
-    private final FormatProvider provider;
-    private final T target;
-    private final String raw;
-    private final LinkedHashMap<CommandArgument<?>, Object> argValues = new LinkedHashMap<>();
-    private CommandNode<T> tail;
+	private final FormatProvider provider;
+	private final T target;
+	private final CommandNode<T> node;
+	private final String raw;
+	private final LinkedHashMap<CommandArgument<?>, Object> argValues = new LinkedHashMap<>();
+	private CommandNode<T> tail;
 
-    private void populateArguments(CommandNode<T> node, Queue<String> raw) {
-        tail = node;
-        for (CommandArgument<?> arg : node.getArguments()) {
-            argValues.put(arg, arg.getValue(raw));
-        }
-        CommandNode<T> next = node.next(this);
-        if (next == null) return;
+	private void populateArguments(CommandNode<T> node, Queue<String> raw, boolean findValues) {
+		tail = node;
+		for (CommandArgument<?> arg : node.getArguments()) {
+			argValues.put(arg, findValues ? arg.getValue(raw) : null);
+		}
+		CommandNode<T> next = node.next(this);
+		if (next == null) return;
 
-        String perm = next.getPermission();
-        if (perm != null && !getTarget().hasPermission(perm)) return;
+		String perm = next.getPermission();
+		if (perm != null && !getTarget().hasPermission(perm)) return;
 
-        populateArguments(next, raw);
-    }
+		populateArguments(next, raw, findValues);
+	}
 
-    private Queue<String> getArgsAsList(String value) {
-        return new LinkedList<>(Arrays.asList(value.split(" ", -1)));
-    }
+	private Queue<String> getArgsAsList(String value) {
+		return new LinkedList<>(Arrays.asList(value.split(" ", -1)));
+	}
 
-    public StringContext(FormatProvider provider, T target, CommandNode<T> node, String value) {
-        this.raw = value;
-        this.provider = provider;
-        this.target = target;
+	public StringContext(FormatProvider provider, T target, CommandNode<T> node, String value) {
+		this.node = node;
+		this.raw = value;
+		this.provider = provider;
+		this.target = target;
+	}
 
-        populateArguments(node, getArgsAsList(value));
-    }
-
-    @Override
-    public T getTarget() {
-        return target;
-    }
+	@Override
+	public T getTarget() {
+		return target;
+	}
 
 
-    @Override
-    @SuppressWarnings("unchecked") // safety is ensured by logic
-    public @Nullable <U> U getArgumentValue(CommandArgument<U> name) {
-        return (U) argValues.get(name);
-    }
+	@Override
+	@SuppressWarnings("unchecked") // safety is ensured by logic
+	public @Nullable <U> U getArgumentValue(CommandArgument<U> name) {
+		return (U) argValues.get(name);
+	}
 
-    @Override
-    public @Nullable Object getArgumentValue(String name) {
-        Optional<CommandArgument<?>> argument = argValues.keySet().stream()
-                .filter(arg -> arg.getName().equals(name))
-                .findFirst();
-        if (!argument.isPresent()) {
-            throw new IllegalArgumentException(String.format("Argument %s does not exist", name));
-        }
-        return getArgumentValue(argument.get());
-    }
+	@Override
+	public @Nullable Object getArgumentValue(String name) {
+		Optional<CommandArgument<?>> argument = argValues.keySet().stream()
+				.filter(arg -> arg.getName().equals(name))
+				.findFirst();
+		if (!argument.isPresent()) {
+			throw new IllegalArgumentException(String.format("Argument %s does not exist", name));
+		}
+		return getArgumentValue(argument.get());
+	}
 
-    @Override
-    public String getRaw() {
-        return raw;
-    }
+	@Override
+	public String getRaw() {
+		return raw;
+	}
 
-    @Override
-    public @NotNull FormatProvider getFormat() {
-        return provider;
-    }
+	@Override
+	public @NotNull FormatProvider getFormat() {
+		return provider;
+	}
 
-    @Override
-    public List<String> tabComplete() {
-        Queue<String> rawQueue = getArgsAsList(raw);
-        List<List<String>> results = new ArrayList<>();
-        List<CommandArgument<?>> argTree = new ArrayList<>(argValues.keySet());
+	@Override
+	public List<String> tabComplete() {
+		Queue<String> rawQueue = getArgsAsList(raw);
 
-        int argIdx = 0;
-        while (!rawQueue.isEmpty()) {
-            if (argIdx >= argTree.size()) return null;
-            CommandArgument<?> arg = argTree.get(argIdx);
-            results.add(arg.tabComplete(rawQueue));
-            argIdx++;
-        }
-        return results.get(results.size() - 1);
-    }
+		// second call to getArgsAsList() to prevent consumption of the queue
+		populateArguments(node, getArgsAsList(raw), true);
+		List<List<String>> results = new ArrayList<>();
+		List<CommandArgument<?>> argTree = new ArrayList<>(argValues.keySet());
 
-    @Override
-    public Component execute() {
-        for (CommandArgument<?> argument : getTail().getArguments()) {
-            if (argument.isOptional()) continue;
-            if (getArgumentValue(argument) == null) {
-                return Component.text("Usage: " + getTail().getName() + " " +
-                        getTail().getArguments().stream()
-                                .map(Object::toString)
-                                .collect(Collectors.joining(" "))
-                );
-            }
-        }
-        return getTail().execute(this);
-    }
+		int argIdx = 0;
+		while (!rawQueue.isEmpty()) {
+			if (argIdx >= argTree.size()) return null;
+			CommandArgument<?> arg = argTree.get(argIdx);
+			results.add(arg.tabComplete(rawQueue));
+			argIdx++;
+		}
+		return results.get(results.size() - 1);
+	}
 
-    @Override
-    public CommandNode<T> getTail() {
-        return tail;
-    }
+	@Override
+	public Component execute() {
+		populateArguments(node, getArgsAsList(raw), true);
+
+		for (CommandArgument<?> argument : getTail().getArguments()) {
+			if (argument.isOptional() || getArgumentValue(argument) != null) continue;
+			return getFormat().getPrefix().append(
+					getFormat().formatMain("Usage: " + getTail().getName() + " " +
+							getTail().getArguments().stream()
+									.map(Object::toString)
+									.collect(Collectors.joining(" "))
+					)
+			);
+		}
+		return getTail().execute(this);
+	}
+
+	@Override
+	public CommandNode<T> getTail() {
+		return tail;
+	}
 }

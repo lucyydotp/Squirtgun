@@ -2,12 +2,9 @@ package me.lucyy.squirtgun.command.node;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.argument.ListArgument;
-import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.format.TextFormatter;
+import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.platform.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +25,7 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 	private final String name;
 	private final @Nullable String permission;
 	private final CommandArgument<String> argument;
+	private final CommandNode<T> helpNode;
 
 	@SafeVarargs
 	public SubcommandNode(@NotNull String name, @Nullable String permission,
@@ -36,17 +34,23 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 		Preconditions.checkNotNull(name, "Name must not be null");
 
 		Set<CommandNode<T>> nodes = new HashSet<>(Arrays.asList(childNodes));
-		if (addHelpNode) {
-			nodes.add(new SubcommandHelpNode<>(this));
-		}
 
 		this.childNodes = nodes;
 		this.name = name;
 		this.permission = permission;
-		argument = new ListArgument("subcommand",
-				"The subcommand to execute",
-				true,
-				this.childNodes.stream().map(CommandNode::getName).collect(Collectors.toList()));
+
+		if (addHelpNode) {
+			helpNode = new SubcommandHelpNode<>(this);
+			nodes.add(helpNode);
+		} else {
+			helpNode = null;
+		}
+
+		argument = new ListArgument("subcommand", "The subcommand to execute",
+				addHelpNode,
+				this.childNodes.stream()
+						.map(CommandNode::getName)
+						.collect(Collectors.toList()));
 	}
 
 	private @Nullable CommandNode<T> getNode(String name) {
@@ -65,25 +69,12 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 	@Override
 	public @Nullable CommandNode<T> next(CommandContext<T> context) {
 		String name = context.getArgumentValue(argument);
-		return name == null ? null : getNode(name);
+		return name == null ? helpNode : getNode(name);
 	}
 
 	@Override
 	public @Nullable Component execute(CommandContext<T> context) {
-		FormatProvider format = context.getFormat();
-		Component out = Component.empty()
-				.append(TextFormatter.formatTitle("Command Help", format))
-				.append(Component.newline());
-
-		for (CommandNode<?> node : childNodes) {
-			out = out.append(format.formatAccent(node.getName()))
-					.append(format.formatMain(" - " + node.getDescription()))
-					.append(Component.newline());
-		}
-
-		out = out.append(TextFormatter.formatTitle("*", context.getFormat()));
-
-		return out;
+		return null;
 	}
 
 	@Override

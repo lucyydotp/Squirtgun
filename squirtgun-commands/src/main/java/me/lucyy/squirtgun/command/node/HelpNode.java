@@ -27,20 +27,30 @@ public class HelpNode<T extends PermissionHolder> implements CommandNode<T> {
 				.append(TextFormatter.formatTitle("Command Help", format))
 				.append(Component.newline());
 
-		String fullCommand = parentNode.getArguments().stream()
-				.map(Object::toString)
-				.collect(Collectors.joining());
+		String fullCommand = parentNode.getName() + " " +
+				parentNode.getArguments().stream()
+						.map(Object::toString)
+						.collect(Collectors.joining());
 
-		out = out.append(TextFormatter.centreText(fullCommand, format, " "))
+		out = out.append(TextFormatter.centreText(parentNode.getDescription(), format, " "))
+				.append(Component.newline())
+				.append(format.formatAccent("Usage"))
+				.append(format.formatMain(": " + fullCommand))
 				.append(Component.newline());
 
-		for (CommandArgument<?> argument : parentNode.getArguments()) {
-			out = out.append(
-					format.formatMain(argument.getName() + " " + argument.getDescription())
-			).append(Component.newline());
+		if (parentNode.getArguments().size() != 0) {
+			out = out.append(Component.newline())
+					.append(TextFormatter.centreText("Arguments", format, " "))
+					.append(Component.newline());
+			for (CommandArgument<?> argument : parentNode.getArguments()) {
+				out = out.append(format.formatAccent(argument.getName()))
+						.append(format.formatMain( " - " + argument.getDescription()))
+						.append(Component.newline());
+			}
 		}
 
-		out = out.append(TextFormatter.formatTitle("*", context.getFormat()));
+		out = out.append(Component.newline())
+				.append(TextFormatter.formatTitle("*", context.getFormat()));
 
 		return out;
 	}
