@@ -1,6 +1,10 @@
 group = "me.lucyy"
 description = "Squirtgun"
 
+plugins {
+    java
+}
+
 repositories {
     maven("https://papermc.io/repo/repository/maven-public/")
 }
@@ -12,8 +16,4 @@ dependencies {
 
     compileOnly(project(":squirtgun-api"))
     compileOnly(project(":squirtgun-commands"))
-}
-
-publishing.publications {
-    create<MavenPublication>("mavenJava").from(components["java"])
 }

@@ -1,16 +1,11 @@
 description = "squirtgun-commands"
 
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-
-    sourceCompatibility = JavaVersion.VERSION_1_8
+plugins {
+    java
 }
 
 repositories {
     mavenCentral()
-    maven("https://oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
@@ -28,14 +23,7 @@ dependencies {
     compileOnly(project(":squirtgun-api"))
 }
 
-publishing.publications {
-    create<MavenPublication>("mavenJava").from(components["java"])
-}
-
 tasks {
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
-    }
     withType<Test> {
         useJUnitPlatform()
     }

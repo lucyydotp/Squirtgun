@@ -107,6 +107,7 @@ public abstract class UpdateChecker {
 
 			if (checkDataForUpdate(text)) {
 				updateAvailable = true;
+				// fixme - at some point remove legacy dependency
 				plugin.getLogger().warning(LegacyComponentSerializer.legacySection().serialize(getUpdateMessage()));
 				plugin.getTaskScheduler().cancel(listenerTask);
 				return true;

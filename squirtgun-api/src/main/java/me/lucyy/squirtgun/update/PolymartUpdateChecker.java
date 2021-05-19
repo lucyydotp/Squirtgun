@@ -9,7 +9,6 @@ import net.kyori.adventure.text.Component;
  * Update checking mechanism for plugins on Polymart.
  */
 public class PolymartUpdateChecker extends UpdateChecker {
-	private final JsonParser parser = new JsonParser();
 
 	/**
 	 * Creates a new update checker, and schedule update checking every 3 hours.
@@ -27,11 +26,11 @@ public class PolymartUpdateChecker extends UpdateChecker {
 
 	@Override
 	protected boolean checkDataForUpdate(String input) {
-		JsonObject object = parser.parse(input).getAsJsonObject();
+		JsonObject object = JsonParser.parseString(input).getAsJsonObject();
 		JsonObject response = object.getAsJsonObject("response");
 		if (!response.get("success").getAsBoolean()) {
-			getPlatform().getLogger().severe("Failed to access Polymart to check for updates! Please report this " +
-				"to the plugin developer.");
+			getPlatform().getLogger().severe(
+					"Failed to access Polymart to check for updates! Please report this to the plugin developer.");
 			return false;
 		}
 		String version = response.getAsJsonObject("resource")
