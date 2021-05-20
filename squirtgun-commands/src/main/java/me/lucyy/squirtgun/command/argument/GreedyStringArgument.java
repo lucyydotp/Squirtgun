@@ -8,7 +8,8 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 
 /**
- * An argument that consumes all the available arguments. If missing, returns null.
+ * An argument that consumes all the available arguments. Note this argument
+ * must be the last in a command chain.
  */
 public final class GreedyStringArgument extends AbstractArgument<String> {
 

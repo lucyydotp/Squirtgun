@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * A command context based on a raw string.
+ * A command context that parses a raw string.
  */
 public class StringContext<T extends PermissionHolder> implements CommandContext<T> {
 

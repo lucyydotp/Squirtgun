@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * A builder to build a node.
+ * A builder to build a node. The minimum required fields are name and an execute function.
  *
  * @param <T> the type to expect from the command context
+ * @since 2.0.0
  */
 public class NodeBuilder<T extends PermissionHolder> {
 

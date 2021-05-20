@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
+/**
+ * An argument that gets a player. This will tabcomplete for online players, but will
+ * provide any player, regardless of if they are online or not.
+ */
 public class OnlinePlayerArgument extends AbstractArgument<SquirtgunPlayer> {
 	private final Platform platform;
 

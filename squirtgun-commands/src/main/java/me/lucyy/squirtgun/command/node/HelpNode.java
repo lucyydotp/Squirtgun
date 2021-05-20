@@ -12,6 +12,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A command node that shows a help screen for another node
+ * that shows its description, usage, and argument information.
+ *
+ * @since 2.0.0
+ */
 public class HelpNode<T extends PermissionHolder> implements CommandNode<T> {
 
 	private final CommandNode<?> parentNode;

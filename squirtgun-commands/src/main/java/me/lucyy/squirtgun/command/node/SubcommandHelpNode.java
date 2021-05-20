@@ -14,6 +14,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * A help node for a subcommand.
+ * One optional argument is exposed, which determines a specific child node to show help for.
+ * If specified, a new {@link HelpNode} will be created for it and the output shown, otherwise
+ * a general overview of the command and its subnodes will be shown.
+ *
+ * @since 2.0.0
+ */
 public class SubcommandHelpNode<T extends PermissionHolder> implements CommandNode<T> {
 
 	private final SubcommandNode<?> parentNode;

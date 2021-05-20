@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Queue;
 
 /**
- * An argument that accepts a single word. If missing, returns null.
+ * An argument that accepts a single word.
  */
 public final class SingleWordArgument extends AbstractArgument<String> {
 

@@ -10,9 +10,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * The context a command is executed in, containing data such as the command target
- * and the arguments provided to it so far.
- * Also responsible for tabcompletion.
+ * The context a command is executed in, responsible for parsin, tab-completing
+ * and executing the command. It contains data such as the command target and
+ * the arguments provided to it so far.
  *
  * @param <T> the subject type.
  * @since 2.0.0
@@ -60,7 +60,7 @@ public interface CommandContext<T extends PermissionHolder> {
 	@Nullable List<String> tabComplete();
 
 	/**
-	 * Executes the context.
+	 * Executes the command.
 	 */
 	Component execute();
 
