@@ -111,3 +111,7 @@ subprojects {
         withType<Javadoc>()
     }
 }
+
+task("printVersion") {
+    println("VERSION=" + project.version)
+}
