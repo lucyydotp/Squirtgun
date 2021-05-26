@@ -48,6 +48,6 @@ public class TestFormatter implements FormatProvider {
 
 	@Override
 	public Component getPrefix() {
-		return TextFormatter.format("{#9dacfa>}CommonLibTest{#fa9efa<} {#a0a0a0} >> ");
+		return Component.empty();
 	}
 }

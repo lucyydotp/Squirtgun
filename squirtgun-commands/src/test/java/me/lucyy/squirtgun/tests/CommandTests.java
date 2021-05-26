@@ -81,17 +81,17 @@ public class CommandTests {
     public void textMissingPermissionForNextNode() {
         Component component = Component.text("hello");
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
-                .name("test")
-                .executes(ctx -> null)
-                .next(new NodeBuilder<>()
+		        .name("test")
+                .executes(x -> component)
+		        .next(new NodeBuilder<>()
                         .name("test2")
 						.executes(ctx -> component)
                         .permission("you.dont.have.this.permission")
                         .build()
                 )
-                .build();
+		        .build();
         Component returned = new StringContext<>(new TestFormatter(),
                 x -> false, node, "test2").execute();
-        Assertions.assertNotEquals(component, returned);
+        Assertions.assertEquals(component, returned);
     }
 }

@@ -127,6 +127,9 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 	public Component execute() {
 		populateArguments(node, getArgsAsList(raw), true);
 
+		String perm = getTail().getPermission();
+		if (perm != null && !getTarget().hasPermission(perm)) return Component.text("No permission!");
+
 		for (CommandArgument<?> argument : getTail().getArguments()) {
 			if (argument.isOptional() || getArgumentValue(argument) != null) continue;
 			return getFormat().getPrefix().append(
@@ -137,9 +140,6 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 					)
 			);
 		}
-
-		String perm = getTail().getPermission();
-		if (perm != null && !getTarget().hasPermission(perm)) return Component.text("No permission!");
 
 		return getTail().execute(this);
 	}
