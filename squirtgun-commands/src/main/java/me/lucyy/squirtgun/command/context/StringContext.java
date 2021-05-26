@@ -137,6 +137,10 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 					)
 			);
 		}
+
+		String perm = getTail().getPermission();
+		if (perm != null && !getTarget().hasPermission(perm)) return Component.text("No permission!");
+
 		return getTail().execute(this);
 	}
 

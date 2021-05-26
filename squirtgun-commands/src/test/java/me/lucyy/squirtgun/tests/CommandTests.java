@@ -43,8 +43,36 @@ public class CommandTests {
 			.executes(ctx -> component)
 			.build();
 
-		Component returned = node.execute(new StringContext<>(new TestFormatter(),
-			x -> true, node, "test"));
+		Component returned = new StringContext<>(new TestFormatter(),
+			x -> true, node, "test").execute();
 		Assertions.assertEquals(returned, component);
+	}
+
+	@Test
+	@DisplayName("Check that commands fail when a required permission is not present")
+	public void testCommandNoPermission() {
+		Component component = Component.text("hello");
+		CommandNode<PermissionHolder> node = new NodeBuilder<>()
+				.name("test")
+				.executes(ctx -> component)
+				.permission("test.permission")
+				.build();
+		Component returned = new StringContext<>(new TestFormatter(),
+				x -> false, node, "test").execute();
+		Assertions.assertNotEquals(component, returned);
+	}
+
+	@Test
+	@DisplayName("Check that commands succeed when a required permission is present")
+	public void testCommandWithPermission() {
+		Component component = Component.text("hello");
+		CommandNode<PermissionHolder> node = new NodeBuilder<>()
+				.name("test")
+				.executes(ctx -> component)
+				.permission("test.permission")
+				.build();
+		Component returned = new StringContext<>(new TestFormatter(),
+				x -> true, node, "test").execute();
+		Assertions.assertEquals(component, returned);
 	}
 }
