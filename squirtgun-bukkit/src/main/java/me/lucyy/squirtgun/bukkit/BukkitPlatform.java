@@ -23,6 +23,7 @@
 
 package me.lucyy.squirtgun.bukkit;
 
+import me.lucyy.squirtgun.bukkit.task.BukkitTaskScheduler;
 import me.lucyy.squirtgun.platform.AuthMode;
 import me.lucyy.squirtgun.platform.EventListener;
 import me.lucyy.squirtgun.platform.Platform;
@@ -43,11 +44,17 @@ public class BukkitPlatform implements Platform {
 
 	private final JavaPlugin plugin;
 
+	private final BukkitTaskScheduler scheduler = new BukkitTaskScheduler(this);
+
 	private final BukkitListenerAdapter listenerAdapter = new BukkitListenerAdapter();
 
 	public BukkitPlatform(final JavaPlugin plugin) {
 		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(listenerAdapter, plugin);
+	}
+
+	public JavaPlugin getBukkitPlugin() {
+		return plugin;
 	}
 
 	@Override
@@ -85,7 +92,7 @@ public class BukkitPlatform implements Platform {
 
 	@Override
 	public TaskScheduler getTaskScheduler() {
-		return null;
+		return scheduler;
 	}
 
 	@Override
