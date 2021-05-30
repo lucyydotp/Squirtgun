@@ -33,9 +33,9 @@ repositories {
 }
 
 dependencies {
-    implementation("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
-    implementation("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
-    implementation("net.kyori:adventure-api:4.7.0")
+    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
+    compileOnly("net.kyori:adventure-api:4.7.0")
 
     implementation(project(":squirtgun-api"))
     implementation(project(":squirtgun-commands"))

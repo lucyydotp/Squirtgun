@@ -34,17 +34,64 @@ import org.junit.jupiter.api.Test;
 
 public class CommandTests {
 
-	@Test
-	@DisplayName("Check simple built command nodes work")
-	public void testSimpleBuiltNodes() {
-		Component component = Component.text("hello");
-		CommandNode<PermissionHolder> node = new NodeBuilder<>()
-			.name("test")
-			.executes(ctx -> component)
-			.build();
+    @Test
+    @DisplayName("Check simple built command nodes work")
+    public void testSimpleBuiltNodes() {
+        Component component = Component.text("hello");
+        CommandNode<PermissionHolder> node = new NodeBuilder<>()
+                .name("test")
+                .executes(ctx -> component)
+                .build();
 
-		Component returned = node.execute(new StringContext<>(new TestFormatter(),
-			x -> true, node, "test"));
-		Assertions.assertEquals(returned, component);
-	}
+        Component returned = new StringContext<>(new TestFormatter(),
+                x -> true, node, "test").execute();
+        Assertions.assertEquals(returned, component);
+    }
+
+    @Test
+    @DisplayName("Check that commands fail when a required permission is not present")
+    public void testCommandNoPermission() {
+        Component component = Component.text("hello");
+        CommandNode<PermissionHolder> node = new NodeBuilder<>()
+                .name("test")
+                .executes(ctx -> component)
+                .permission("test.permission")
+                .build();
+        Component returned = new StringContext<>(new TestFormatter(),
+                x -> false, node, "test").execute();
+        Assertions.assertNotEquals(component, returned);
+    }
+
+    @Test
+    @DisplayName("Check that commands succeed when a required permission is present")
+    public void testCommandWithPermission() {
+        Component component = Component.text("hello");
+        CommandNode<PermissionHolder> node = new NodeBuilder<>()
+                .name("test")
+                .executes(ctx -> component)
+                .permission("test.permission")
+                .build();
+        Component returned = new StringContext<>(new TestFormatter(),
+                x -> true, node, "test").execute();
+        Assertions.assertEquals(component, returned);
+    }
+
+    @Test
+    @DisplayName("Check that a missing permission blocks a next node")
+    public void textMissingPermissionForNextNode() {
+        Component component = Component.text("hello");
+        CommandNode<PermissionHolder> node = new NodeBuilder<>()
+		        .name("test")
+                .executes(x -> component)
+		        .next(new NodeBuilder<>()
+                        .name("test2")
+						.executes(ctx -> component)
+                        .permission("you.dont.have.this.permission")
+                        .build()
+                )
+		        .build();
+        Component returned = new StringContext<>(new TestFormatter(),
+                x -> false, node, "test2").execute();
+        Assertions.assertEquals(component, returned);
+    }
 }

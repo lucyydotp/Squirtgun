@@ -49,7 +49,7 @@ public class PolymartUpdateChecker extends UpdateChecker {
 
 	@Override
 	protected boolean checkDataForUpdate(String input) {
-		JsonObject object = JsonParser.parseString(input).getAsJsonObject();
+		JsonObject object = new JsonParser().parse(input).getAsJsonObject();
 		JsonObject response = object.getAsJsonObject("response");
 		if (!response.get("success").getAsBoolean()) {
 			getPlatform().getLogger().severe(
