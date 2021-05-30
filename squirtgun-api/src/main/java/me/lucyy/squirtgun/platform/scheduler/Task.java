@@ -38,7 +38,7 @@ public class Task {
 
 	public static class Builder {
 		private int interval = -1;
-		private int delay = -1;
+		private int delay = 0;
 		private boolean isAsync = false;
 		private Consumer<Platform> action;
 
@@ -65,7 +65,6 @@ public class Task {
 		}
 
 		public Task build() {
-			Preconditions.checkArgument(delay != -1, "Delay has not been set");
 			Preconditions.checkNotNull(action, "Action has not been set");
 			return new Task(action, delay, interval, isAsync);
 		}
