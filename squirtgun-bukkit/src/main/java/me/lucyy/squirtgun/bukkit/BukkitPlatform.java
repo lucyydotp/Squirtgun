@@ -66,6 +66,11 @@ public class BukkitPlatform implements Platform {
 	}
 
 	@Override
+	public String[] getAuthors() {
+		return plugin.getDescription().getAuthors().toArray(new String[0]);
+	}
+
+	@Override
 	public AuthMode getAuthMode() {
 		boolean onlineMode = Bukkit.getOnlineMode();
 		try {

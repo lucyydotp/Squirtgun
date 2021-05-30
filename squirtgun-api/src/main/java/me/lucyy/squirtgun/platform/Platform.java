@@ -39,6 +39,8 @@ public interface Platform {
 
 	String getPluginVersion();
 
+	String[] getAuthors();
+
 	AuthMode getAuthMode();
 
 	TaskScheduler getTaskScheduler();
