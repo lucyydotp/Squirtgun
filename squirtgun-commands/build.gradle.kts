@@ -41,8 +41,8 @@ dependencies {
     testImplementation("com.google.guava:guava:30.1.1-jre")
     testImplementation(project(":squirtgun-api"))
 
-    implementation("net.kyori:adventure-api:4.7.0")
-    implementation("com.google.guava:guava:30.1.1-jre")
+    compileOnly("net.kyori:adventure-api:4.7.0")
+    compileOnly("com.google.guava:guava:30.1.1-jre")
     implementation(project(":squirtgun-api"))
 }
 
