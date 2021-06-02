@@ -49,7 +49,7 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 	private void populateArguments(CommandNode<T> node, Queue<String> raw, boolean findValues) {
 		tail = node;
 		for (CommandArgument<?> arg : node.getArguments()) {
-			argValues.put(arg, findValues ? arg.getValue(raw) : null);
+			argValues.put(arg, findValues ? arg.getValue(raw, this) : null);
 		}
 		CommandNode<T> next = node.next(this);
 		if (next == null) return;
@@ -117,7 +117,7 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 		while (!rawQueue.isEmpty()) {
 			if (argIdx >= argTree.size()) return null;
 			CommandArgument<?> arg = argTree.get(argIdx);
-			results.add(arg.tabComplete(rawQueue));
+			results.add(arg.tabComplete(rawQueue, this));
 			argIdx++;
 		}
 		return results.get(results.size() - 1);

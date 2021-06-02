@@ -23,6 +23,8 @@
 
 package me.lucyy.squirtgun.command.argument;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * An abstract argument, encapsulating the name and description fields.
  */
@@ -42,7 +44,7 @@ public abstract class AbstractArgument<T> implements CommandArgument<T> {
 	}
 
 	@Override
-	public final String getName() {
+	public final @NotNull String getName() {
 		return name;
 	}
 

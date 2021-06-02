@@ -21,12 +21,14 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.command.node;
+package me.lucyy.squirtgun.command.node.subcommand;
 
 import com.google.common.collect.ImmutableList;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.argument.ListArgument;
 import me.lucyy.squirtgun.command.context.CommandContext;
+import me.lucyy.squirtgun.command.node.CommandNode;
+import me.lucyy.squirtgun.command.node.HelpNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.format.TextFormatter;
 import me.lucyy.squirtgun.platform.PermissionHolder;
