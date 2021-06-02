@@ -101,7 +101,9 @@ public class SubcommandHelpNode<T extends PermissionHolder> implements CommandNo
 		for (CommandNode<?> node : parentNode.getNodes()) {
 			String perm = node.getPermission();
 			if (perm == null || context.getTarget().hasPermission(perm)) {
-				Component innerComp = fmt.formatAccent(node.getName())
+				Component innerComp =
+						fmt.formatMain(parentNode.getName() + " ")
+						.append(fmt.formatAccent(node.getName()))
 						.append(fmt.formatMain(" - " + node.getDescription()))
 						.append(Component.text("\n"));
 				out = out.append(innerComp);

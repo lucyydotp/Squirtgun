@@ -59,7 +59,7 @@ public class HelpNode<T extends PermissionHolder> implements CommandNode<T> {
 		String fullCommand = parentNode.getName() + " " +
 				parentNode.getArguments().stream()
 						.map(Object::toString)
-						.collect(Collectors.joining());
+						.collect(Collectors.joining(" "));
 
 		out = out.append(TextFormatter.centreText(parentNode.getDescription(), format, " "))
 				.append(Component.newline())
