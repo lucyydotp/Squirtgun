@@ -33,10 +33,7 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A node that tab completes and acts as a "splitter" for other nodes.
@@ -86,7 +83,6 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
      * @param permission the permission needed to execute this node. May be null if none is required.
      * @param childNodes the child nodes
      */
-    // FIXME - is this SafeVarargs actually safe?
     @SafeVarargs
     protected SubcommandNode(@NotNull String name, @Nullable String permission, @NotNull CommandNode<T>... childNodes) {
         Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
