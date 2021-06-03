@@ -25,21 +25,22 @@ package me.lucyy.squirtgun.bukkit;
 
 import me.lucyy.squirtgun.platform.Gamemode;
 import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * SquirtgunPlayer implementation for Bukkit.
  */
-public class BukkitPlayer implements SquirtgunPlayer {
+public class BukkitPlayer implements SquirtgunPlayer, ForwardingAudience {
 
     private final OfflinePlayer parent;
+    private final Audience audience;
     private static final EnumMap<org.bukkit.GameMode, Gamemode> gamemodeMap = new EnumMap<>(org.bukkit.GameMode.class);
 
     static {
@@ -49,8 +50,9 @@ public class BukkitPlayer implements SquirtgunPlayer {
         gamemodeMap.put(GameMode.SPECTATOR, Gamemode.SPECTATOR);
     }
 
-    public BukkitPlayer(OfflinePlayer parent) {
+    public BukkitPlayer(OfflinePlayer parent, Audience audience) {
         this.parent = parent;
+        this.audience = audience;
     }
 
     @Override
@@ -96,5 +98,10 @@ public class BukkitPlayer implements SquirtgunPlayer {
             Objects.requireNonNull(bukkitMode);
 	        ((Player) parent).setGameMode(bukkitMode);
         }
+    }
+
+    @Override
+    public @NonNull Iterable<? extends Audience> audiences() {
+        return Collections.singleton(audience);
     }
 }

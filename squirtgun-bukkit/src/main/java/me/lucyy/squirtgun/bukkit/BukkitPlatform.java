@@ -29,7 +29,12 @@ import me.lucyy.squirtgun.platform.EventListener;
 import me.lucyy.squirtgun.platform.Platform;
 import me.lucyy.squirtgun.platform.SquirtgunPlayer;
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -42,84 +47,94 @@ import java.util.stream.Collectors;
  */
 public class BukkitPlatform implements Platform {
 
-	private final JavaPlugin plugin;
+    private final JavaPlugin plugin;
 
-	private final BukkitTaskScheduler scheduler = new BukkitTaskScheduler(this);
+    private final BukkitTaskScheduler scheduler = new BukkitTaskScheduler(this);
 
-	private final BukkitListenerAdapter listenerAdapter = new BukkitListenerAdapter();
+    private final BukkitListenerAdapter listenerAdapter = new BukkitListenerAdapter();
 
-	public BukkitPlatform(final JavaPlugin plugin) {
-		this.plugin = plugin;
-		plugin.getServer().getPluginManager().registerEvents(listenerAdapter, plugin);
-	}
+    private final BukkitAudiences audiences;
 
-	public JavaPlugin getBukkitPlugin() {
-		return plugin;
-	}
+    public BukkitPlatform(final JavaPlugin plugin) {
+        this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(listenerAdapter, plugin);
+        audiences = BukkitAudiences.create(plugin);
+    }
 
-	@Override
-	public Logger getLogger() {
-		return plugin.getLogger();
-	}
+    public JavaPlugin getBukkitPlugin() {
+        return plugin;
+    }
 
-	@Override
-	public String getPluginName() {
-		return plugin.getName();
-	}
+    @Override
+    public Logger getLogger() {
+        return plugin.getLogger();
+    }
 
-	@Override
-	public String getPluginVersion() {
-		return plugin.getDescription().getVersion();
-	}
+    @Override
+    public void log(Component component) {
+		audiences.console().sendMessage(component);
+    }
 
-	@Override
-	public String[] getAuthors() {
-		return plugin.getDescription().getAuthors().toArray(new String[0]);
-	}
+    @Override
+    public String getPluginName() {
+        return plugin.getName();
+    }
 
-	@Override
-	public AuthMode getAuthMode() {
-		boolean onlineMode = Bukkit.getOnlineMode();
-		try {
-			if (Class.forName("org.spigotmc.SpigotConfig").getField("bungee").getBoolean(null)) {
-				return AuthMode.BUNGEE;
-			}
-		} catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignored) {
-			// probably running craftbukkit, we can safely ignore these
-		}
-		return onlineMode ? AuthMode.ONLINE : AuthMode.OFFLINE;
-	}
+    @Override
+    public String getPluginVersion() {
+        return plugin.getDescription().getVersion();
+    }
 
-	@Override
-	public TaskScheduler getTaskScheduler() {
-		return scheduler;
-	}
+    @Override
+    public String[] getAuthors() {
+        return plugin.getDescription().getAuthors().toArray(new String[0]);
+    }
 
-	@Override
-	public void registerEventListener(EventListener listener) {
-		listenerAdapter.addListener(listener);
-	}
+    @Override
+    public AuthMode getAuthMode() {
+        boolean onlineMode = Bukkit.getOnlineMode();
+        try {
+            if (Class.forName("org.spigotmc.SpigotConfig").getField("bungee").getBoolean(null)) {
+                return AuthMode.BUNGEE;
+            }
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignored) {
+            // probably running craftbukkit, we can safely ignore these
+        }
+        return onlineMode ? AuthMode.ONLINE : AuthMode.OFFLINE;
+    }
 
-	@Override
-	public void unregisterEventListener(EventListener listener) {
-		listenerAdapter.removeListener(listener);
-	}
+    @Override
+    public TaskScheduler getTaskScheduler() {
+        return scheduler;
+    }
 
-	@Override
-	public SquirtgunPlayer getPlayer(UUID uuid) {
-		return new BukkitPlayer(Bukkit.getOfflinePlayer(uuid));
-	}
+    @Override
+    public void registerEventListener(EventListener listener) {
+        listenerAdapter.addListener(listener);
+    }
 
-	@Override
-	@SuppressWarnings("deprecation") // blame the orange hash man. :(
-	public SquirtgunPlayer getPlayer(String name) {
-		return new BukkitPlayer(Bukkit.getOfflinePlayer(name));
-	}
+    @Override
+    public void unregisterEventListener(EventListener listener) {
+        listenerAdapter.removeListener(listener);
+    }
 
-	@Override
-	public List<SquirtgunPlayer> getOnlinePlayers() {
-		return Bukkit.getOnlinePlayers().stream()
-				.map(BukkitPlayer::new)
-				.collect(Collectors.toList());
-	}
+    @Override
+    public SquirtgunPlayer getPlayer(UUID uuid) {
+        return new BukkitPlayer(Bukkit.getOfflinePlayer(uuid), audiences.player(uuid));
+    }
+
+    @Override
+    @SuppressWarnings("deprecation") // blame the orange hash man. :(
+    public SquirtgunPlayer getPlayer(String name) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+        Audience audience = player instanceof Player ? audiences.player((Player) audiences) : Audience.empty();
+        return new BukkitPlayer(Bukkit.getOfflinePlayer(name), audience);
+    }
+
+    @Override
+    public List<SquirtgunPlayer> getOnlinePlayers() {
+        return Bukkit.getOnlinePlayers().stream()
+                .map(p -> new BukkitPlayer(p, audiences.player(p)))
+                .collect(Collectors.toList());
+    }
 }

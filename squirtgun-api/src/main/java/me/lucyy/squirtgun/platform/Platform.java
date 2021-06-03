@@ -24,6 +24,8 @@
 package me.lucyy.squirtgun.platform;
 
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
+import net.kyori.adventure.text.Component;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -34,6 +36,8 @@ import java.util.logging.Logger;
 public interface Platform {
 
 	Logger getLogger();
+
+	void log(Component component);
 
 	String getPluginName();
 

@@ -66,7 +66,7 @@ public final class RgbGradientPattern implements FormatPattern {
 			component = component.append(Component.text(text.charAt(x), color));
 		}
 
-		return TextFormatter.applyLegacyDecorations(component, formats); // TODO test this
+		return TextFormatter.applyLegacyDecorations(component, formats);
 	}
 
 	@Override
