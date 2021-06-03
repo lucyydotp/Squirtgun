@@ -19,10 +19,9 @@ public class SubcommandNodeArgument<T extends PermissionHolder> extends Abstract
 	 * @param parent      the node this argument belongs to
 	 * @param name        the argument's name
 	 * @param description the argument's description
-	 * @param isOptional  whether the argument is optional or not
 	 */
-	public SubcommandNodeArgument(SubcommandNode<T> parent, String name, String description, boolean isOptional) {
-		super(name, description, isOptional);
+	public SubcommandNodeArgument(SubcommandNode<T> parent, String name, String description) {
+		super(name, description, false);
 		this.parent = parent;
 	}
 
@@ -48,5 +47,10 @@ public class SubcommandNodeArgument<T extends PermissionHolder> extends Abstract
 		return getValidNodes(raw, context.getTarget())
 				.map(CommandNode::getName)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public boolean isOptional() {
+		return parent.getFallbackNode() == null;
 	}
 }

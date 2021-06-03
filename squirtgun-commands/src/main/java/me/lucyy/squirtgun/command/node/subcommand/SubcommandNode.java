@@ -32,6 +32,7 @@ import me.lucyy.squirtgun.platform.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -45,75 +46,108 @@ import java.util.Set;
  */
 public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T> {
 
-	private final Set<? extends CommandNode<T>> childNodes;
-	private final String name;
-	private final @Nullable String permission;
-	private final CommandArgument<CommandNode<T>> argument;
-	private final CommandNode<T> helpNode;
+    @SafeVarargs
+    public static <T extends PermissionHolder> SubcommandNode<T> withHelp(
+            String name,
+            @Nullable String permission,
+            @NotNull CommandNode<T>... childNodes) {
+        SubcommandNode<T> node = new SubcommandNode<>(name, permission, childNodes);
+        node.setFallbackNode(new SubcommandHelpNode<>(node));
+        return node;
+    }
 
-	/**
-	 * @param name        this node's name.
-	 * @param permission  the permission needed to execute this node. May be null if none is required.
-	 * @param addHelpNode whether or not to add a {@link SubcommandHelpNode} with the name "help" to the list
-	 * @param childNodes  the child nodes
-	 */
-	@SafeVarargs
-	public SubcommandNode(@NotNull String name, @Nullable String permission,
-	                      boolean addHelpNode, @NotNull CommandNode<T>... childNodes) {
-		Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
-		Preconditions.checkNotNull(name, "Name must not be null");
+    @SafeVarargs
+    public static <T extends PermissionHolder> SubcommandNode<T> withFallback(
+            String name,
+            @Nullable String permission,
+            @NotNull CommandNode<T> fallback,
+            @NotNull CommandNode<T>... childNodes) {
+        SubcommandNode<T> node = new SubcommandNode<>(name, permission, childNodes);
+        node.setFallbackNode(fallback);
+        return node;
+    }
 
-		Set<CommandNode<T>> nodes = new HashSet<>(Arrays.asList(childNodes));
+    @SafeVarargs
+    public static <T extends PermissionHolder> SubcommandNode<T> withBasicHelp(
+            String name,
+            @Nullable String permission,
+            @NotNull CommandNode<T>... childNodes) {
+        return new SubcommandNode<>(name, permission, childNodes);
+    }
 
-		this.childNodes = nodes;
-		this.name = name;
-		this.permission = permission;
+    private final Set<? extends CommandNode<T>> childNodes;
+    private final String name;
+    private final @Nullable String permission;
+    private final CommandArgument<CommandNode<T>> argument;
+    private CommandNode<T> fallbackNode;
 
-		if (addHelpNode) {
-			helpNode = new SubcommandHelpNode<>(this);
-			nodes.add(helpNode);
-		} else {
-			helpNode = null;
-		}
+    /**
+     * @param name       this node's name.
+     * @param permission the permission needed to execute this node. May be null if none is required.
+     * @param childNodes the child nodes
+     */
+    // FIXME - is this SafeVarargs actually safe?
+    @SafeVarargs
+    protected SubcommandNode(@NotNull String name, @Nullable String permission, @NotNull CommandNode<T>... childNodes) {
+        Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
+        Preconditions.checkNotNull(name, "Name must not be null");
 
-		argument = new SubcommandNodeArgument<>(this, "subcommand", "The subcommand to execute", addHelpNode);
-	}
+        this.childNodes = new HashSet<>(Arrays.asList(childNodes));
+        this.name = name;
+        this.permission = permission;
 
-	@Override
-	public @NotNull List<CommandArgument<?>> getArguments() {
-		return ImmutableList.of(argument);
-	}
+        argument = new SubcommandNodeArgument<>(this, "subcommand", "The subcommand to execute");
+    }
 
-	/**
-	 * Gets the child nodes that this node holds.
-	 */
-	public Set<? extends CommandNode<T>> getNodes() {
-		return childNodes;
-	}
+    /**
+     * Gets the child nodes that this node holds.
+     */
+    public Set<? extends CommandNode<T>> getNodes() {
+        return childNodes;
+    }
 
-	@Override
-	public @Nullable CommandNode<T> next(CommandContext<T> context) {
-		CommandNode<T> name = context.getArgumentValue(argument);
-		return name == null ? helpNode : name;
-	}
+    /**
+     * Sets the fallback node.
+     */
+    private void setFallbackNode(CommandNode<T> fallback) {
+        fallbackNode = fallback;
+    }
 
-	@Override
-	public @Nullable Component execute(CommandContext<T> context) {
-		return null;
-	}
+    /**
+     * Gets the fallback node.
+     */
+    public @Nullable CommandNode<T> getFallbackNode() {
+        return fallbackNode;
+    }
 
-	@Override
-	public @NotNull String getName() {
-		return name;
-	}
+    @Override
+    public @NotNull List<CommandArgument<?>> getArguments() {
+        return ImmutableList.of(argument);
+    }
 
-	@Override
-	public String getDescription() {
-		return null;
-	} // TODO
+    @Override
+    public @Nullable CommandNode<T> next(CommandContext<T> context) {
+        CommandNode<T> name = context.getArgumentValue(argument);
+        return name == null ? fallbackNode : name;
+    }
 
-	@Override
-	public @Nullable String getPermission() {
-		return permission;
-	}
+    @Override
+    public @Nullable Component execute(CommandContext<T> context) {
+        return null;
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return name;
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
+    } // TODO
+
+    @Override
+    public @Nullable String getPermission() {
+        return permission;
+    }
 }
