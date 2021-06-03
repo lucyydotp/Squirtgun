@@ -26,7 +26,6 @@ package me.lucyy.squirtgun.update;
 import me.lucyy.squirtgun.platform.Platform;
 import me.lucyy.squirtgun.platform.scheduler.Task;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
