@@ -9,7 +9,6 @@ import me.lucyy.squirtgun.platform.Platform;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.Arrays;
 
 public class PluginInfoNode<T extends PermissionHolder> implements CommandNode<T> {
 

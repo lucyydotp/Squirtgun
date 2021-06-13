@@ -55,7 +55,7 @@ subprojects {
                     licenses {
                         license {
                             name.set("MIT License")
-                            url.set("http://www.opensource.org/licenses/mit-license.php")
+                            url.set("https://www.opensource.org/licenses/mit-license.php")
                         }
                     }
                     developers {
@@ -92,6 +92,7 @@ subprojects {
         }
     }
 
+    /* DO NOT COMMIT - TODO REVERT
     signing {
         val signingKey: String? by project
         val signingPassword: String? by project
@@ -110,6 +111,7 @@ subprojects {
         }
         withType<Javadoc>()
     }
+    */
 }
 
 task("printVersion") {

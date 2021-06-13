@@ -29,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Queue;
-import java.util.stream.Collectors;
 
 /**
  * An argument that consumes all the available arguments. Note this argument
