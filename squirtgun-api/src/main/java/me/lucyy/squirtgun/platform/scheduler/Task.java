@@ -25,10 +25,11 @@ package me.lucyy.squirtgun.platform.scheduler;
 
 import com.google.common.base.Preconditions;
 import me.lucyy.squirtgun.platform.Platform;
+
 import java.util.function.Consumer;
 
 /**
- * TODO javadoc
+ * A task that can be run. It can be scheduled to run later, or to repeat itself, and it may be asynchronous.
  */
 public class Task {
 
@@ -36,6 +37,9 @@ public class Task {
 		return new Builder();
 	}
 
+	/**
+	 * A builder for a task.
+	 */
 	public static class Builder {
 		private int interval = -1;
 		private int delay = 0;
@@ -75,6 +79,14 @@ public class Task {
 	private final int interval;
 	private final boolean isAsync;
 
+	/**
+	 * Creates a new task.
+	 *
+	 * @param action   the action to execute
+	 * @param delay    how long to wait before executing this task
+	 * @param interval how many ticks to wait between executing repeatedly, or -1 if it should not repeat.
+	 * @param isAsync  whether to run this task asynchronously - how this happens is dictated by the platform.
+	 */
 	public Task(final Consumer<Platform> action, final int delay, final int interval, final boolean isAsync) {
 		this.action = action;
 		this.delay = delay;
@@ -82,22 +94,37 @@ public class Task {
 		this.isAsync = isAsync;
 	}
 
+	/**
+	 * Whether this task is repeating.
+	 */
 	public boolean isRepeating() {
 		return interval != -1;
 	}
 
+	/**
+	 * How long to wait before executing this task.
+	 */
 	public int getDelay() {
 		return delay;
 	}
 
+	/**
+	 * How many ticks to wait between executing repeatedly, or -1 if it should not repeat.
+	 */
 	public int getInterval() {
 		return interval;
 	}
 
+	/**
+	 * Executes this task.
+	 */
 	public void execute(Platform platform) {
 		action.accept(platform);
 	}
 
+	/**
+	 * Whether this task should be run asynchronously.
+	 */
 	public boolean isAsync() {
 		return isAsync;
 	}

@@ -26,7 +26,6 @@ package me.lucyy.squirtgun.update;
 import me.lucyy.squirtgun.platform.Platform;
 import me.lucyy.squirtgun.platform.scheduler.Task;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -112,8 +111,7 @@ public abstract class UpdateChecker {
 
 			if (checkDataForUpdate(text)) {
 				updateAvailable = true;
-				// fixme - at some point remove legacy dependency
-				plugin.getLogger().warning(LegacyComponentSerializer.legacySection().serialize(getUpdateMessage()));
+				plugin.log(getUpdateMessage());
 				plugin.getTaskScheduler().cancel(listenerTask);
 				return true;
 			} else plugin.getLogger().info("No update available.");

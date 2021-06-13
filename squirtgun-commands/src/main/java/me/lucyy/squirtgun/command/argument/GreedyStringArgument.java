@@ -24,11 +24,11 @@
 package me.lucyy.squirtgun.command.argument;
 
 import com.google.common.collect.ImmutableList;
+import me.lucyy.squirtgun.command.context.CommandContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Queue;
-import java.util.stream.Collectors;
 
 /**
  * An argument that consumes all the available arguments. Note this argument
@@ -46,12 +46,12 @@ public final class GreedyStringArgument extends AbstractArgument<String> {
     }
 
     @Override
-    public String getValue(Queue<String> args) {
+    public String getValue(Queue<String> args, CommandContext<?> ctx) {
         return String.join(" ", args);
     }
 
     @Override
-    public @NotNull List<String> tabComplete(Queue<String> value) {
+    public @NotNull List<String> tabComplete(Queue<String> value, CommandContext<?> ctx) {
         value.poll();
         return ImmutableList.of(toString());
     }

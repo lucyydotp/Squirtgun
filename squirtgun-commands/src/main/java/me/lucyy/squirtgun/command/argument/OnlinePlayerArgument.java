@@ -23,6 +23,7 @@
 
 package me.lucyy.squirtgun.command.argument;
 
+import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.platform.Platform;
 import me.lucyy.squirtgun.platform.SquirtgunPlayer;
 import org.jetbrains.annotations.Nullable;
@@ -43,13 +44,13 @@ public class OnlinePlayerArgument extends AbstractArgument<SquirtgunPlayer> {
 	}
 
 	@Override
-	public SquirtgunPlayer getValue(Queue<String> args) {
+	public SquirtgunPlayer getValue(Queue<String> args, CommandContext<?> ctx) {
 		String name = args.poll();
 		return name == null || "".equals(name) ? null : platform.getPlayer(name);
 	}
 
 	@Override
-	public @Nullable List<String> tabComplete(Queue<String> args) {
+	public @Nullable List<String> tabComplete(Queue<String> args, CommandContext<?> ctx) {
 		String name = args.poll();
 		return name == null ? null : platform.getOnlinePlayers()
 				.stream()

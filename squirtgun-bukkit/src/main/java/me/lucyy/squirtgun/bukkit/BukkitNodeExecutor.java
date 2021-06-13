@@ -29,7 +29,7 @@ import me.lucyy.squirtgun.command.context.StringContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.platform.PermissionHolder;
-import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import me.lucyy.squirtgun.platform.Platform;
 import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -37,6 +37,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -46,24 +47,27 @@ public class BukkitNodeExecutor implements TabExecutor {
 
 	private final CommandNode<PermissionHolder> node;
 	private final FormatProvider formatter;
+	private final Platform platform;
 
 	/**
 	 * @param node      the root command node to execute
 	 * @param formatter the command sender to pass to the context
+	 * @param platform  the platform that this node belongs to
 	 */
-	public BukkitNodeExecutor(CommandNode<PermissionHolder> node, FormatProvider formatter) {
+	public BukkitNodeExecutor(CommandNode<PermissionHolder> node, FormatProvider formatter, Platform platform) {
 		this.node = node;
 		this.formatter = formatter;
+		this.platform = platform;
 	}
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender bukkitSender,
-	                         @NotNull Command command,
-	                         @NotNull String label,
-	                         @NotNull String[] args) {
+							 @NotNull Command command,
+							 @NotNull String label,
+							 @NotNull String[] args) {
 		PermissionHolder sender;
 		if (bukkitSender instanceof OfflinePlayer) {
-			sender = new BukkitPlayer((OfflinePlayer) bukkitSender);
+			sender = platform.getPlayer(bukkitSender.getName());
 		} else {
 			sender = new BukkitSenderWrapper(bukkitSender);
 		}
@@ -78,9 +82,9 @@ public class BukkitNodeExecutor implements TabExecutor {
 
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
-	                                            @NotNull Command command,
-	                                            @NotNull String alias,
-	                                            @NotNull String[] stringArgs) {
+												@NotNull Command command,
+												@NotNull String alias,
+												@NotNull String[] stringArgs) {
 		CommandContext<PermissionHolder> context = new StringContext<>(
 				formatter, new BukkitSenderWrapper(sender), node, String.join(" ", stringArgs));
 		List<String> ret = context.tabComplete();

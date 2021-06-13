@@ -23,6 +23,7 @@
 
 package me.lucyy.squirtgun.command.argument;
 
+import me.lucyy.squirtgun.command.context.CommandContext;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Queue;
@@ -46,13 +47,13 @@ public class ListArgument extends AbstractArgument<String> {
 	}
 
 	@Override
-	public String getValue(Queue<String> args) {
+	public String getValue(Queue<String> args, CommandContext<?> ctx) {
 		String val = args.poll();
 		return val != null && values.contains(val) ? val : null;
 	}
 
 	@Override
-	public @Nullable List<String> tabComplete(Queue<String> value) {
+	public @Nullable List<String> tabComplete(Queue<String> value, CommandContext<?> ctx) {
 		String top = value.poll();
 		if (top == null) return null;
 		return values.stream()

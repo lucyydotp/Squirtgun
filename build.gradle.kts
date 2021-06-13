@@ -28,7 +28,7 @@ plugins {
 }
 
 subprojects {
-    version = "2.0.0-pre2"
+    version = "2.0.0-pre3"
     group = "me.lucyy"
 
     apply<MavenPublishPlugin>()
@@ -55,7 +55,7 @@ subprojects {
                     licenses {
                         license {
                             name.set("MIT License")
-                            url.set("http://www.opensource.org/licenses/mit-license.php")
+                            url.set("https://www.opensource.org/licenses/mit-license.php")
                         }
                     }
                     developers {
@@ -97,11 +97,11 @@ subprojects {
         val signingPassword: String? by project
         if (signingKey != null && signingPassword != null) {
             useInMemoryPgpKeys(signingKey, signingPassword)
+             sign(publishing.publications["mavenJava"])
         }
         if (signatory == null) {
             logger.warn("No signatories available, skipping signing.")
         }
-        sign(publishing.publications["mavenJava"])
     }
 
     tasks {

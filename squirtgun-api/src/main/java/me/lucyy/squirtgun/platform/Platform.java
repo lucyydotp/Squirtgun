@@ -24,34 +24,84 @@
 package me.lucyy.squirtgun.platform;
 
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
+import net.kyori.adventure.text.Component;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
- * TODO javadocs
+ * A wrapper around a server platform's API, specific to a plugin.
+ * This is a work-in-progress API and more functionality is planned.
+ *
+ * @since 2.0.0
  */
 public interface Platform {
 
+	/**
+	 * Gets the plugin's logger for logging text to the console.
+	 */
 	Logger getLogger();
 
+	/**
+	 * Logs a formatted component to the console.
+	 * @param component the component to log
+	 */
+	void log(Component component);
+
+	/**
+	 * Gets the plugin's name.
+	 */
 	String getPluginName();
 
+	/**
+	 * Gets the plugin's version.
+	 */
 	String getPluginVersion();
 
+	/**
+	 * Gets a list of the authors' names.
+	 */
 	String[] getAuthors();
 
+	/**
+	 * Gets the server's authentication mode.
+	 */
 	AuthMode getAuthMode();
 
+	/**
+	 * Gets the server's task scheduler.
+	 */
 	TaskScheduler getTaskScheduler();
 
+	/**
+	 * Registers an event listener.
+	 * @param listener the listener to register
+	 */
 	void registerEventListener(EventListener listener);
 
+	/**
+	 * Unregisters an event listener. If the listener is not registered, this does nothing.
+	 * @param listener the listener to unregister.
+	 */
 	void unregisterEventListener(EventListener listener);
 
+	/**
+	 * Gets a player by UUID.
+	 * @param uuid the UUID of the player to get
+	 * @return the player
+	 */
 	SquirtgunPlayer getPlayer(UUID uuid);
 
+	/**
+	 * Gets a player by name.
+	 * @param name the name of the player to get
+	 * @return the player with the given name.
+	 */
 	SquirtgunPlayer getPlayer(String name);
 
+	/**
+	 * Gets a list of all online players.
+	 */
 	List<SquirtgunPlayer> getOnlinePlayers();
 }
