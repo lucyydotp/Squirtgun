@@ -34,7 +34,7 @@ public class SubcommandNodeArgument<T extends PermissionHolder> extends Abstract
 	@Override
 	public CommandNode<T> getValue(Queue<String> args, CommandContext<?> context) {
 		String raw = args.poll();
-		if (raw == null) return null;
+		if (raw == null || raw.equals("")) return null;
 		return getValidNodes(raw, context.getTarget())
 				.findFirst()
 				.orElse(null);

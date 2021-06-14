@@ -27,6 +27,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.context.CommandContext;
+import me.lucyy.squirtgun.command.node.AbstractNode;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.platform.PermissionHolder;
 import net.kyori.adventure.text.Component;
@@ -41,7 +42,7 @@ import java.util.*;
  *
  * @since 2.0.0
  */
-public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T> {
+public class SubcommandNode<T extends PermissionHolder> extends AbstractNode<T> {
 
 	/**
 	 * Creates a node with an advanced help node.
@@ -103,10 +104,7 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 		return new SubcommandNode<>(name, description, permission, childNodes);
 	}
 
-	private final Set<? extends CommandNode<T>> childNodes;
-	private final String name;
-	private final String description;
-	private final @Nullable String permission;
+	private final Set<CommandNode<T>> childNodes;
 	private final CommandArgument<CommandNode<T>> argument;
 	private CommandNode<T> fallbackNode;
 
@@ -118,13 +116,10 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 	@SafeVarargs
 	protected SubcommandNode(@NotNull String name, @NotNull String description,
 							 @Nullable String permission, @NotNull CommandNode<T>... childNodes) {
+		super(name, description, permission);
 		Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
-		Preconditions.checkNotNull(name, "Name must not be null");
 
 		this.childNodes = new HashSet<>(Arrays.asList(childNodes));
-		this.name = name;
-		this.description = description;
-		this.permission = permission;
 
 		argument = new SubcommandNodeArgument<>(this, "subcommand", "The subcommand to execute");
 	}
@@ -141,6 +136,7 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 	 */
 	private void setFallbackNode(CommandNode<T> fallback) {
 		fallbackNode = fallback;
+		childNodes.add(fallback);
 	}
 
 	/**
@@ -164,20 +160,5 @@ public class SubcommandNode<T extends PermissionHolder> implements CommandNode<T
 	@Override
 	public @Nullable Component execute(CommandContext<T> context) {
 		return null;
-	}
-
-	@Override
-	public @NotNull String getName() {
-		return name;
-	}
-
-	@Override
-	public String getDescription() {
-		return description;
-	}
-
-	@Override
-	public @Nullable String getPermission() {
-		return permission;
 	}
 }

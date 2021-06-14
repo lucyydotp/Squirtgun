@@ -7,16 +7,14 @@ import me.lucyy.squirtgun.format.TextFormatter;
 import me.lucyy.squirtgun.platform.PermissionHolder;
 import me.lucyy.squirtgun.platform.Platform;
 import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PluginInfoNode<T extends PermissionHolder> implements CommandNode<T> {
+public class PluginInfoNode<T extends PermissionHolder> extends AbstractNode<T> {
 
-	private final String name;
 	private final Platform plugin;
 
 	public PluginInfoNode(String name, Platform plugin) {
-		this.name = name;
+		super(name, "Shows information about this plugin.", null);
 		this.plugin = plugin;
 	}
 
@@ -35,15 +33,5 @@ public class PluginInfoNode<T extends PermissionHolder> implements CommandNode<T
 				.append(fmt.formatMain("Built with Squirtgun version "))
 				.append(fmt.formatAccent(Squirtgun.VERSION)).append(nl).append(nl)
 				.append(TextFormatter.formatTitle("*", fmt));
-	}
-
-	@Override
-	public @NotNull String getName() {
-		return name;
-	}
-
-	@Override
-	public String getDescription() {
-		return "Shows information about this plugin.";
 	}
 }
