@@ -127,7 +127,7 @@ public class BukkitPlatform implements Platform {
     @SuppressWarnings("deprecation") // blame the orange hash man. :(
     public SquirtgunPlayer getPlayer(String name) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(name);
-        Audience audience = player instanceof Player ? audiences.player((Player) audiences) : Audience.empty();
+        Audience audience = player instanceof Player ? audiences.player((Player) player) : Audience.empty();
         return new BukkitPlayer(Bukkit.getOfflinePlayer(name), audience);
     }
 

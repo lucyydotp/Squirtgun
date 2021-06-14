@@ -28,7 +28,7 @@ plugins {
 }
 
 subprojects {
-    version = "2.0.0-pre3"
+    version = "2.0.0-pre4-SNAPSHOT"
     group = "me.lucyy"
 
     apply<MavenPublishPlugin>()
