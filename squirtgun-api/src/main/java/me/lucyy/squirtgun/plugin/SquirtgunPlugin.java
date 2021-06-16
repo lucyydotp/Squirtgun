@@ -50,4 +50,14 @@ public abstract class SquirtgunPlugin<P extends Platform> {
      * Gets a list of the authors' names.
      */
     public abstract @NotNull String[] getAuthors();
+
+    /**
+     * Called when the plugin is enabled. By default, does nothing.
+     */
+    public void onEnable() { }
+
+    /**
+     * Called when the plugin is disabled. By default, does nothing.
+     */
+    public void onDisable() { }
 }

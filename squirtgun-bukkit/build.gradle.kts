@@ -29,14 +29,14 @@ plugins {
 }
 
 repositories {
-    maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
 }
 
 dependencies {
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
-    compileOnly("net.kyori:adventure-api:4.7.0")
+    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
 
-    implementation("me.lucko:adventure-platform-bukkit:4.7.0")
+    implementation("net.kyori:adventure-api:4.8.1")
+    implementation("me.lucko:adventure-platform-bukkit:4.8.1")
     implementation(project(":squirtgun-api"))
     implementation(project(":squirtgun-commands"))
 }
