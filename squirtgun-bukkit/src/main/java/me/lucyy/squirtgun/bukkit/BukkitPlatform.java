@@ -29,6 +29,7 @@ import me.lucyy.squirtgun.platform.EventListener;
 import me.lucyy.squirtgun.platform.Platform;
 import me.lucyy.squirtgun.platform.SquirtgunPlayer;
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
+import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -37,6 +38,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -75,20 +78,6 @@ public class BukkitPlatform implements Platform {
 		audiences.console().sendMessage(component);
     }
 
-    @Override
-    public String getPluginName() {
-        return plugin.getName();
-    }
-
-    @Override
-    public String getPluginVersion() {
-        return plugin.getDescription().getVersion();
-    }
-
-    @Override
-    public String[] getAuthors() {
-        return plugin.getDescription().getAuthors().toArray(new String[0]);
-    }
 
     @Override
     public AuthMode getAuthMode() {
@@ -136,5 +125,10 @@ public class BukkitPlatform implements Platform {
         return Bukkit.getOnlinePlayers().stream()
                 .map(p -> new BukkitPlayer(p, audiences.player(p)))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Path getConfigPath(SquirtgunPlugin<?> plugin) {
+        return Paths.get(this.plugin.getDataFolder().toURI());
     }
 }

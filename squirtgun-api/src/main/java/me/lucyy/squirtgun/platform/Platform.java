@@ -24,8 +24,10 @@
 package me.lucyy.squirtgun.platform;
 
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
+import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -37,7 +39,6 @@ import java.util.logging.Logger;
  * @since 2.0.0
  */
 public interface Platform {
-
 	/**
 	 * Gets the plugin's logger for logging text to the console.
 	 */
@@ -48,21 +49,6 @@ public interface Platform {
 	 * @param component the component to log
 	 */
 	void log(Component component);
-
-	/**
-	 * Gets the plugin's name.
-	 */
-	String getPluginName();
-
-	/**
-	 * Gets the plugin's version.
-	 */
-	String getPluginVersion();
-
-	/**
-	 * Gets a list of the authors' names.
-	 */
-	String[] getAuthors();
 
 	/**
 	 * Gets the server's authentication mode.
@@ -104,4 +90,9 @@ public interface Platform {
 	 * Gets a list of all online players.
 	 */
 	List<SquirtgunPlayer> getOnlinePlayers();
+
+	/**
+	 * Gets a path to a directory where config files specific to a plugin can be stored.
+	 */
+	Path getConfigPath(SquirtgunPlugin<?> plugin);
 }

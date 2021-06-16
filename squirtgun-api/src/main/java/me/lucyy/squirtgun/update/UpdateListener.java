@@ -24,24 +24,27 @@
 package me.lucyy.squirtgun.update;
 
 import me.lucyy.squirtgun.platform.EventListener;
-import me.lucyy.squirtgun.platform.Platform;
 import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
+
 import java.util.UUID;
 
 class UpdateListener extends EventListener {
 	private final UpdateChecker checker;
-	private final Platform platform;
+	private final SquirtgunPlugin<?> plugin;
 
-	public UpdateListener(UpdateChecker checker, Platform platform) {
-		this.checker = checker;
-		this.platform = platform;
+	public UpdateListener(UpdateChecker checker, SquirtgunPlugin<?> plugin) {
+        super(plugin);
+        this.checker = checker;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public void onPlayerJoin(UUID uuid) {
 		super.onPlayerJoin(uuid);
-		SquirtgunPlayer player = platform.getPlayer(uuid);
-		if (checker.checkDataForUpdate() && platform.getPlayer(uuid).hasPermission(checker.getListenerPermission()))
+		SquirtgunPlayer player = plugin.getPlatform().getPlayer(uuid);
+		if (checker.checkDataForUpdate() && player.hasPermission(checker.getListenerPermission())) {
 			player.sendMessage(checker.getUpdateMessage());
+		}
 	}
 }

@@ -22,7 +22,7 @@
  */
 
 group = "me.lucyy"
-description = "Squirtgun"
+description = "squirtgun"
 
 plugins {
     java
@@ -34,9 +34,9 @@ repositories {
 
 dependencies {
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
-    compileOnly("me.lucko:adventure-platform-bukkit:4.7.0")
     compileOnly("net.kyori:adventure-api:4.7.0")
 
+    implementation("me.lucko:adventure-platform-bukkit:4.7.0")
     implementation(project(":squirtgun-api"))
     implementation(project(":squirtgun-commands"))
 }

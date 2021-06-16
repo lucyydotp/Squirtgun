@@ -5,15 +5,15 @@ import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.format.TextFormatter;
 import me.lucyy.squirtgun.platform.PermissionHolder;
-import me.lucyy.squirtgun.platform.Platform;
+import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
 public class PluginInfoNode<T extends PermissionHolder> extends AbstractNode<T> {
 
-	private final Platform plugin;
+	private final SquirtgunPlugin<?> plugin;
 
-	public PluginInfoNode(String name, Platform plugin) {
+	public PluginInfoNode(String name, SquirtgunPlugin<?> plugin) {
 		super(name, "Shows information about this plugin.", null);
 		this.plugin = plugin;
 	}
