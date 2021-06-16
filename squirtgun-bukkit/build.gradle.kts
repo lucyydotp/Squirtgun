@@ -30,13 +30,15 @@ plugins {
 
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
+    implementation("org.jetbrains:annotations:20.1.0")
     compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
 
     implementation("net.kyori:adventure-api:4.8.1")
-    implementation("me.lucko:adventure-platform-bukkit:4.8.1")
+    implementation("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
     implementation(project(":squirtgun-api"))
     implementation(project(":squirtgun-commands"))
 }

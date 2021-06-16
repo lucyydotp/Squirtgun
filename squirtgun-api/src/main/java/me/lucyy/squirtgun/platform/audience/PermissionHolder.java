@@ -21,11 +21,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.platform;
+package me.lucyy.squirtgun.platform.audience;
 
 /**
  * An entity capable of holding permissions and executing commands.
  */
+@FunctionalInterface
 public interface PermissionHolder {
 
 	/**

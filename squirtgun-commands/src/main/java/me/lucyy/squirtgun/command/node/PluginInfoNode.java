@@ -4,7 +4,7 @@ import me.lucyy.squirtgun.Squirtgun;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.format.TextFormatter;
-import me.lucyy.squirtgun.platform.PermissionHolder;
+import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;

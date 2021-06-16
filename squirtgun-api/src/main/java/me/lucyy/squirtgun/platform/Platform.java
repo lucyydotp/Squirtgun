@@ -23,6 +23,8 @@
 
 package me.lucyy.squirtgun.platform;
 
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
 import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
@@ -71,6 +73,11 @@ public interface Platform {
 	 * @param listener the listener to unregister.
 	 */
 	void unregisterEventListener(EventListener listener);
+
+	/**
+	 * Gets the console as a permissible audience. This can be used to send messages.
+	 */
+	SquirtgunUser getConsole();
 
 	/**
 	 * Gets a player by UUID.

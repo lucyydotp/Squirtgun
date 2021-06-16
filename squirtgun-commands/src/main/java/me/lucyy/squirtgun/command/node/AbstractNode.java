@@ -1,7 +1,7 @@
 package me.lucyy.squirtgun.command.node;
 
 import com.google.common.base.Preconditions;
-import me.lucyy.squirtgun.platform.PermissionHolder;
+import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

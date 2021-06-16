@@ -3,7 +3,7 @@ package me.lucyy.squirtgun.command.node.subcommand;
 import me.lucyy.squirtgun.command.argument.AbstractArgument;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
-import me.lucyy.squirtgun.platform.PermissionHolder;
+import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;

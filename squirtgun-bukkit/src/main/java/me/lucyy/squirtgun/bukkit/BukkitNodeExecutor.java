@@ -28,7 +28,8 @@ import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.context.StringContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.platform.PermissionHolder;
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
+import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import me.lucyy.squirtgun.platform.Platform;
 import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
@@ -47,14 +48,14 @@ public class BukkitNodeExecutor implements TabExecutor {
 
     private final CommandNode<PermissionHolder> node;
     private final FormatProvider formatter;
-    private final Platform platform;
+    private final BukkitPlatform platform;
 
     /**
      * @param node      the root command node to execute
      * @param formatter the command sender to pass to the context
      * @param platform  the platform that this node belongs to
      */
-    public BukkitNodeExecutor(CommandNode<PermissionHolder> node, FormatProvider formatter, Platform platform) {
+    public BukkitNodeExecutor(CommandNode<PermissionHolder> node, FormatProvider formatter, BukkitPlatform platform) {
         this.node = node;
         this.formatter = formatter;
         this.platform = platform;
@@ -65,16 +66,16 @@ public class BukkitNodeExecutor implements TabExecutor {
                              @NotNull Command command,
                              @NotNull String label,
                              @NotNull String[] args) {
-        PermissionHolder sender;
+        SquirtgunUser sender;
         if (bukkitSender instanceof OfflinePlayer) {
             sender = platform.getPlayer(bukkitSender.getName());
         } else {
-            sender = new BukkitSenderWrapper(bukkitSender);
+            sender = platform.getConsole();
         }
 
         Component ret = new StringContext<>(formatter, sender, node, String.join(" ", args)).execute();
         if (ret != null) {
-            bukkitSender.sendMessage(ret);
+            sender.sendMessage(ret);
         }
         return true;
     }
@@ -85,7 +86,7 @@ public class BukkitNodeExecutor implements TabExecutor {
                                                 @NotNull String alias,
                                                 @NotNull String[] stringArgs) {
         CommandContext<PermissionHolder> context = new StringContext<>(
-                formatter, new BukkitSenderWrapper(sender), node, String.join(" ", stringArgs));
+                formatter, platform.getUser(sender), node, String.join(" ", stringArgs));
         List<String> ret = context.tabComplete();
         return ret == null ? ImmutableList.of() : ret;
     }

@@ -21,13 +21,13 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.platform;
+package me.lucyy.squirtgun.platform.audience;
 
-import net.kyori.adventure.audience.Audience;
+import me.lucyy.squirtgun.platform.Gamemode;
 
 import java.util.UUID;
 
-public interface SquirtgunPlayer extends PermissionHolder, Audience {
+public interface SquirtgunPlayer extends SquirtgunUser {
 	UUID getUuid();
 
 	String getUsername();

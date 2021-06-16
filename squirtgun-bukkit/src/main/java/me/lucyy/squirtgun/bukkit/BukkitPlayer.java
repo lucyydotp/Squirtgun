@@ -24,20 +24,20 @@
 package me.lucyy.squirtgun.bukkit;
 
 import me.lucyy.squirtgun.platform.Gamemode;
-import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 /**
  * SquirtgunPlayer implementation for Bukkit.
  */
-public class BukkitPlayer implements SquirtgunPlayer, ForwardingAudience {
+public class BukkitPlayer implements SquirtgunPlayer, ForwardingAudience.Single {
 
     private final OfflinePlayer parent;
     private final Audience audience;
@@ -101,7 +101,7 @@ public class BukkitPlayer implements SquirtgunPlayer, ForwardingAudience {
     }
 
     @Override
-    public @NonNull Iterable<? extends Audience> audiences() {
-        return Collections.singleton(audience);
+    public @NotNull Audience audience() {
+        return audience;
     }
 }

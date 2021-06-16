@@ -25,7 +25,7 @@ package me.lucyy.squirtgun.command.argument;
 
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.platform.Platform;
-import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Queue;

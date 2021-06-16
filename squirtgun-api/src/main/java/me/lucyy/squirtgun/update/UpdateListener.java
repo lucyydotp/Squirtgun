@@ -24,7 +24,7 @@
 package me.lucyy.squirtgun.update;
 
 import me.lucyy.squirtgun.platform.EventListener;
-import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 
 import java.util.UUID;

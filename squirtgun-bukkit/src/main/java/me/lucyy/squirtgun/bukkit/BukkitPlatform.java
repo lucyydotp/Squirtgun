@@ -27,7 +27,8 @@ import me.lucyy.squirtgun.bukkit.task.BukkitTaskScheduler;
 import me.lucyy.squirtgun.platform.AuthMode;
 import me.lucyy.squirtgun.platform.EventListener;
 import me.lucyy.squirtgun.platform.Platform;
-import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
 import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.audience.Audience;
@@ -35,6 +36,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -75,7 +77,7 @@ public class BukkitPlatform implements Platform {
 
     @Override
     public void log(Component component) {
-		audiences.console().sendMessage(component);
+        audiences.console().sendMessage(component);
     }
 
 
@@ -108,6 +110,11 @@ public class BukkitPlatform implements Platform {
     }
 
     @Override
+    public SquirtgunUser getConsole() {
+        return new BukkitConsoleWrapper(audiences.console());
+    }
+
+    @Override
     public SquirtgunPlayer getPlayer(UUID uuid) {
         return new BukkitPlayer(Bukkit.getOfflinePlayer(uuid), audiences.player(uuid));
     }
@@ -125,6 +132,18 @@ public class BukkitPlatform implements Platform {
         return Bukkit.getOnlinePlayers().stream()
                 .map(p -> new BukkitPlayer(p, audiences.player(p)))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Gets a SquirtgunUser from a command sender.
+     *
+     * @param sender the command sender
+     */
+    public SquirtgunUser getUser(CommandSender sender) {
+        if (sender instanceof OfflinePlayer) {
+            return getPlayer(((OfflinePlayer) sender).getUniqueId());
+        }
+        return getConsole();
     }
 
     @Override
