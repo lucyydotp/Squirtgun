@@ -34,19 +34,19 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BukkitConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
 
-	private final Audience audience;
+    private final Audience audience;
 
-	public BukkitConsoleWrapper(Audience audience) {
-		this.audience = audience;
-	}
+    public BukkitConsoleWrapper(Audience audience) {
+        this.audience = audience;
+    }
 
-	@Override
-	public boolean hasPermission(String permission) {
-		return Bukkit.getServer().getConsoleSender().hasPermission(permission);
-	}
+    @Override
+    public boolean hasPermission(String permission) {
+        return Bukkit.getServer().getConsoleSender().hasPermission(permission);
+    }
 
-	@Override
-	public @NotNull Audience audience() {
-		return audience;
-	}
+    @Override
+    public @NotNull Audience audience() {
+        return audience;
+    }
 }
