@@ -42,6 +42,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -68,6 +69,11 @@ public class BukkitPlatform implements Platform {
 
     public JavaPlugin getBukkitPlugin() {
         return plugin;
+    }
+
+    @Override
+    public String name() {
+        return "Bukkit";
     }
 
     @Override
@@ -120,11 +126,18 @@ public class BukkitPlatform implements Platform {
     }
 
     @Override
-    @SuppressWarnings("deprecation") // blame the orange hash man. :(
     public SquirtgunPlayer getPlayer(String name) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+        OfflinePlayer player = Bukkit.getPlayer(name);
+        if (player == null) {
+            player = Arrays.stream(Bukkit.getOfflinePlayers())
+                    .filter(p -> name.equals(p.getName()))
+                    .findFirst().orElse(null);
+        }
+        if (player == null) {
+            return null;
+        }
         Audience audience = player instanceof Player ? audiences.player((Player) player) : Audience.empty();
-        return new BukkitPlayer(Bukkit.getOfflinePlayer(name), audience);
+        return new BukkitPlayer(player, audience);
     }
 
     @Override

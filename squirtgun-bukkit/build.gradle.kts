@@ -29,12 +29,13 @@ plugins {
 }
 
 repositories {
+    mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
-    implementation("org.jetbrains:annotations:20.1.0")
+    compileOnly("org.jetbrains:annotations:20.1.0")
     compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
 
     implementation("net.kyori:adventure-api:4.8.1")

@@ -31,7 +31,11 @@ public class PluginInfoNode<T extends PermissionHolder> extends AbstractNode<T> 
 				.append(fmt.formatAccent(String.join(", ", plugin.getAuthors())))
 				.append(nl)
 				.append(fmt.formatMain("Built with Squirtgun version "))
-				.append(fmt.formatAccent(Squirtgun.VERSION)).append(nl).append(nl)
+				.append(fmt.formatAccent(Squirtgun.VERSION))
+				.append(nl)
+				.append(fmt.formatMain("Using platform "))
+				.append(fmt.formatAccent(plugin.getPlatform().name()))
+				.append(nl).append(nl)
 				.append(TextFormatter.formatTitle("*", fmt));
 	}
 }

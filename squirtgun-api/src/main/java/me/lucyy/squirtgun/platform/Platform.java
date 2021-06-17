@@ -28,6 +28,7 @@ import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
 import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -41,6 +42,11 @@ import java.util.logging.Logger;
  * @since 2.0.0
  */
 public interface Platform {
+	/**
+	 * Gets this platform's user-friendly name.
+	 */
+	String name();
+
 	/**
 	 * Gets the plugin's logger for logging text to the console.
 	 */
@@ -87,11 +93,11 @@ public interface Platform {
 	SquirtgunPlayer getPlayer(UUID uuid);
 
 	/**
-	 * Gets a player by name.
+	 * Gets a player by cached name.
 	 * @param name the name of the player to get
-	 * @return the player with the given name.
+	 * @return the player with the given name, or null if a player with that name has not played on the server before.
 	 */
-	SquirtgunPlayer getPlayer(String name);
+	@Nullable SquirtgunPlayer getPlayer(String name);
 
 	/**
 	 * Gets a list of all online players.
