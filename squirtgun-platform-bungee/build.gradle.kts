@@ -21,33 +21,24 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.bukkit;
+group = "me.lucyy"
+description = "squirtgun-platform-bungee"
 
-import com.google.common.collect.ImmutableList;
-import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.audience.ForwardingAudience;
-import org.bukkit.Bukkit;
-import org.jetbrains.annotations.NotNull;
+plugins {
+    java
+}
 
-/**
- * CommandSender wrapper for the console.
- */
-public class BukkitConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
+repositories {
+    mavenCentral()
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+}
 
-	private final Audience audience;
+dependencies {
+    compileOnly("org.jetbrains:annotations:20.1.0")
+    compileOnly("net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT")
 
-	public BukkitConsoleWrapper(Audience audience) {
-		this.audience = audience;
-	}
-
-	@Override
-	public boolean hasPermission(String permission) {
-		return Bukkit.getServer().getConsoleSender().hasPermission(permission);
-	}
-
-	@Override
-	public @NotNull Audience audience() {
-		return audience;
-	}
+    implementation("net.kyori:adventure-api:4.8.1")
+    implementation("net.kyori:adventure-platform-bungeecord:4.0.0-SNAPSHOT")
+    implementation(project(":squirtgun-api"))
+    implementation(project(":squirtgun-commands"))
 }

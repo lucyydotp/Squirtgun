@@ -21,25 +21,31 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-group = "me.lucyy"
-description = "squirtgun"
+package me.lucyy.squirtgun.bungee;
 
-plugins {
-    java
-}
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
+import org.jetbrains.annotations.NotNull;
 
-repositories {
-    mavenCentral()
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://oss.sonatype.org/content/repositories/snapshots/")
-}
+/**
+ * CommandSender wrapper for the console.
+ */
+public class BungeeConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
 
-dependencies {
-    compileOnly("org.jetbrains:annotations:20.1.0")
-    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
+	private final Audience audience;
 
-    implementation("net.kyori:adventure-api:4.8.1")
-    implementation("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
-    implementation(project(":squirtgun-api"))
-    implementation(project(":squirtgun-commands"))
+	public BungeeConsoleWrapper(Audience audience) {
+		this.audience = audience;
+	}
+
+	@Override
+	public boolean hasPermission(String permission) {
+		return true;
+	}
+
+	@Override
+	public @NotNull Audience audience() {
+		return audience;
+	}
 }

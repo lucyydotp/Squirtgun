@@ -21,72 +21,56 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.bukkit;
+package me.lucyy.squirtgun.bungee;
 
 import com.google.common.collect.ImmutableList;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.context.StringContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
-import me.lucyy.squirtgun.platform.Platform;
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
 import net.kyori.adventure.text.Component;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.List;
 
 /**
- * Wraps a {@link CommandNode} so it can be executed by a Bukkit server.
+ * Wraps a {@link CommandNode} so it can be executed by a BungeeCord proxy.
  */
-public class BukkitNodeExecutor implements TabExecutor {
+public class BungeeNodeExecutor extends Command implements TabExecutor {
 
     private final CommandNode<PermissionHolder> node;
     private final FormatProvider formatter;
-    private final BukkitPlatform platform;
+    private final BungeePlatform platform;
 
     /**
      * @param node      the root command node to execute
      * @param formatter the command sender to pass to the context
      * @param platform  the platform that this node belongs to
      */
-    public BukkitNodeExecutor(CommandNode<PermissionHolder> node, FormatProvider formatter, BukkitPlatform platform) {
+    public BungeeNodeExecutor(CommandNode<PermissionHolder> node, FormatProvider formatter, BungeePlatform platform) {
+        super(node.getName());
         this.node = node;
         this.formatter = formatter;
         this.platform = platform;
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender bukkitSender,
-                             @NotNull Command command,
-                             @NotNull String label,
-                             @NotNull String[] args) {
-        SquirtgunUser sender;
-        if (bukkitSender instanceof OfflinePlayer) {
-            sender = platform.getPlayer(bukkitSender.getName());
-        } else {
-            sender = platform.getConsole();
-        }
-
-        Component ret = new StringContext<>(formatter, sender, node, String.join(" ", args)).execute();
+    public void execute(CommandSender sender, String[] args) {
+        SquirtgunUser user = platform.getUser(sender);
+        Component ret = new StringContext<>(formatter, user, node, String.join(" ", args)).execute();
         if (ret != null) {
-            sender.sendMessage(ret);
+            user.sendMessage(ret);
         }
-        return true;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
-                                                @NotNull Command command,
-                                                @NotNull String alias,
-                                                @NotNull String[] stringArgs) {
+    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         CommandContext<PermissionHolder> context = new StringContext<>(
-                formatter, platform.getUser(sender), node, String.join(" ", stringArgs));
+                formatter, platform.getUser(sender), node, String.join(" ", args));
         List<String> ret = context.tabComplete();
         return ret == null ? ImmutableList.of() : ret;
     }

@@ -1,4 +1,5 @@
 rootProject.name = "squirtgun"
 include("squirtgun-api")
-include("squirtgun-bukkit")
+include("squirtgun-platform-bukkit")
+include("squirtgun-platform-bungee")
 include("squirtgun-commands")
