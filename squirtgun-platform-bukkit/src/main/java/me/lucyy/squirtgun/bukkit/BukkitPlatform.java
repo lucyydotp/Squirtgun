@@ -27,16 +27,22 @@ import me.lucyy.squirtgun.bukkit.task.BukkitTaskScheduler;
 import me.lucyy.squirtgun.platform.AuthMode;
 import me.lucyy.squirtgun.platform.EventListener;
 import me.lucyy.squirtgun.platform.Platform;
-import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
+import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -66,29 +72,20 @@ public class BukkitPlatform implements Platform {
     }
 
     @Override
+    public String name() {
+        return "Bukkit";
+    }
+
+    @Override
     public Logger getLogger() {
         return plugin.getLogger();
     }
 
     @Override
     public void log(Component component) {
-		audiences.console().sendMessage(component);
+        audiences.console().sendMessage(component);
     }
 
-    @Override
-    public String getPluginName() {
-        return plugin.getName();
-    }
-
-    @Override
-    public String getPluginVersion() {
-        return plugin.getDescription().getVersion();
-    }
-
-    @Override
-    public String[] getAuthors() {
-        return plugin.getDescription().getAuthors().toArray(new String[0]);
-    }
 
     @Override
     public AuthMode getAuthMode() {
@@ -119,16 +116,28 @@ public class BukkitPlatform implements Platform {
     }
 
     @Override
+    public SquirtgunUser getConsole() {
+        return new BukkitConsoleWrapper(audiences.console());
+    }
+
+    @Override
     public SquirtgunPlayer getPlayer(UUID uuid) {
         return new BukkitPlayer(Bukkit.getOfflinePlayer(uuid), audiences.player(uuid));
     }
 
     @Override
-    @SuppressWarnings("deprecation") // blame the orange hash man. :(
     public SquirtgunPlayer getPlayer(String name) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
-        Audience audience = player instanceof Player ? audiences.player((Player) audiences) : Audience.empty();
-        return new BukkitPlayer(Bukkit.getOfflinePlayer(name), audience);
+        OfflinePlayer player = Bukkit.getPlayer(name);
+        if (player == null) {
+            player = Arrays.stream(Bukkit.getOfflinePlayers())
+                    .filter(p -> name.equals(p.getName()))
+                    .findFirst().orElse(null);
+        }
+        if (player == null) {
+            return null;
+        }
+        Audience audience = player instanceof Player ? audiences.player((Player) player) : Audience.empty();
+        return new BukkitPlayer(player, audience);
     }
 
     @Override
@@ -136,5 +145,22 @@ public class BukkitPlatform implements Platform {
         return Bukkit.getOnlinePlayers().stream()
                 .map(p -> new BukkitPlayer(p, audiences.player(p)))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Gets a SquirtgunUser from a command sender.
+     *
+     * @param sender the command sender
+     */
+    public SquirtgunUser getUser(CommandSender sender) {
+        if (sender instanceof OfflinePlayer) {
+            return getPlayer(((OfflinePlayer) sender).getUniqueId());
+        }
+        return getConsole();
+    }
+
+    @Override
+    public Path getConfigPath(SquirtgunPlugin<?> plugin) {
+        return Paths.get(this.plugin.getDataFolder().toURI());
     }
 }

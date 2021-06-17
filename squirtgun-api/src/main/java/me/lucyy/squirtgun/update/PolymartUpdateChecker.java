@@ -26,6 +26,7 @@ package me.lucyy.squirtgun.update;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.lucyy.squirtgun.platform.Platform;
+import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
 
 /**
@@ -42,7 +43,7 @@ public class PolymartUpdateChecker extends UpdateChecker {
 	 * @param listenerPermission if a player holds this permission and an update is available, they will be sent the
 	 *                           update message in chat
 	 */
-	public PolymartUpdateChecker(Platform plugin, int id, Component updateMessage, String listenerPermission) {
+	public PolymartUpdateChecker(SquirtgunPlugin<?> plugin, int id, Component updateMessage, String listenerPermission) {
 		super(plugin, "https://api.polymart.org/v1/getResourceInfo?resource_id=" + id,
 			updateMessage, listenerPermission);
 	}
@@ -52,7 +53,7 @@ public class PolymartUpdateChecker extends UpdateChecker {
 		JsonObject object = new JsonParser().parse(input).getAsJsonObject();
 		JsonObject response = object.getAsJsonObject("response");
 		if (!response.get("success").getAsBoolean()) {
-			getPlatform().getLogger().severe(
+			getPlugin().getPlatform().getLogger().severe(
 					"Failed to access Polymart to check for updates! Please report this to the plugin developer.");
 			return false;
 		}
@@ -61,6 +62,6 @@ public class PolymartUpdateChecker extends UpdateChecker {
 			.getAsJsonObject("latest")
 			.get("version").getAsString();
 
-		return !getPlatform().getPluginVersion().equals(version);
+		return !getPlugin().getPluginVersion().equals(version);
 	}
 }

@@ -23,22 +23,30 @@
 
 package me.lucyy.squirtgun.bukkit;
 
-import me.lucyy.squirtgun.platform.PermissionHolder;
-import org.bukkit.command.CommandSender;
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * CommandSender wrapper to check permissions for commands.
+ * CommandSender wrapper for the console.
  */
-public class BukkitSenderWrapper implements PermissionHolder {
+public class BukkitConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
 
-	private final CommandSender parent;
+    private final Audience audience;
 
-	public BukkitSenderWrapper(CommandSender parent) {
-		this.parent = parent;
-	}
+    public BukkitConsoleWrapper(Audience audience) {
+        this.audience = audience;
+    }
 
-	@Override
-	public boolean hasPermission(String permission) {
-		return parent.hasPermission(permission);
-	}
+    @Override
+    public boolean hasPermission(String permission) {
+        return Bukkit.getServer().getConsoleSender().hasPermission(permission);
+    }
+
+    @Override
+    public @NotNull Audience audience() {
+        return audience;
+    }
 }

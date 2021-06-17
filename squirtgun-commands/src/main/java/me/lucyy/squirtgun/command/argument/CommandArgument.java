@@ -24,7 +24,7 @@
 package me.lucyy.squirtgun.command.argument;
 
 import me.lucyy.squirtgun.command.context.CommandContext;
-import me.lucyy.squirtgun.platform.PermissionHolder;
+import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

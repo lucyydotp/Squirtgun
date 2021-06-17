@@ -23,10 +23,22 @@
 
 package me.lucyy.squirtgun.platform;
 
+import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
+
 import java.util.UUID;
 
 @SuppressWarnings("EmptyMethod")
 public abstract class EventListener {
+	private final SquirtgunPlugin<?> plugin;
+
+	protected EventListener(SquirtgunPlugin<?> plugin) {
+		this.plugin = plugin;
+	}
+
+	public SquirtgunPlugin<?> getPlugin() {
+		return plugin;
+	}
+
 	public void onPlayerJoin(UUID uuid) {  }
 	public void onPlayerLeave(UUID uuid) {  }
 }

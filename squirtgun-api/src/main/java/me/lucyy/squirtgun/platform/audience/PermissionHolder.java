@@ -21,22 +21,19 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-group = "me.lucyy"
-description = "Squirtgun"
+package me.lucyy.squirtgun.platform.audience;
 
-plugins {
-    java
-}
+/**
+ * An entity capable of holding permissions and executing commands.
+ */
+@FunctionalInterface
+public interface PermissionHolder {
 
-repositories {
-    maven("https://papermc.io/repo/repository/maven-public/")
-}
-
-dependencies {
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
-    compileOnly("me.lucko:adventure-platform-bukkit:4.7.0")
-    compileOnly("net.kyori:adventure-api:4.7.0")
-
-    implementation(project(":squirtgun-api"))
-    implementation(project(":squirtgun-commands"))
+	/**
+	 * Gets whether the target holds the provided permission.
+	 *
+	 * @param permission the permission to check
+	 * @return if the target holds the given permission
+	 */
+	boolean hasPermission(String permission);
 }

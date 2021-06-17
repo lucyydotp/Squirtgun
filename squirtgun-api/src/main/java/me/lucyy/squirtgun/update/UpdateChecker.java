@@ -25,6 +25,7 @@ package me.lucyy.squirtgun.update;
 
 import me.lucyy.squirtgun.platform.Platform;
 import me.lucyy.squirtgun.platform.scheduler.Task;
+import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
  */
 public abstract class UpdateChecker {
 	private boolean updateAvailable;
-	private final Platform plugin;
+	private final SquirtgunPlugin<?> plugin;
 	private final Component updateMessage;
 	private final String listenerPermission;
 	private final String url;
@@ -52,16 +53,16 @@ public abstract class UpdateChecker {
 	 * @param updateMessage      the message to show in console and to players with the listener permission on join
 	 * @param listenerPermission if a player holds this permission and an update is available, they will be sent the update message in chat
 	 */
-	protected UpdateChecker(Platform plugin, String url, Component updateMessage, String listenerPermission) {
+	protected UpdateChecker(SquirtgunPlugin<?> plugin, String url, Component updateMessage, String listenerPermission) {
 		this.plugin = plugin;
 		this.url = url;
 		this.updateMessage = updateMessage;
 		this.listenerPermission = listenerPermission;
 
-		plugin.registerEventListener(new UpdateListener(this, plugin));
+		plugin.getPlatform().registerEventListener(new UpdateListener(this, plugin));
 
 		if (plugin.getPluginVersion().contains("-")) {
-			plugin.getLogger().warning("Development version detected, skipping update check.");
+			plugin.getPlatform().getLogger().warning("Development version detected, skipping update check.");
 			listenerTask = null;
 			return;
 		}
@@ -72,7 +73,7 @@ public abstract class UpdateChecker {
 				.action(x -> checkForUpdate())
 				.build();
 
-		plugin.getTaskScheduler().start(listenerTask);
+		plugin.getPlatform().getTaskScheduler().start(listenerTask);
 	}
 
 	/**
@@ -85,9 +86,9 @@ public abstract class UpdateChecker {
 	protected abstract boolean checkDataForUpdate(String input);
 
 	/**
-	 * Gets the platform that this checker is associated with.
+	 * Gets the plugin that this checker is associated with.
 	 */
-	protected Platform getPlatform() {
+	protected SquirtgunPlugin<?> getPlugin() {
 		return plugin;
 	}
 
@@ -100,7 +101,7 @@ public abstract class UpdateChecker {
 	@SuppressWarnings("UnusedReturnValue")
 	public boolean checkForUpdate() {
 		try {
-			plugin.getLogger().info("Checking for updates...");
+			plugin.log("Checking for updates...");
 
 			HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
 			if (con.getResponseCode() != 200) throw new Exception();
@@ -111,13 +112,13 @@ public abstract class UpdateChecker {
 
 			if (checkDataForUpdate(text)) {
 				updateAvailable = true;
-				plugin.log(getUpdateMessage());
-				plugin.getTaskScheduler().cancel(listenerTask);
+				plugin.getPlatform().log(getUpdateMessage());
+				plugin.getPlatform().getTaskScheduler().cancel(listenerTask);
 				return true;
-			} else plugin.getLogger().info("No update available.");
+			} else plugin.getPlatform().getLogger().info("No update available.");
 
 		} catch (Exception ignored) {
-			plugin.getLogger().warning("Unable to check for updates!");
+			plugin.getPlatform().getLogger().warning("Unable to check for updates!");
 		}
 		return false;
 	}

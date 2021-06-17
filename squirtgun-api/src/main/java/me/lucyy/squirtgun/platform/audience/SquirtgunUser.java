@@ -21,30 +21,11 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.update;
+package me.lucyy.squirtgun.platform.audience;
 
-import me.lucyy.squirtgun.platform.EventListener;
-import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
-import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
+import net.kyori.adventure.audience.Audience;
 
-import java.util.UUID;
-
-class UpdateListener extends EventListener {
-	private final UpdateChecker checker;
-	private final SquirtgunPlugin<?> plugin;
-
-	public UpdateListener(UpdateChecker checker, SquirtgunPlugin<?> plugin) {
-        super(plugin);
-        this.checker = checker;
-		this.plugin = plugin;
-	}
-
-	@Override
-	public void onPlayerJoin(UUID uuid) {
-		super.onPlayerJoin(uuid);
-		SquirtgunPlayer player = plugin.getPlatform().getPlayer(uuid);
-		if (checker.checkDataForUpdate() && player.hasPermission(checker.getListenerPermission())) {
-			player.sendMessage(checker.getUpdateMessage());
-		}
-	}
-}
+/**
+ * An empty interface extending PermissionHolder and Audience.
+ */
+public interface SquirtgunUser extends PermissionHolder, Audience { }

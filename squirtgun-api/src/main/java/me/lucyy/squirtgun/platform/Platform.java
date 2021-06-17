@@ -23,9 +23,14 @@
 
 package me.lucyy.squirtgun.platform;
 
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
+import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -37,6 +42,10 @@ import java.util.logging.Logger;
  * @since 2.0.0
  */
 public interface Platform {
+	/**
+	 * Gets this platform's user-friendly name.
+	 */
+	String name();
 
 	/**
 	 * Gets the plugin's logger for logging text to the console.
@@ -48,21 +57,6 @@ public interface Platform {
 	 * @param component the component to log
 	 */
 	void log(Component component);
-
-	/**
-	 * Gets the plugin's name.
-	 */
-	String getPluginName();
-
-	/**
-	 * Gets the plugin's version.
-	 */
-	String getPluginVersion();
-
-	/**
-	 * Gets a list of the authors' names.
-	 */
-	String[] getAuthors();
 
 	/**
 	 * Gets the server's authentication mode.
@@ -87,6 +81,11 @@ public interface Platform {
 	void unregisterEventListener(EventListener listener);
 
 	/**
+	 * Gets the console as a permissible audience. This can be used to send messages.
+	 */
+	SquirtgunUser getConsole();
+
+	/**
 	 * Gets a player by UUID.
 	 * @param uuid the UUID of the player to get
 	 * @return the player
@@ -94,14 +93,19 @@ public interface Platform {
 	SquirtgunPlayer getPlayer(UUID uuid);
 
 	/**
-	 * Gets a player by name.
+	 * Gets a player by cached name.
 	 * @param name the name of the player to get
-	 * @return the player with the given name.
+	 * @return the player with the given name, or null if a player with that name has not played on the server before.
 	 */
-	SquirtgunPlayer getPlayer(String name);
+	@Nullable SquirtgunPlayer getPlayer(String name);
 
 	/**
 	 * Gets a list of all online players.
 	 */
 	List<SquirtgunPlayer> getOnlinePlayers();
+
+	/**
+	 * Gets a path to a directory where config files specific to a plugin can be stored.
+	 */
+	Path getConfigPath(SquirtgunPlugin<?> plugin);
 }

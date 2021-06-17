@@ -21,22 +21,31 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.platform;
+package me.lucyy.squirtgun.bungee;
 
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
+/**
+ * CommandSender wrapper for the console.
+ */
+public class BungeeConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
 
-public interface SquirtgunPlayer extends PermissionHolder, Audience {
-	UUID getUuid();
+	private final Audience audience;
 
-	String getUsername();
+	public BungeeConsoleWrapper(Audience audience) {
+		this.audience = audience;
+	}
 
-	boolean isOnline();
+	@Override
+	public boolean hasPermission(String permission) {
+		return true;
+	}
 
-	boolean hasPermission(String permission);
-
-	Gamemode getGamemode();
-
-	void setGamemode(Gamemode mode);
+	@Override
+	public @NotNull Audience audience() {
+		return audience;
+	}
 }

@@ -21,30 +21,42 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.update;
+package me.lucyy.squirtgun.bungee;
 
 import me.lucyy.squirtgun.platform.EventListener;
-import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
-import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
+import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-class UpdateListener extends EventListener {
-	private final UpdateChecker checker;
-	private final SquirtgunPlugin<?> plugin;
+public class BungeeListenerAdapter implements Listener {
+	private final List<EventListener> listeners = new ArrayList<>();
 
-	public UpdateListener(UpdateChecker checker, SquirtgunPlugin<?> plugin) {
-        super(plugin);
-        this.checker = checker;
-		this.plugin = plugin;
+	public void addListener(EventListener listener) {
+		listeners.add(listener);
 	}
 
-	@Override
-	public void onPlayerJoin(UUID uuid) {
-		super.onPlayerJoin(uuid);
-		SquirtgunPlayer player = plugin.getPlatform().getPlayer(uuid);
-		if (checker.checkDataForUpdate() && player.hasPermission(checker.getListenerPermission())) {
-			player.sendMessage(checker.getUpdateMessage());
+	public void removeListener(EventListener listener) {
+		listeners.remove(listener);
+	}
+
+	@EventHandler
+	public void onPlayerJoin(LoginEvent e) {
+		UUID uuid = e.getConnection().getUniqueId();
+		for (EventListener listener : listeners) {
+			listener.onPlayerJoin(uuid);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerQuit(PlayerDisconnectEvent e) {
+		UUID uuid = e.getPlayer().getUniqueId();
+		for (EventListener listener : listeners) {
+			listener.onPlayerLeave(uuid);
 		}
 	}
 }

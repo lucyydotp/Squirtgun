@@ -21,30 +21,25 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.update;
+group = "me.lucyy"
+description = "squirtgun-platform-bukkit"
 
-import me.lucyy.squirtgun.platform.EventListener;
-import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
-import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
+plugins {
+    java
+}
 
-import java.util.UUID;
+repositories {
+    mavenCentral()
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+}
 
-class UpdateListener extends EventListener {
-	private final UpdateChecker checker;
-	private final SquirtgunPlugin<?> plugin;
+dependencies {
+    compileOnly("org.jetbrains:annotations:20.1.0")
+    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
 
-	public UpdateListener(UpdateChecker checker, SquirtgunPlugin<?> plugin) {
-        super(plugin);
-        this.checker = checker;
-		this.plugin = plugin;
-	}
-
-	@Override
-	public void onPlayerJoin(UUID uuid) {
-		super.onPlayerJoin(uuid);
-		SquirtgunPlayer player = plugin.getPlatform().getPlayer(uuid);
-		if (checker.checkDataForUpdate() && player.hasPermission(checker.getListenerPermission())) {
-			player.sendMessage(checker.getUpdateMessage());
-		}
-	}
+    implementation("net.kyori:adventure-api:4.8.1")
+    implementation("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
+    implementation(project(":squirtgun-api"))
+    implementation(project(":squirtgun-commands"))
 }

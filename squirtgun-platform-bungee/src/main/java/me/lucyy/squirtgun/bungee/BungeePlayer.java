@@ -21,36 +21,26 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.bukkit;
+package me.lucyy.squirtgun.bungee;
 
 import me.lucyy.squirtgun.platform.Gamemode;
-import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
-import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 /**
  * SquirtgunPlayer implementation for Bukkit.
  */
-public class BukkitPlayer implements SquirtgunPlayer, ForwardingAudience {
+public class BungeePlayer implements SquirtgunPlayer, ForwardingAudience.Single {
 
-    private final OfflinePlayer parent;
+    private final ProxiedPlayer parent;
     private final Audience audience;
-    private static final EnumMap<org.bukkit.GameMode, Gamemode> gamemodeMap = new EnumMap<>(org.bukkit.GameMode.class);
 
-    static {
-        gamemodeMap.put(GameMode.CREATIVE, Gamemode.CREATIVE);
-        gamemodeMap.put(GameMode.SURVIVAL, Gamemode.SURVIVAL);
-        gamemodeMap.put(GameMode.ADVENTURE, Gamemode.ADVENTURE);
-        gamemodeMap.put(GameMode.SPECTATOR, Gamemode.SPECTATOR);
-    }
-
-    public BukkitPlayer(OfflinePlayer parent, Audience audience) {
+    public BungeePlayer(ProxiedPlayer parent, Audience audience) {
         this.parent = parent;
         this.audience = audience;
     }
@@ -67,41 +57,26 @@ public class BukkitPlayer implements SquirtgunPlayer, ForwardingAudience {
 
     @Override
     public boolean isOnline() {
-        return parent.isOnline();
+        return parent.isConnected();
     }
 
     @Override
     public boolean hasPermission(String permission) {
-        if (parent instanceof Player) {
-            return ((Player) parent).hasPermission(permission);
-        }
-        return false;
+        return parent.hasPermission(permission);
     }
 
     @Override
     public Gamemode getGamemode() {
-        if (parent instanceof Player) {
-            return gamemodeMap.get(((Player) parent).getGameMode());
-        }
-        return null;
+        throw new UnsupportedOperationException("Gamemodes cannot be accessed from BungeeCord");
     }
 
     @Override
     public void setGamemode(Gamemode mode) {
-        if (parent instanceof Player) {
-            org.bukkit.GameMode bukkitMode = gamemodeMap.entrySet().stream()
-                    .filter(k -> k.getValue() == mode)
-                    .map(Map.Entry::getKey)
-                    .findFirst().orElse(null);
-
-            // both enums are fully mapped so this is safe
-            Objects.requireNonNull(bukkitMode);
-	        ((Player) parent).setGameMode(bukkitMode);
-        }
+        throw new UnsupportedOperationException("Gamemodes cannot be accessed from BungeeCord");
     }
 
     @Override
-    public @NonNull Iterable<? extends Audience> audiences() {
-        return Collections.singleton(audience);
+    public @NotNull Audience audience() {
+        return audience;
     }
 }

@@ -21,30 +21,39 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.update;
+package me.lucyy.squirtgun.command.node;
 
-import me.lucyy.squirtgun.platform.EventListener;
-import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
-import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
+import com.google.common.base.Preconditions;
+import me.lucyy.squirtgun.platform.audience.PermissionHolder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
+public abstract class AbstractNode<T extends PermissionHolder> implements CommandNode<T> {
 
-class UpdateListener extends EventListener {
-	private final UpdateChecker checker;
-	private final SquirtgunPlugin<?> plugin;
+    private final String name;
+    private final String description;
+    private final @Nullable String permission;
 
-	public UpdateListener(UpdateChecker checker, SquirtgunPlugin<?> plugin) {
-        super(plugin);
-        this.checker = checker;
-		this.plugin = plugin;
-	}
+    protected AbstractNode(@NotNull String name, @NotNull String description, @Nullable String permission) {
+        Preconditions.checkNotNull(name, "Name must not be null");
+        Preconditions.checkNotNull(description, "Description must not be null");
+        this.name = name;
+        this.description = description;
+        this.permission = permission;
+    }
 
-	@Override
-	public void onPlayerJoin(UUID uuid) {
-		super.onPlayerJoin(uuid);
-		SquirtgunPlayer player = plugin.getPlatform().getPlayer(uuid);
-		if (checker.checkDataForUpdate() && player.hasPermission(checker.getListenerPermission())) {
-			player.sendMessage(checker.getUpdateMessage());
-		}
-	}
+    @Override
+    public @NotNull String getName() {
+        return name;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public @Nullable String getPermission() {
+        return permission;
+    }
 }

@@ -52,10 +52,10 @@ public class BukkitListenerAdapter implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerJoin(PlayerQuitEvent e) {
+	public void onPlayerQuit(PlayerQuitEvent e) {
 		UUID uuid = e.getPlayer().getUniqueId();
 		for (EventListener listener : listeners) {
-			listener.onPlayerJoin(uuid);
+			listener.onPlayerLeave(uuid);
 		}
 	}
 }

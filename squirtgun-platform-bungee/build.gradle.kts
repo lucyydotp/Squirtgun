@@ -21,18 +21,24 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.lucyy.squirtgun.platform;
+group = "me.lucyy"
+description = "squirtgun-platform-bungee"
 
-/**
- * An entity capable of holding permissions and executing commands.
- */
-public interface PermissionHolder {
+plugins {
+    java
+}
 
-	/**
-	 * Gets whether the target holds the provided permission.
-	 *
-	 * @param permission the permission to check
-	 * @return if the target holds the given permission
-	 */
-	boolean hasPermission(String permission);
+repositories {
+    mavenCentral()
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+}
+
+dependencies {
+    compileOnly("org.jetbrains:annotations:20.1.0")
+    compileOnly("net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT")
+
+    implementation("net.kyori:adventure-api:4.8.1")
+    implementation("net.kyori:adventure-platform-bungeecord:4.0.0-SNAPSHOT")
+    implementation(project(":squirtgun-api"))
+    implementation(project(":squirtgun-commands"))
 }
