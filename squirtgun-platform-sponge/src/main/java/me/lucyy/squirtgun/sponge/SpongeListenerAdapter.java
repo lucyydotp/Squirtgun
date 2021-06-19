@@ -21,9 +21,40 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = "squirtgun"
-include("squirtgun-api")
-include("squirtgun-platform-bukkit")
-include("squirtgun-platform-bungee")
-include("squirtgun-platform-sponge")
-include("squirtgun-commands")
+package me.lucyy.squirtgun.sponge;
+
+import me.lucyy.squirtgun.platform.EventListener;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.network.ServerSideConnectionEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class SpongeListenerAdapter {
+	private final List<EventListener> listeners = new ArrayList<>();
+
+	public void addListener(EventListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeListener(EventListener listener) {
+		listeners.remove(listener);
+	}
+
+	@Listener
+	public void onPlayerJoin(ServerSideConnectionEvent.Join e) {
+		UUID uuid = e.player().uniqueId();
+		for (EventListener listener : listeners) {
+			listener.onPlayerJoin(uuid);
+		}
+	}
+
+	@Listener
+	public void onPlayerQuit(ServerSideConnectionEvent.Disconnect e) {
+		UUID uuid = e.player().uniqueId();
+		for (EventListener listener : listeners) {
+			listener.onPlayerLeave(uuid);
+		}
+	}
+}

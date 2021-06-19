@@ -21,9 +21,16 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = "squirtgun"
-include("squirtgun-api")
-include("squirtgun-platform-bukkit")
-include("squirtgun-platform-bungee")
-include("squirtgun-platform-sponge")
-include("squirtgun-commands")
+description = "squirtgun-platform-sponge"
+
+repositories {
+    mavenCentral()
+    maven("https://repo.spongepowered.org/maven")
+}
+
+dependencies {
+    compileOnly("org.spongepowered:spongeapi:8.0.0-SNAPSHOT")
+
+    implementation(project(":squirtgun-api"))
+    implementation(project(":squirtgun-commands"))
+}

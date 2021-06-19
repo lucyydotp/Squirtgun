@@ -23,12 +23,12 @@
 
 plugins {
     `maven-publish`
-    java
+    `java-library`
     signing
 }
 
 subprojects {
-    version = "2.0.0-pre4"
+    version = "2.0.0-pre5-SNAPSHOT"
     group = "me.lucyy"
 
     apply<MavenPublishPlugin>()
@@ -36,8 +36,8 @@ subprojects {
     apply<JavaPlugin>()
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
 
         withJavadocJar()
         withSourcesJar()
@@ -48,8 +48,7 @@ subprojects {
             create<MavenPublication>("mavenJava") {
                 from(components["java"])
                 pom {
-                    artifactId = artifactId
-                    description.set("A multipurpose library designed for Minecraft: Java Edition plugins.")
+                    description.set(project.description)
                     url.set("https://lucyy.me")
                     name.set("squirtgun")
                     licenses {

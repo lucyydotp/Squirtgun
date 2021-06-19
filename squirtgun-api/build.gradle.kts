@@ -27,7 +27,6 @@ description = "squirtgun-api"
 
 plugins {
     `java-library`
-    signing
 }
 
 repositories {
@@ -43,6 +42,7 @@ dependencies {
     testImplementation("net.kyori:adventure-text-serializer-legacy:4.8.1")
     testImplementation("com.google.guava:guava:30.1.1-jre")
 
+    api("org.jetbrains:annotations:21.0.1")
     api("net.kyori:adventure-api:4.8.1")
     implementation("net.kyori:adventure-text-serializer-legacy:4.8.1")
     implementation("com.google.guava:guava:30.1.1-jre")
