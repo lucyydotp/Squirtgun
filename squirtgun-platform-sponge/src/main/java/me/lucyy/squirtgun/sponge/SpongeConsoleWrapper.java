@@ -21,9 +21,28 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-rootProject.name = "squirtgun"
-include("squirtgun-api")
-include("squirtgun-platform-bukkit")
-include("squirtgun-platform-bungee")
-include("squirtgun-platform-sponge")
-include("squirtgun-commands")
+package me.lucyy.squirtgun.sponge;
+
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.Sponge;
+
+/**
+ * CommandSender wrapper for the console.
+ */
+public class SpongeConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
+
+	public static final SpongeConsoleWrapper instance = new SpongeConsoleWrapper();
+
+	@Override
+	public boolean hasPermission(String permission) {
+		return true;
+	}
+
+	@Override
+	public @NotNull Audience audience() {
+		return Sponge.server();
+	}
+}

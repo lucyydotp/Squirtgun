@@ -20,10 +20,23 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package me.lucyy.squirtgun.sponge.command;
 
-rootProject.name = "squirtgun"
-include("squirtgun-api")
-include("squirtgun-platform-bukkit")
-include("squirtgun-platform-bungee")
-include("squirtgun-platform-sponge")
-include("squirtgun-commands")
+import io.leangen.geantyref.TypeToken;
+import me.lucyy.squirtgun.command.node.CommandNode;
+import me.lucyy.squirtgun.platform.audience.PermissionHolder;
+import org.spongepowered.api.command.manager.CommandManager;
+import org.spongepowered.api.command.registrar.CommandRegistrar;
+import org.spongepowered.api.command.registrar.CommandRegistrarType;
+
+public class SquirtgunRegistrarType<T extends PermissionHolder> implements CommandRegistrarType<CommandNode<T>> {
+    @Override
+    public TypeToken<CommandNode<T>> handledType() {
+        return new TypeToken<>() { };
+    }
+
+    @Override
+    public CommandRegistrar<CommandNode<T>> create(CommandManager.Mutable manager) {
+        return new SquirtgunCommandRegistrar<>();
+    }
+}

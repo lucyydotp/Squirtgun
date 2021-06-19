@@ -24,10 +24,6 @@
 group = "me.lucyy"
 description = "squirtgun-platform-bungee"
 
-plugins {
-    java
-}
-
 repositories {
     mavenCentral()
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
@@ -37,7 +33,6 @@ dependencies {
     compileOnly("org.jetbrains:annotations:20.1.0")
     compileOnly("net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT")
 
-    implementation("net.kyori:adventure-api:4.8.1")
     implementation("net.kyori:adventure-platform-bungeecord:4.0.0-SNAPSHOT")
     implementation(project(":squirtgun-api"))
     implementation(project(":squirtgun-commands"))

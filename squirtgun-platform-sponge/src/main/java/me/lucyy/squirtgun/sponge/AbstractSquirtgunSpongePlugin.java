@@ -20,10 +20,19 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package me.lucyy.squirtgun.sponge;
 
-rootProject.name = "squirtgun"
-include("squirtgun-api")
-include("squirtgun-platform-bukkit")
-include("squirtgun-platform-bungee")
-include("squirtgun-platform-sponge")
-include("squirtgun-commands")
+import com.google.inject.Inject;
+import org.spongepowered.api.config.DefaultConfig;
+
+import java.nio.file.Path;
+
+public abstract class AbstractSquirtgunSpongePlugin {
+    @Inject
+    @DefaultConfig(sharedRoot = false)
+    private Path privateConfigDir;
+
+    public Path getConfigDir() {
+        return privateConfigDir;
+    }
+}
