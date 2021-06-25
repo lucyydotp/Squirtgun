@@ -21,34 +21,30 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import org.apache.tools.ant.filters.ReplaceTokens
+package me.lucyy.squirtgun.fabric;
 
-description = "squirtgun-api"
+import me.lucko.fabric.api.permissions.v0.Permissions;
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
+import org.jetbrains.annotations.NotNull;
 
-repositories {
-    mavenCentral()
-}
+public class FabricConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
 
-dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+	private final FabricPlatform platform;
 
-    testImplementation("net.kyori:adventure-api:4.8.1")
-    testImplementation("net.kyori:adventure-text-serializer-gson:4.8.1")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:4.8.1")
-    testImplementation("com.google.guava:guava:30.1.1-jre")
+	FabricConsoleWrapper(final FabricPlatform platform) {
+		this.platform = platform;
+	}
 
-    api("net.kyori:adventure-api:4.8.1")
-    implementation("net.kyori:adventure-text-serializer-legacy:4.8.1")
-    implementation("com.google.guava:guava:30.1.1-jre")
-    implementation("com.google.code.gson:gson:2.8.6")
-}
+	@Override
+	public boolean hasPermission(final String permission) {
+		// console being console, if the permission is undefined, it should always fallback to true
+		return Permissions.check(this.platform.getServer().getCommandSource(), permission, true);
+	}
 
-tasks {
-    withType<ProcessResources> {
-        filter<ReplaceTokens>("tokens" to mapOf("version" to project.version.toString()))
-    }
-    withType<Test> {
-        useJUnitPlatform()
-    }
+	@Override
+	public @NotNull Audience audience() {
+		return this.platform.getAudienceProvider().console();
+	}
 }

@@ -23,21 +23,24 @@
 
 plugins {
     `maven-publish`
-    java
+    `java-library`
     signing
 }
 
+version = "2.0.0-pre6-SNAPSHOT"
+group = "me.lucyy"
+
 subprojects {
-    version = "2.0.0-pre6-SNAPSHOT"
-    group = "me.lucyy"
+    version = rootProject.version
+    group = rootProject.group
 
     apply<MavenPublishPlugin>()
     apply<SigningPlugin>()
-    apply<JavaPlugin>()
+    apply<JavaLibraryPlugin>()
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
 
         withJavadocJar()
         withSourcesJar()
@@ -45,30 +48,33 @@ subprojects {
 
     publishing {
         publications {
-            create<MavenPublication>("mavenJava") {
-                from(components["java"])
-                pom {
-                    artifactId = artifactId
-                    description.set("A multipurpose library designed for Minecraft: Java Edition plugins.")
-                    url.set("https://lucyy.me")
-                    name.set("squirtgun")
-                    licenses {
-                        license {
-                            name.set("MIT License")
-                            url.set("https://www.opensource.org/licenses/mit-license.php")
+            // fabric has a bit of a special task: remapping
+            if (project != rootProject.project("squirtgun-platform-fabric")) {
+                create<MavenPublication>("mavenJava") {
+                    from(components["java"])
+                    pom {
+                        artifactId = artifactId
+                        description.set("A multipurpose library designed for Minecraft: Java Edition plugins.")
+                        url.set("https://lucyy.me")
+                        name.set("squirtgun")
+                        licenses {
+                            license {
+                                name.set("MIT License")
+                                url.set("https://www.opensource.org/licenses/mit-license.php")
+                            }
                         }
-                    }
-                    developers {
-                        developer {
-                            id.set("lucyy-mc")
-                            name.set("Lucy Poulton")
-                            email.set("lucy@poulton.xyz")
+                        developers {
+                            developer {
+                                id.set("lucyy-mc")
+                                name.set("Lucy Poulton")
+                                email.set("lucy@poulton.xyz")
+                            }
                         }
-                    }
-                    scm {
-                        connection.set("scm:git:git://github.com/lucyy-mc/Squirtgun.git")
-                        developerConnection.set("scm:git:git://github.com/lucyy-mc/Squirtgun.git")
-                        url.set("https://github.com/lucyy-mc/Squirtgun")
+                        scm {
+                            connection.set("scm:git:git://github.com/lucyy-mc/Squirtgun.git")
+                            developerConnection.set("scm:git:git://github.com/lucyy-mc/Squirtgun.git")
+                            url.set("https://github.com/lucyy-mc/Squirtgun")
+                        }
                     }
                 }
             }
@@ -82,11 +88,12 @@ subprojects {
                     val ossrhUsername: String? by project
                     val ossrhPassword: String? by project
 
-                    if (ossrhUsername != null && ossrhPassword != null)
+                    if (ossrhUsername != null && ossrhPassword != null) {
                         credentials {
                             username = ossrhUsername
                             password = ossrhPassword
                         }
+                    }
                 }
             }
         }
@@ -97,7 +104,7 @@ subprojects {
         val signingPassword: String? by project
         if (signingKey != null && signingPassword != null) {
             useInMemoryPgpKeys(signingKey, signingPassword)
-             sign(publishing.publications["mavenJava"])
+            sign(publishing.publications["mavenJava"])
         }
         if (signatory == null) {
             logger.warn("No signatories available, skipping signing.")

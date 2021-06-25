@@ -26,6 +26,7 @@ package me.lucyy.squirtgun.platform.scheduler;
 import com.google.common.base.Preconditions;
 import me.lucyy.squirtgun.platform.Platform;
 
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 /**
@@ -37,10 +38,21 @@ public class Task {
 		return new Builder();
 	}
 
+	public static Builder builder(final Consumer<Platform> action) {
+		return new Builder().action(action);
+	}
+
+	public static Builder builder(final Runnable action) {
+		return new Builder().action(action);
+	}
+
 	/**
 	 * A builder for a task.
 	 */
 	public static class Builder {
+
+		private static final AtomicLong ID_SUPPLIER = new AtomicLong(0L);
+
 		private int interval = -1;
 		private int delay = 0;
 		private boolean isAsync = false;
@@ -68,9 +80,14 @@ public class Task {
 			return this;
 		}
 
+		public Builder action(Runnable action) {
+			this.action = p -> action.run();
+			return this;
+		}
+
 		public Task build() {
 			Preconditions.checkNotNull(action, "Action has not been set");
-			return new Task(action, delay, interval, isAsync);
+			return new Task(action, delay, interval, isAsync, ID_SUPPLIER.getAndIncrement());
 		}
 	}
 
@@ -78,6 +95,7 @@ public class Task {
 	private final int delay;
 	private final int interval;
 	private final boolean isAsync;
+	private final long id;
 
 	/**
 	 * Creates a new task.
@@ -87,11 +105,12 @@ public class Task {
 	 * @param interval how many ticks to wait between executing repeatedly, or -1 if it should not repeat.
 	 * @param isAsync  whether to run this task asynchronously - how this happens is dictated by the platform.
 	 */
-	public Task(final Consumer<Platform> action, final int delay, final int interval, final boolean isAsync) {
+	private Task(final Consumer<Platform> action, final int delay, final int interval, final boolean isAsync, final long id) {
 		this.action = action;
 		this.delay = delay;
 		this.interval = interval;
 		this.isAsync = isAsync;
+		this.id = id;
 	}
 
 	/**
@@ -127,5 +146,41 @@ public class Task {
 	 */
 	public boolean isAsync() {
 		return isAsync;
+	}
+
+	public long getId() {
+		return this.id;
+	}
+
+	@Override
+	public String toString() {
+		return "Task{"
+					 + "id=" + this.id
+					 + ", action=" + this.action
+					 + ", delay=" + this.delay
+					 + ", interval=" + this.interval
+					 + ", isAsync=" + this.isAsync
+					 + '}';
+	}
+
+	@Override
+	public boolean equals(final Object other) {
+		if (this == other) { return true; }
+		if (!(other.getClass() == this.getClass())) { return false; }
+
+		final Task that = (Task) other;
+		return this.delay == that.delay
+					 && this.interval == that.interval
+					 && this.isAsync == that.isAsync
+					 && this.id == that.id;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = this.delay;
+		result = 31 * result + this.interval;
+		result = 31 * result + (this.isAsync ? 1 : 0);
+		result = 31 * result + (int) (this.id ^ (this.id >>> 32));
+		return result;
 	}
 }

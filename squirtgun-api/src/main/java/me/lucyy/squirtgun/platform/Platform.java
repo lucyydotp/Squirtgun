@@ -102,7 +102,7 @@ public interface Platform {
 	/**
 	 * Gets a list of all online players.
 	 */
-	List<SquirtgunPlayer> getOnlinePlayers();
+	List<? extends SquirtgunPlayer> getOnlinePlayers();
 
 	/**
 	 * Gets a path to a directory where config files specific to a plugin can be stored.
