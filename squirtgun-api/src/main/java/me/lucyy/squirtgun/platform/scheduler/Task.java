@@ -26,6 +26,7 @@ package me.lucyy.squirtgun.platform.scheduler;
 import com.google.common.base.Preconditions;
 import me.lucyy.squirtgun.platform.Platform;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
@@ -148,6 +149,13 @@ public class Task {
 		return isAsync;
 	}
 
+	/**
+	 * Get the numeric ID assigned to this task.
+	 *
+	 * <p>Task IDs are auto-incremental and unique.</p>
+	 *
+	 * @return the task ID
+	 */
 	public long getId() {
 		return this.id;
 	}
@@ -166,7 +174,7 @@ public class Task {
 	@Override
 	public boolean equals(final Object other) {
 		if (this == other) { return true; }
-		if (!(other.getClass() == this.getClass())) { return false; }
+		if (other == null || other.getClass() != this.getClass()) { return false; }
 
 		final Task that = (Task) other;
 		return this.delay == that.delay
@@ -177,10 +185,6 @@ public class Task {
 
 	@Override
 	public int hashCode() {
-		int result = this.delay;
-		result = 31 * result + this.interval;
-		result = 31 * result + (this.isAsync ? 1 : 0);
-		result = 31 * result + (int) (this.id ^ (this.id >>> 32));
-		return result;
+		return Objects.hash(this.delay, this.interval, this.isAsync, this.id);
 	}
 }
