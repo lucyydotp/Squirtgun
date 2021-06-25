@@ -56,8 +56,8 @@ tasks {
     javadoc {
         val opts = options as StandardJavadocDocletOptions
         listOf(
-            "https://maven.fabricmc.net/docs/yarn-${minecraftVersion}+build.${yarnBuild}",
-            "https://"
+            "https://maven.fabricmc.net/docs/yarn-${minecraftVersion}+build.${yarnBuild}/",
+            "https://jd.adventure.kyori.net/api/4.8.1/"
         ).forEach { opts.links?.add(it) }
     }
 
