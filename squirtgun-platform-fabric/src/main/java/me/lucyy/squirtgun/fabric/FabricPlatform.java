@@ -28,6 +28,7 @@ import me.lucyy.squirtgun.fabric.task.FabricTaskScheduler;
 import me.lucyy.squirtgun.platform.AuthMode;
 import me.lucyy.squirtgun.platform.EventListener;
 import me.lucyy.squirtgun.platform.Platform;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
 import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -36,18 +37,17 @@ import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.kyori.adventure.text.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.logging.Logger;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Squirtgun Platform implementation for the Fabric mod loader.
@@ -57,9 +57,9 @@ public class FabricPlatform implements Platform {
 	private static final Logger LOGGER = Logger.getLogger(FabricPlatform.class.getSimpleName());
 	private static final List<String> PROXY_BRIDGING_MODS = List.of("fabricproxy", "fabricproxy-lite");
 
-	private MinecraftDedicatedServer server;
+	private MinecraftServer server;
 	private FabricServerAudiences audiences;
-	private List<FabricPlayer> onlinePlayers = List.of();  // default to empty list until server has started
+	private List<SquirtgunPlayer> onlinePlayers = List.of();  // default to empty list until server has started
 	private final FabricTaskScheduler taskScheduler;
 	private final FabricConsoleWrapper consoleWrapper;
 	private final FabricListenerAdapter listenerAdapter = new FabricListenerAdapter();
@@ -67,12 +67,10 @@ public class FabricPlatform implements Platform {
 	/**
 	 * Create the Squirtgun's Fabric "platform" for the server.
 	 *
-	 * <p>The server instance passed <b>must</b> be a {@link MinecraftDedicatedServer}.</p>
-	 *
 	 * @param server server instance to work with
 	 */
 	public FabricPlatform(final @NotNull MinecraftServer server) {
-		this.server = validateState(MinecraftDedicatedServer.class::isInstance, server, MinecraftDedicatedServer.class::cast, "Squirtgun cannot be used on the client!");
+		this.server = requireNonNull(server, "server");
 		this.audiences = FabricServerAudiences.of(server);
 		this.taskScheduler = new FabricTaskScheduler(this);
 		this.consoleWrapper = new FabricConsoleWrapper(this);
@@ -95,8 +93,8 @@ public class FabricPlatform implements Platform {
 	 *
 	 * @return the server instance
 	 */
-	public MinecraftDedicatedServer getServer() {
-		return validateState(Objects::nonNull, this.server, "Cannot access the server without a server running");
+	public MinecraftServer getServer() {
+		return requireNonNull(this.server, "Cannot access the server without a server running");
 	}
 
 	/**
@@ -105,7 +103,7 @@ public class FabricPlatform implements Platform {
 	 * @return the server audience provider
 	 */
 	public FabricServerAudiences getAudienceProvider() {
-		return validateState(Objects::nonNull, this.audiences, "Cannot access the audience provider without a server running");
+		return requireNonNull(this.audiences, "Cannot access the audience provider without a server running");
 	}
 
 	@Override
@@ -125,10 +123,15 @@ public class FabricPlatform implements Platform {
 
 	@Override
 	public AuthMode getAuthMode() {
-		if (PROXY_BRIDGING_MODS.stream().anyMatch(FabricLoader.getInstance()::isModLoaded)) {
-			return AuthMode.BUNGEE;
+		final var server = getServer();
+		if (server instanceof DedicatedServer) {
+			if (PROXY_BRIDGING_MODS.stream().anyMatch(FabricLoader.getInstance()::isModLoaded)) {
+				return AuthMode.BUNGEE;
+			} else {
+				return ((DedicatedServer) server).getProperties().onlineMode ? AuthMode.ONLINE : AuthMode.OFFLINE;
+			}
 		} else {
-			return getServer().getProperties().onlineMode ? AuthMode.ONLINE : AuthMode.OFFLINE;
+			return AuthMode.ONLINE;	// https://github.com/lucyy-mc/Squirtgun/pull/29#discussion_r658576670
 		}
 	}
 
@@ -187,7 +190,7 @@ public class FabricPlatform implements Platform {
 	}
 
 	@Override
-	public List<FabricPlayer> getOnlinePlayers() {
+	public List<SquirtgunPlayer> getOnlinePlayers() {
 		return this.onlinePlayers;
 	}
 
@@ -198,17 +201,5 @@ public class FabricPlatform implements Platform {
 
 	private FabricPlayer asFabricPlayerOrNull(final ServerPlayerEntity player) {
 		return player == null ? null : new FabricPlayer(player, getAudienceProvider().audience(player));
-	}
-
-	private <T> T validateState(final Predicate<T> validation, final T value, final String message) {
-		return validateState(validation, value, Function.identity(), message);
-	}
-
-	private <T, U> U validateState(final Predicate<T> validation, final T value, final Function<T, U> post, final String message) {
-		if (validation.test(value)) {
-			return post.apply(value);
-		} else {
-			throw new IllegalStateException(message);
-		}
 	}
 }

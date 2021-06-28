@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "squirtgun-platform-fabric",
+  "version": "${version}",
+  "name": "squirtgun-platform-fabric",
+  "description": "A simple permissions API for Fabric.",
+  "contact": {
+    "sources": "https://github.com/lucyy-mc/Squirtgun",
+    "issues": "https://github.com/lucyy-mc/Squirtgun/issues"
+  },
+  "authors": [
+    {
+      "name": "Lucy",
+      "contact": {
+        "homepage": "https://lucyy.me/",
+        "email": "lucy@poulton.xyz",
+        "sources": "https://github.com/lucyy-mc"
+      }
+    }
+  ],
+  "contributors": [
+    {
+      "name": "emilyy-dev",
+      "contact": {
+        "sources": "https://github.com/emilyy-dev"
+      }
+    }
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {},
+  "depends": {
+    "fabricloader": ">=0.11.0",
+    "fabric-api-base": "*",
+    "fabric-permissions-api-v0": "*",
+    "adventure-platform-fabric": "4.1.0-SNAPSHOT"
+  },
+  "custom": {
+    "modmenu:api": true
+  }
+}

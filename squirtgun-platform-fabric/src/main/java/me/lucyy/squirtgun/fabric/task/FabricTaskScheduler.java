@@ -27,7 +27,7 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import me.lucyy.squirtgun.fabric.FabricPlatform;
 import me.lucyy.squirtgun.platform.scheduler.Task;
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.MinecraftServer;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class FabricTaskScheduler implements TaskScheduler {
 
 	private final FabricPlatform platform;
-	private final MinecraftDedicatedServer server;
+	private final MinecraftServer server;
 	private final Map<Task, ScheduledFuture<?>> taskMap = new LinkedHashMap<>();
 	private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(new DefaultThreadFactory("squirtgun-fabric-scheduler"));
 
