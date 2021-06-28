@@ -21,8 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-description = "squirtgun-platform-fabric"
-
 plugins {
     id("fabric-loom") version "0.8-SNAPSHOT"
 }
@@ -30,8 +28,9 @@ plugins {
 val minecraftVersion = "1.17"
 val yarnBuild = 13
 val loaderVersion = "0.11.6"
-val fabricApiVersion = "0.35.2+1.17"
-val luckoFabricPermissionsApiVersion = "0.1-SNAPSHOT"
+val fabricApiVersion = "0.36.0+1.17"
+val fabricPermissionsApiVersion = "0.1-SNAPSHOT"
+val adventureFabricVersion = "4.1.0-SNAPSHOT"
 
 repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
@@ -40,30 +39,18 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:${minecraftVersion}")
     mappings("net.fabricmc:yarn:${minecraftVersion}+build.${yarnBuild}:v2")
-    modCompileOnly("net.fabricmc:fabric-loader:${loaderVersion}")
+    modImplementation("net.fabricmc:fabric-loader:${loaderVersion}")
 
-    modCompileOnly("net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}")
-    modCompileOnly("me.lucko:fabric-permissions-api:${luckoFabricPermissionsApiVersion}") {
-        isTransitive = true
-    }
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}")
+    modApi(include("me.lucko:fabric-permissions-api:${fabricPermissionsApiVersion}")!!)
+    modApi(include("net.kyori:adventure-platform-fabric:${adventureFabricVersion}")!!)
 
-    api(project(":squirtgun-api"))
-    api(project(":squirtgun-commands"))
-    modApi("net.kyori:adventure-platform-fabric:4.1.0-SNAPSHOT")
-}
-
-tasks {
-    javadoc {
-        val opts = options as StandardJavadocDocletOptions
-        listOf(
-            "https://maven.fabricmc.net/docs/yarn-${minecraftVersion}+build.${yarnBuild}/",
-            "https://jd.adventure.kyori.net/api/4.8.1/"
-        ).forEach { opts.links?.add(it) }
-    }
-
-    withType<GenerateModuleMetadata> {
-        enabled = true
-    }
+    modApi(include(project(":squirtgun-api")) {
+        exclude("net.kyori")
+    })
+    modApi(include(project(":squirtgun-commands")) {
+        exclude("net.kyori")
+    })
 }
 
 publishing {

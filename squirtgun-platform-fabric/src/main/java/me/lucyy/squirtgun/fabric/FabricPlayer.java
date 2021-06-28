@@ -73,7 +73,7 @@ public class FabricPlayer implements SquirtgunPlayer, ForwardingAudience.Single 
 
 	@Override
 	public boolean hasPermission(final String permission) {
-		return Permissions.check(this.handle, permission, 3); // 3 = op level 3 (2nd to last, "admins")
+		return Permissions.check(this.handle, permission, 3);	// 3 = op level 3 (2nd to last, "admins")
 	}
 
 	@Override

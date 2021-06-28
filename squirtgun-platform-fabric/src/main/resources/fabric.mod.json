@@ -3,7 +3,7 @@
   "id": "squirtgun-platform-fabric",
   "version": "${version}",
   "name": "squirtgun-platform-fabric",
-  "description": "A simple permissions API for Fabric.",
+  "description": "A multipurpose library designed for Minecraft: Java Edition plugins.",
   "contact": {
     "sources": "https://github.com/lucyy-mc/Squirtgun",
     "issues": "https://github.com/lucyy-mc/Squirtgun/issues"

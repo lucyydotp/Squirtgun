@@ -21,13 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-group = "me.lucyy"
-description = "squirtgun-platform-bukkit"
-
-plugins {
-    java
-}
-
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
@@ -35,11 +28,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.jetbrains:annotations:20.1.0")
-    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
+    compileOnlyApi("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
 
-    implementation("net.kyori:adventure-api:4.8.1")
-    implementation("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
-    implementation(project(":squirtgun-api"))
-    implementation(project(":squirtgun-commands"))
+    api("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
+    api(project(":squirtgun-api"))
+    api(project(":squirtgun-commands"))
 }

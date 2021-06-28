@@ -21,25 +21,55 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-repositories {
-    mavenCentral()
-}
+package me.lucyy.squirtgun.fabric;
 
-dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+import me.lucyy.squirtgun.platform.Gamemode;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
+import net.minecraft.util.Util;
+import org.jetbrains.annotations.NotNull;
 
-    testImplementation("net.kyori:adventure-api:4.8.1")
-    testImplementation("net.kyori:adventure-text-serializer-gson:4.8.1")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:4.8.1")
-    testImplementation("com.google.guava:guava:21.0")
-    testImplementation(project(":squirtgun-api"))
+import java.util.UUID;
 
-    api(project(":squirtgun-api"))
-}
+public final class DummyFabricPlayer extends FabricPlayer implements SquirtgunPlayer, ForwardingAudience.Single {
 
-tasks {
-    test {
-        useJUnitPlatform()
-    }
+	public static final FabricPlayer INSTANCE = new DummyFabricPlayer();
+
+	private DummyFabricPlayer() {
+		super(null, Audience.empty());
+	}
+
+	@Override
+	public UUID getUuid() {
+		return Util.NIL_UUID;
+	}
+
+	@Override
+	public String getUsername() {
+		return "null";
+	}
+
+	@Override
+	public boolean isOnline() {
+		return false;
+	}
+
+	@Override
+	public boolean hasPermission(final String permission) {
+		return false;
+	}
+
+	@Override
+	public Gamemode getGamemode() {
+		return Gamemode.SURVIVAL;
+	}
+
+	@Override
+	public void setGamemode(final Gamemode mode) { }
+
+	@Override
+	public @NotNull Audience audience() {
+		return Audience.empty();
+	}
 }

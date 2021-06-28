@@ -55,7 +55,9 @@ import static java.util.Objects.requireNonNull;
 public class FabricPlatform implements Platform {
 
 	private static final Logger LOGGER = Logger.getLogger(FabricPlatform.class.getSimpleName());
-	private static final List<String> PROXY_BRIDGING_MODS = List.of("fabricproxy", "fabricproxy-lite");
+	private static final List<String> PROXY_BRIDGING_MODS =
+			List.of("fabricproxy",  // fabricproxy has been superseded by fabricproxy-lite, TODO drop off the list?
+							"fabricproxy-lite");
 
 	private MinecraftServer server;
 	private FabricServerAudiences audiences;
@@ -79,7 +81,7 @@ public class FabricPlatform implements Platform {
 	}
 
 	private void serverStarted(final MinecraftServer server) {
-		this.onlinePlayers = Lists.transform(getServer().getPlayerManager().getPlayerList(), this::asFabricPlayerOrNull);
+		this.onlinePlayers = Lists.transform(getServer().getPlayerManager().getPlayerList(), this::asFabricPlayerOrDummy);
 	}
 
 	private void serverStopping(final MinecraftServer server) {
@@ -93,7 +95,7 @@ public class FabricPlatform implements Platform {
 	 *
 	 * @return the server instance
 	 */
-	public MinecraftServer getServer() {
+	public MinecraftServer getServer() {  // TODO mark as @Nullable instead of forcefully failing?
 		return requireNonNull(this.server, "Cannot access the server without a server running");
 	}
 
@@ -102,7 +104,7 @@ public class FabricPlatform implements Platform {
 	 *
 	 * @return the server audience provider
 	 */
-	public FabricServerAudiences getAudienceProvider() {
+	public FabricServerAudiences getAudienceProvider() {  // TODO mark as @Nullable instead of forcefully failing?
 		return requireNonNull(this.audiences, "Cannot access the audience provider without a server running");
 	}
 
@@ -131,7 +133,7 @@ public class FabricPlatform implements Platform {
 				return ((DedicatedServer) server).getProperties().onlineMode ? AuthMode.ONLINE : AuthMode.OFFLINE;
 			}
 		} else {
-			return AuthMode.ONLINE;	// https://github.com/lucyy-mc/Squirtgun/pull/29#discussion_r658576670
+			return AuthMode.ONLINE;  // https://github.com/lucyy-mc/Squirtgun/pull/29#discussion_r658576670
 		}
 	}
 
@@ -151,13 +153,16 @@ public class FabricPlatform implements Platform {
 	}
 
 	/**
+	 * Wraps a {@link ServerCommandSource} in a {@link SquirtgunUser}.
 	 *
+	 * <p>If the command source entity is a player entity, this method calls and returns
+	 * {@link #getPlayer(ServerPlayerEntity)}, elsewise it returns {@link #getConsole()}.</p>
 	 *
 	 * @param commandSource {@link ServerCommandSource} to adapt
 	 * @return corresponding {@link SquirtgunUser}
 	 */
-	public SquirtgunUser fromCommandSource(final ServerCommandSource commandSource) {
-		final var entity = commandSource.getEntity();
+	public @NotNull SquirtgunUser fromCommandSource(final @NotNull ServerCommandSource commandSource) {
+		final var entity = requireNonNull(commandSource, "commandSource").getEntity();
 		if (entity instanceof ServerPlayerEntity) {
 			return getPlayer((ServerPlayerEntity) entity);
 		} else {
@@ -172,21 +177,22 @@ public class FabricPlatform implements Platform {
 
 	@Override
 	public FabricPlayer getPlayer(final UUID uuid) {
-		return asFabricPlayerOrNull(getServer().getPlayerManager().getPlayer(uuid));
+		return asFabricPlayerOrDummy(getServer().getPlayerManager().getPlayer(requireNonNull(uuid, "uuid")));
 	}
 
 	@Override
-	public @Nullable FabricPlayer getPlayer(final String name) {
-		return asFabricPlayerOrNull(getServer().getPlayerManager().getPlayer(name));
+	public FabricPlayer getPlayer(final String name) {
+		return asFabricPlayerOrDummy(getServer().getPlayerManager().getPlayer(requireNonNull(name, "name")));
 	}
 
 	/**
+	 * Wraps a {@link ServerPlayerEntity} in a {@link FabricPlayer}.
 	 *
 	 * @param player player entity to wrap
 	 * @return Squirtgun's Fabric player wrapper
 	 */
-	public FabricPlayer getPlayer(final ServerPlayerEntity player) {
-		return asFabricPlayerOrNull(player);
+	public @NotNull FabricPlayer getPlayer(final @Nullable ServerPlayerEntity player) {
+		return asFabricPlayerOrDummy(player);
 	}
 
 	@Override
@@ -199,7 +205,7 @@ public class FabricPlatform implements Platform {
 		return FabricLoader.getInstance().getConfigDir().resolve(plugin.getPluginName());
 	}
 
-	private FabricPlayer asFabricPlayerOrNull(final ServerPlayerEntity player) {
-		return player == null ? null : new FabricPlayer(player, getAudienceProvider().audience(player));
+	private FabricPlayer asFabricPlayerOrDummy(final ServerPlayerEntity player) {
+		return player == null ? DummyFabricPlayer.INSTANCE : new FabricPlayer(player, getAudienceProvider().audience(player));
 	}
 }

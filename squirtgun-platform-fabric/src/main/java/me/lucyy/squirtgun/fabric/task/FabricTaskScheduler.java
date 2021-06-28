@@ -39,6 +39,8 @@ import java.util.concurrent.TimeUnit;
 
 public class FabricTaskScheduler implements TaskScheduler {
 
+	private static final long MSPT = 50L;
+
 	private final FabricPlatform platform;
 	private final MinecraftServer server;
 	private final Map<Task, ScheduledFuture<?>> taskMap = new LinkedHashMap<>();
@@ -55,7 +57,7 @@ public class FabricTaskScheduler implements TaskScheduler {
 
 		final var future =
 				task.isRepeating()
-				? this.scheduler.scheduleWithFixedDelay(runTask(task), task.getDelay() * 50L, task.getInterval() * 50L, TimeUnit.MILLISECONDS)
+				? this.scheduler.scheduleWithFixedDelay(runTask(task), task.getDelay() * MSPT, task.getInterval() * MSPT, TimeUnit.MILLISECONDS)
 				: this.scheduler.schedule(runTask(task), task.getDelay() * 50L, TimeUnit.MILLISECONDS);
 		this.taskMap.put(task, future);
 	}

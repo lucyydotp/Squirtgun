@@ -22,8 +22,8 @@
  */
 
 plugins {
-    `maven-publish`
     `java-library`
+    `maven-publish`
     signing
 }
 
@@ -33,10 +33,11 @@ group = "me.lucyy"
 subprojects {
     version = rootProject.version
     group = rootProject.group
+    description = name
 
-    apply<MavenPublishPlugin>()
-    apply<SigningPlugin>()
-    apply<JavaLibraryPlugin>()
+    apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
+    apply(plugin = "signing")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -49,7 +50,7 @@ subprojects {
     publishing {
         publications {
             // fabric has a bit of a special task: remapping
-            if (project != rootProject.project("squirtgun-platform-fabric")) {
+            if (name != "squirtgun-platform-fabric") {
                 create<MavenPublication>("mavenJava") {
                     from(components["java"])
                     pom {
@@ -112,10 +113,15 @@ subprojects {
     }
 
     tasks {
-        withType<JavaCompile> {
-            options.encoding = "UTF-8"
+        processResources {
+            eachFile { expand("version" to version) }
         }
-        withType<Javadoc>()
+
+        compileJava {
+            options.encoding = Charsets.UTF_8.name()
+        }
+
+        javadoc { }
     }
 }
 
