@@ -23,46 +23,69 @@
 
 package me.lucyy.squirtgun.fabric;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.EnumBiMap;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import me.lucyy.squirtgun.platform.Gamemode;
 import net.kyori.adventure.audience.Audience;
-import net.minecraft.util.Util;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-enum DummyFabricPlayer implements FabricPlayer {
-	INSTANCE;
+class FabricPlayerImpl implements FabricPlayer {
+
+	private static final BiMap<GameMode, Gamemode> GAMEMODE_BIMAP = EnumBiMap.create(GameMode.class, Gamemode.class);
+
+	static {
+		GAMEMODE_BIMAP.put(GameMode.SURVIVAL, Gamemode.SURVIVAL);
+		GAMEMODE_BIMAP.put(GameMode.CREATIVE, Gamemode.CREATIVE);
+		GAMEMODE_BIMAP.put(GameMode.ADVENTURE, Gamemode.ADVENTURE);
+		GAMEMODE_BIMAP.put(GameMode.SPECTATOR, Gamemode.SPECTATOR);
+	}
+
+	private final ServerPlayerEntity handle;
+	private final Audience audience;
+
+	FabricPlayerImpl(final ServerPlayerEntity handle, final Audience audience) {
+		this.handle = handle;
+		this.audience = audience;
+	}
 
 	@Override
 	public UUID getUuid() {
-		return Util.NIL_UUID;
+		return this.handle.getUuid();
 	}
 
 	@Override
 	public String getUsername() {
-		return "null";
+		return this.handle.getEntityName();
 	}
 
 	@Override
 	public boolean isOnline() {
-		return false;
+		// a "player" is always online to be a player - TODO use GameProfile and NbtCompound?
+		return true;
 	}
 
 	@Override
 	public boolean hasPermission(final String permission) {
-		return false;
+		return Permissions.check(this.handle, permission, 3);  // 3 = op level 3 (2nd to last, "admins")
 	}
 
 	@Override
 	public Gamemode getGamemode() {
-		return Gamemode.SURVIVAL;
+		return GAMEMODE_BIMAP.get(this.handle.interactionManager.getGameMode());
 	}
 
 	@Override
-	public void setGamemode(final Gamemode mode) { }
+	public void setGamemode(final Gamemode mode) {
+		this.handle.changeGameMode(GAMEMODE_BIMAP.inverse().get(mode));
+	}
 
 	@Override
 	public @NotNull Audience audience() {
-		return Audience.empty();
+		return this.audience;
 	}
 }

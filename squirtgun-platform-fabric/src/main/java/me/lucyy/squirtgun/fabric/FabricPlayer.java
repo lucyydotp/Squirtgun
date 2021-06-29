@@ -23,71 +23,7 @@
 
 package me.lucyy.squirtgun.fabric;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.EnumBiMap;
-import me.lucko.fabric.api.permissions.v0.Permissions;
-import me.lucyy.squirtgun.platform.Gamemode;
 import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.GameMode;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
-public class FabricPlayer implements SquirtgunPlayer, ForwardingAudience.Single {
-
-	private static final BiMap<GameMode, Gamemode> GAMEMODE_BIMAP = EnumBiMap.create(GameMode.class, Gamemode.class);
-
-	static {
-		GAMEMODE_BIMAP.put(GameMode.SURVIVAL, Gamemode.SURVIVAL);
-		GAMEMODE_BIMAP.put(GameMode.CREATIVE, Gamemode.CREATIVE);
-		GAMEMODE_BIMAP.put(GameMode.ADVENTURE, Gamemode.ADVENTURE);
-		GAMEMODE_BIMAP.put(GameMode.SPECTATOR, Gamemode.SPECTATOR);
-	}
-
-	private final ServerPlayerEntity handle;
-	private final Audience audience;
-
-	FabricPlayer(final ServerPlayerEntity handle, final Audience audience) {
-		this.handle = handle;
-		this.audience = audience;
-	}
-
-	@Override
-	public UUID getUuid() {
-		return this.handle.getUuid();
-	}
-
-	@Override
-	public String getUsername() {
-		return this.handle.getEntityName();
-	}
-
-	@Override
-	public boolean isOnline() {
-		// a "player" is always online to be a player - TODO use GameProfile and NbtCompound?
-		return true;
-	}
-
-	@Override
-	public boolean hasPermission(final String permission) {
-		return Permissions.check(this.handle, permission, 3);	// 3 = op level 3 (2nd to last, "admins")
-	}
-
-	@Override
-	public Gamemode getGamemode() {
-		return GAMEMODE_BIMAP.get(this.handle.interactionManager.getGameMode());
-	}
-
-	@Override
-	public void setGamemode(final Gamemode mode) {
-		this.handle.changeGameMode(GAMEMODE_BIMAP.inverse().get(mode));
-	}
-
-	@Override
-	public @NotNull Audience audience() {
-		return this.audience;
-	}
-}
+public interface FabricPlayer extends SquirtgunPlayer, ForwardingAudience.Single { }

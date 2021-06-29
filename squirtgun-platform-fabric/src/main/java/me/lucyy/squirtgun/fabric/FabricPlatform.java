@@ -206,6 +206,6 @@ public class FabricPlatform implements Platform {
 	}
 
 	private FabricPlayer asFabricPlayerOrDummy(final ServerPlayerEntity player) {
-		return player == null ? DummyFabricPlayer.INSTANCE : new FabricPlayer(player, getAudienceProvider().audience(player));
+		return player == null ? DummyFabricPlayer.INSTANCE : new FabricPlayerImpl(player, getAudienceProvider().audience(player));
 	}
 }
