@@ -28,6 +28,8 @@ import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
@@ -59,7 +61,7 @@ public class SubcommandNodeArgument<T extends PermissionHolder> extends Abstract
 		String raw = args.poll();
 		if (raw == null || raw.equals("")) return null;
 		return getValidNodes(raw, context.getTarget())
-				.findFirst()
+				.min(Comparator.comparingInt(a -> a.getName().length()))
 				.orElse(null);
 	}
 
