@@ -32,10 +32,11 @@ import net.minecraft.server.MinecraftServer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 
 public class FabricTaskScheduler implements TaskScheduler {
 
@@ -44,7 +45,7 @@ public class FabricTaskScheduler implements TaskScheduler {
 	private final FabricPlatform platform;
 	private final MinecraftServer server;
 	private final Map<Task, ScheduledFuture<?>> taskMap = new LinkedHashMap<>();
-	private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(new DefaultThreadFactory("squirtgun-fabric-scheduler"));
+	private final ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor(new DefaultThreadFactory("squirtgun-fabric-scheduler"));
 
 	public FabricTaskScheduler(final FabricPlatform platform) {
 		this.platform = platform;
