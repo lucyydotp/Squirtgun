@@ -35,6 +35,9 @@
     "fabric-permissions-api-v0": "*",
     "adventure-platform-fabric": "4.1.0-SNAPSHOT"
   },
+  "suggests": {
+    "luckperms": ">=5.3.0"
+  },
   "custom": {
     "modmenu:api": true
   }

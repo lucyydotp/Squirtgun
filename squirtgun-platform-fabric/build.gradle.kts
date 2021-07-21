@@ -42,7 +42,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${loaderVersion}")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}")
-    modApi(include("me.lucko:fabric-permissions-api:${fabricPermissionsApiVersion}")!!)
+    modApi("me.lucko:fabric-permissions-api:${fabricPermissionsApiVersion}")
     modApi(include("net.kyori:adventure-platform-fabric:${adventureFabricVersion}")!!)
 
     modApi(include(project(":squirtgun-api")) {
