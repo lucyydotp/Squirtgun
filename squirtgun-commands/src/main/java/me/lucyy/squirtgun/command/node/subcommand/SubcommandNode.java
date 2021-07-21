@@ -26,6 +26,7 @@ package me.lucyy.squirtgun.command.node.subcommand;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
+import me.lucyy.squirtgun.command.condition.CommandCondition;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.node.AbstractNode;
 import me.lucyy.squirtgun.command.node.CommandNode;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.locks.Condition;
 
 /**
  * A node that tab completes and acts as a "splitter" for other nodes.
@@ -44,121 +46,121 @@ import java.util.*;
  */
 public class SubcommandNode<T extends PermissionHolder> extends AbstractNode<T> {
 
-	/**
-	 * Creates a node with an advanced help node.
-	 *
-	 * @param name        this node's name
-	 * @param description this node's description
-	 * @param permission  the permission needed to execute this node. May be null if none is required
-	 * @param childNodes  the child nodes
-	 * @return a new SubcommandNode
-	 */
-	@SafeVarargs
-	public static <T extends PermissionHolder> SubcommandNode<T> withHelp(
-			String name,
-			String description,
-			@Nullable String permission,
-			@NotNull CommandNode<T>... childNodes) {
-		SubcommandNode<T> node = new SubcommandNode<>(name, description, permission, childNodes);
-		node.setFallbackNode(new SubcommandHelpNode<>(node));
-		return node;
-	}
+    /**
+     * Creates a node with an advanced help node.
+     *
+     * @param name        this node's name
+     * @param description this node's description
+     * @param condition   the condition needed to execute this node
+     * @param childNodes  the child nodes
+     * @return a new SubcommandNode
+     */
+    @SafeVarargs
+    public static <T extends PermissionHolder> SubcommandNode<T> withHelp(
+            String name,
+            String description,
+            CommandCondition condition,
+            @NotNull CommandNode<T>... childNodes) {
+        SubcommandNode<T> node = new SubcommandNode<>(name, description, condition, childNodes);
+        node.setFallbackNode(new SubcommandHelpNode<>(node));
+        return node;
+    }
 
-	/**
-	 * Creates a node with a custom default node.
-	 *
-	 * @param name        this node's name
-	 * @param description this node's description
-	 * @param permission  the permission needed to execute this node. May be null if none is required
-	 * @param fallback    the node to use if no valid subcommand is specified
-	 * @param childNodes  the child nodes
-	 * @return a new SubcommandNode
-	 */
-	@SafeVarargs
-	public static <T extends PermissionHolder> SubcommandNode<T> withFallback(
-			String name,
-			String description,
-			@Nullable String permission,
-			@NotNull CommandNode<T> fallback,
-			@NotNull CommandNode<T>... childNodes) {
-		SubcommandNode<T> node = new SubcommandNode<>(name, description, permission, childNodes);
-		node.setFallbackNode(fallback);
-		return node;
-	}
+    /**
+     * Creates a node with a custom default node.
+     *
+     * @param name        this node's name
+     * @param description this node's description
+     * @param condition   the condition needed to execute this node
+     * @param fallback    the node to use if no valid subcommand is specified
+     * @param childNodes  the child nodes
+     * @return a new SubcommandNode
+     */
+    @SafeVarargs
+    public static <T extends PermissionHolder> SubcommandNode<T> withFallback(
+            String name,
+            String description,
+            @Nullable CommandCondition condition,
+            @NotNull CommandNode<T> fallback,
+            @NotNull CommandNode<T>... childNodes) {
+        SubcommandNode<T> node = new SubcommandNode<>(name, description, condition, childNodes);
+        node.setFallbackNode(fallback);
+        return node;
+    }
 
-	/**
-	 * Creates a node with a basic help node.
-	 *
-	 * @param name        this node's name
-	 * @param description this node's description
-	 * @param permission  the permission needed to execute this node. May be null if none is required
-	 * @param childNodes  the child nodes
-	 * @return a new SubcommandNode
-	 */
-	@SafeVarargs
-	public static <T extends PermissionHolder> SubcommandNode<T> withBasicHelp(
-			String name,
-			String description,
-			@Nullable String permission,
-			@NotNull CommandNode<T>... childNodes) {
-		return new SubcommandNode<>(name, description, permission, childNodes);
-	}
+    /**
+     * Creates a node with a basic help node.
+     *
+     * @param name        this node's name
+     * @param description this node's description
+     * @param condition   the condition needed to execute this node
+     * @param childNodes  the child nodes
+     * @return a new SubcommandNode
+     */
+    @SafeVarargs
+    public static <T extends PermissionHolder> SubcommandNode<T> withBasicHelp(
+            String name,
+            String description,
+            @Nullable CommandCondition condition,
+            @NotNull CommandNode<T>... childNodes) {
+        return new SubcommandNode<>(name, description, condition, childNodes);
+    }
 
-	private final Set<CommandNode<T>> childNodes;
-	private final CommandArgument<CommandNode<T>> argument;
-	private CommandNode<T> fallbackNode;
+    private final Set<CommandNode<T>> childNodes;
+    private final CommandArgument<CommandNode<T>> argument;
+    private CommandNode<T> fallbackNode;
 
-	/**
-	 * @param name       this node's name.
-	 * @param permission the permission needed to execute this node. May be null if none is required.
-	 * @param childNodes the child nodes
-	 */
-	@SafeVarargs
-	protected SubcommandNode(@NotNull String name, @NotNull String description,
-							 @Nullable String permission, @NotNull CommandNode<T>... childNodes) {
-		super(name, description, permission);
-		Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
+    /**
+     * @param name       this node's name
+     * @param condition  the condition needed to execute this node
+     * @param childNodes the child nodes
+     */
+    @SafeVarargs
+    protected SubcommandNode(@NotNull String name, @NotNull String description,
+                             @Nullable CommandCondition condition, @NotNull CommandNode<T>... childNodes) {
+        super(name, description, condition);
+        Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
 
-		this.childNodes = new HashSet<>(Arrays.asList(childNodes));
+        this.childNodes = new HashSet<>(Arrays.asList(childNodes));
 
-		argument = new SubcommandNodeArgument<>(this, "subcommand", "The subcommand to execute");
-	}
+        argument = new SubcommandNodeArgument<>(this, "subcommand", "The subcommand to execute");
+    }
 
-	/**
-	 * Gets the child nodes that this node holds.
-	 */
-	public Set<? extends CommandNode<T>> getNodes() {
-		return childNodes;
-	}
+    /**
+     * Gets the child nodes that this node holds.
+     */
+    public Set<? extends CommandNode<T>> getNodes() {
+        return childNodes;
+    }
 
-	/**
-	 * Sets the fallback node.
-	 */
-	private void setFallbackNode(CommandNode<T> fallback) {
-		fallbackNode = fallback;
-		childNodes.add(fallback);
-	}
+    /**
+     * Sets the fallback node.
+     */
+    private void setFallbackNode(CommandNode<T> fallback) {
+        fallbackNode = fallback;
+        childNodes.add(fallback);
+    }
 
-	/**
-	 * Gets the fallback node.
-	 */
-	public @Nullable CommandNode<T> getFallbackNode() {
-		return fallbackNode;
-	}
+    /**
+     * Gets the fallback node.
+     */
+    public @Nullable CommandNode<T> getFallbackNode() {
+        return fallbackNode;
+    }
 
-	@Override
-	public @NotNull List<CommandArgument<?>> getArguments() {
-		return ImmutableList.of(argument);
-	}
+    @Override
+    public @NotNull List<CommandArgument<?>> getArguments() {
+        return ImmutableList.of(argument);
+    }
 
-	@Override
-	public @Nullable CommandNode<T> next(CommandContext<T> context) {
-		CommandNode<T> name = context.getArgumentValue(argument);
-		return name == null ? fallbackNode : name;
-	}
+    @Override
+    public @Nullable CommandNode<T> next(CommandContext<T> context) {
+        CommandNode<T> name = context.getArgumentValue(argument);
+        return name == null ? fallbackNode : name;
+    }
 
-	@Override
-	public @Nullable Component execute(CommandContext<T> context) {
-		return null;
-	}
+    @Override
+    public @Nullable Component execute(CommandContext<T> context) {
+        return null;
+    }
 }

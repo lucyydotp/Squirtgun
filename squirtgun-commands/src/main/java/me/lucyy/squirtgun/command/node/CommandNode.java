@@ -23,6 +23,7 @@
 
 package me.lucyy.squirtgun.command.node;
 
+import me.lucyy.squirtgun.command.condition.CommandCondition;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
@@ -61,12 +62,12 @@ public interface CommandNode<T extends PermissionHolder> {
 	String getDescription();
 
 	/**
-	 * Gets the permission needed to execute this node or any children.
+	 * Gets the condition needed to execute this node or any children.
 	 *
-	 * @return the permission, or null if no permission is needed
+	 * @return the condition, or {@link CommandCondition#empty()} by default
 	 */
-	default @Nullable String getPermission() {
-		return null;
+	default @NotNull CommandCondition getCondition() {
+		return CommandCondition.empty();
 	}
 
 	/**

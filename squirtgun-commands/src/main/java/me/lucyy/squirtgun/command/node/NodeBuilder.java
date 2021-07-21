@@ -25,6 +25,7 @@ package me.lucyy.squirtgun.command.node;
 
 import com.google.common.base.Preconditions;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
+import me.lucyy.squirtgun.command.condition.CommandCondition;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import net.kyori.adventure.text.Component;
@@ -48,20 +49,20 @@ public class NodeBuilder<T extends PermissionHolder> {
 
 		private final String name;
 		private final String description;
-		private final @Nullable String permission;
+		private final CommandCondition condition;
 		private final Function<CommandContext<T>, @Nullable Component> executes;
 		private final @Nullable CommandNode<T> next;
 		private final List<CommandArgument<?>> arguments;
 
 		private BuiltCommandNode(String name,
 								 String description,
-								 @Nullable String permission,
+								 CommandCondition condition,
 								 Function<CommandContext<T>, @Nullable Component> executes,
 								 @Nullable CommandNode<T> next,
 								 List<CommandArgument<?>> arguments) {
 			this.name = name;
 			this.description = description;
-			this.permission = permission;
+			this.condition = condition;
 			this.executes = executes;
 			this.next = next;
 			this.arguments = arguments;
@@ -83,8 +84,8 @@ public class NodeBuilder<T extends PermissionHolder> {
 		}
 
 		@Override
-		public @Nullable String getPermission() {
-			return permission;
+		public @NotNull CommandCondition getCondition() {
+			return condition;
 		}
 
 		@Override
@@ -100,7 +101,7 @@ public class NodeBuilder<T extends PermissionHolder> {
 
 	private String name;
 	private String description;
-	private String permission;
+	private CommandCondition condition = CommandCondition.empty();
 	private Function<CommandContext<T>, @Nullable Component> executes;
 	private CommandNode<T> next;
 
@@ -130,13 +131,13 @@ public class NodeBuilder<T extends PermissionHolder> {
 	}
 
 	/**
-	 * Sets this node's required permission.
+	 * Sets this node's required condition.
 	 *
-	 * @param permission the required permission or null if none is needed
+	 * @param condition the required condition
 	 * @return this
 	 */
-	public NodeBuilder<T> permission(@Nullable String permission) {
-		this.permission = permission;
+	public NodeBuilder<T> condition(CommandCondition condition) {
+		this.condition = condition;
 		return this;
 	}
 
@@ -181,6 +182,6 @@ public class NodeBuilder<T extends PermissionHolder> {
 	 * @return a node built from the specified parameters.
 	 */
 	public CommandNode<T> build() {
-		return new BuiltCommandNode<>(name, description, permission, executes, next, arguments);
+		return new BuiltCommandNode<>(name, description, condition, executes, next, arguments);
 	}
 }

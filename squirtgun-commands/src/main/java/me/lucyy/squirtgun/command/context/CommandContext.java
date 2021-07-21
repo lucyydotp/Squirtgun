@@ -78,7 +78,7 @@ public interface CommandContext<T extends PermissionHolder> {
 	FormatProvider getFormat();
 
 	/**
-	 * Gets the string to be shown in the tabcompleter.
+	 * Gets a list of entries for tab completion.
 	 */
 	@Nullable List<String> tabComplete();
 

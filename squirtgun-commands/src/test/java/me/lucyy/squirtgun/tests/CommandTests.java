@@ -23,6 +23,7 @@
 
 package me.lucyy.squirtgun.tests;
 
+import me.lucyy.squirtgun.command.condition.CommandCondition;
 import me.lucyy.squirtgun.command.context.StringContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.command.node.NodeBuilder;
@@ -55,7 +56,7 @@ public class CommandTests {
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(ctx -> component)
-                .permission("test.permission")
+                .condition(CommandCondition.hasPermission("test.permission"))
                 .build();
         Component returned = new StringContext<>(new TestFormatter(),
                 x -> false, node, "test").execute();
@@ -69,7 +70,7 @@ public class CommandTests {
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(ctx -> component)
-                .permission("test.permission")
+                .condition(CommandCondition.hasPermission("test.permission"))
                 .build();
         Component returned = new StringContext<>(new TestFormatter(),
                 x -> true, node, "test").execute();
@@ -86,7 +87,7 @@ public class CommandTests {
 		        .next(new NodeBuilder<>()
                         .name("test2")
 						.executes(ctx -> component)
-                        .permission("you.dont.have.this.permission")
+                        .condition(CommandCondition.hasPermission("you.dont.have.this.permission"))
                         .build()
                 )
 		        .build();

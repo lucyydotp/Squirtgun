@@ -26,6 +26,7 @@ package me.lucyy.squirtgun.command.node.subcommand;
 import com.google.common.collect.ImmutableList;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.argument.ListArgument;
+import me.lucyy.squirtgun.command.condition.CommandCondition;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.command.node.HelpNode;
@@ -99,8 +100,7 @@ public class SubcommandHelpNode<T extends PermissionHolder> implements CommandNo
 				.append(Component.newline());
 
 		for (CommandNode<?> node : parentNode.getNodes()) {
-			String perm = node.getPermission();
-			if (perm == null || context.getTarget().hasPermission(perm)) {
+			if (node.getCondition().canExecute(context.getTarget())) {
 				Component innerComp =
 						fmt.formatMain(parentNode.getName() + " ")
 						.append(fmt.formatAccent(node.getName()))

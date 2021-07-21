@@ -20,40 +20,44 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package me.lucyy.squirtgun.command.condition;
 
-package me.lucyy.squirtgun.command.node;
-
-import com.google.common.base.Preconditions;
-import me.lucyy.squirtgun.command.condition.CommandCondition;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
-import org.jetbrains.annotations.NotNull;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 
-public abstract class AbstractNode<T extends PermissionHolder> implements CommandNode<T> {
+/**
+ * TODO javadoc
+ */
+@FunctionalInterface
+public interface CommandCondition {
 
-    private final String name;
-    private final String description;
-    private final CommandCondition permission;
-
-    protected AbstractNode(@NotNull String name, @NotNull String description, CommandCondition permission) {
-        Preconditions.checkNotNull(name, "Name must not be null");
-        Preconditions.checkNotNull(description, "Description must not be null");
-        this.name = name;
-        this.description = description;
-        this.permission = permission;
+    static CommandCondition empty() {
+        return holder -> true;
     }
 
-    @Override
-    public @NotNull String getName() {
-        return name;
+    static CommandCondition hasPermission(String permission) {
+        return holder -> holder.hasPermission(permission);
     }
 
-    @Override
-    public String getDescription() {
-        return description;
+    static CommandCondition isPlayer() {
+        return holder -> holder instanceof SquirtgunPlayer;
     }
 
-    @Override
-    public @NotNull CommandCondition getCondition() {
-        return permission;
+    static CommandCondition isConsole() {
+        return holder -> !(holder instanceof SquirtgunPlayer);
+    }
+
+    boolean canExecute(PermissionHolder holder);
+
+    default CommandCondition and(CommandCondition next) {
+        return holder -> this.canExecute(holder) && next.canExecute(holder);
+    }
+
+    default CommandCondition or(CommandCondition next) {
+        return holder -> this.canExecute(holder) || next.canExecute(holder);
+    }
+
+    default CommandCondition inverse() {
+        return holder -> !this.canExecute(holder);
     }
 }
