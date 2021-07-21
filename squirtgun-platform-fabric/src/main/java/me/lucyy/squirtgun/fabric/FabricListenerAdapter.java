@@ -32,6 +32,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Set;
+import java.util.UUID;
 
 class FabricListenerAdapter {
 
@@ -53,12 +54,12 @@ class FabricListenerAdapter {
 	}
 
 	private void playerJoin(final ServerPlayNetworkHandler handler, final PacketSender sender, final MinecraftServer server) {
-		final var uuid = handler.player.getUuid();
+		final UUID uuid = handler.player.getUuid();
 		this.listeners.forEach(listener -> listener.onPlayerJoin(uuid));
 	}
 
 	private void playerDisconnect(final ServerPlayNetworkHandler handler, final MinecraftServer server) {
-		final var uuid = handler.player.getUuid();
+		final UUID uuid = handler.player.getUuid();
 		this.listeners.forEach(listener -> listener.onPlayerLeave(uuid));
 	}
 }

@@ -35,6 +35,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.kyori.adventure.text.Component;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.dedicated.DedicatedServer;
@@ -125,7 +126,7 @@ public class FabricPlatform implements Platform {
 
 	@Override
 	public AuthMode getAuthMode() {
-		final var server = getServer();
+		final MinecraftServer server = getServer();
 		if (server instanceof DedicatedServer) {
 			if (PROXY_BRIDGING_MODS.stream().anyMatch(FabricLoader.getInstance()::isModLoaded)) {
 				return AuthMode.BUNGEE;
@@ -162,7 +163,7 @@ public class FabricPlatform implements Platform {
 	 * @return corresponding {@link SquirtgunUser}
 	 */
 	public @NotNull SquirtgunUser fromCommandSource(final @NotNull ServerCommandSource commandSource) {
-		final var entity = requireNonNull(commandSource, "commandSource").getEntity();
+		final Entity entity = requireNonNull(commandSource, "commandSource").getEntity();
 		if (entity instanceof ServerPlayerEntity) {
 			return getPlayer((ServerPlayerEntity) entity);
 		} else {
