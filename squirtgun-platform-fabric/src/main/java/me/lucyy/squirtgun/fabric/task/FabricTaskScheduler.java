@@ -38,7 +38,10 @@ import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 
-public class FabricTaskScheduler implements TaskScheduler {
+/**
+ * A simple task scheduler.
+ */
+public final class FabricTaskScheduler implements TaskScheduler {
 
 	private static final long MSPT = 50L;
 
@@ -52,11 +55,25 @@ public class FabricTaskScheduler implements TaskScheduler {
 		this.server = platform.getServer();
 	}
 
+	/**
+	 * Shuts down and the underlying scheduler, cancels queued tasks and waits for them to
+	 * finish execution.
+	 */
+	public void shutdown() {
+		try {
+			this.scheduler.shutdown();
+			this.scheduler.awaitTermination(15L, TimeUnit.SECONDS);
+		} catch (final InterruptedException exception) {
+			// oh well
+			exception.printStackTrace();
+		}
+	}
+
 	@Override
 	public void start(final Task task) {
 		cancel(task);
 
-		final var future =
+		final ScheduledFuture<?> future =
 				task.isRepeating()
 				? this.scheduler.scheduleWithFixedDelay(runTask(task), task.getDelay() * MSPT, task.getInterval() * MSPT, TimeUnit.MILLISECONDS)
 				: this.scheduler.schedule(runTask(task), task.getDelay() * 50L, TimeUnit.MILLISECONDS);
@@ -66,16 +83,6 @@ public class FabricTaskScheduler implements TaskScheduler {
 	@Override
 	public void cancel(final Task task) {
 		Optional.ofNullable(this.taskMap.remove(task)).ifPresent(future -> future.cancel(false));
-	}
-
-	public void shutdown() {
-		try {
-			this.scheduler.shutdown();
-			this.scheduler.awaitTermination(15L, TimeUnit.SECONDS);
-		} catch (final InterruptedException exception) {
-			// oh well
-			exception.printStackTrace();
-		}
 	}
 
 	private Runnable runTask(final Task task) {

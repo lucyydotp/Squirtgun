@@ -25,5 +25,10 @@ package me.lucyy.squirtgun.fabric;
 
 import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.audience.ForwardingAudience;
+import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * Abstracted squirtgun player for the Fabric server.
+ */
+@ApiStatus.NonExtendable
 public interface FabricPlayer extends SquirtgunPlayer, ForwardingAudience.Single { }

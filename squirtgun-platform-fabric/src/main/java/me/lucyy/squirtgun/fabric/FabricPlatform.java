@@ -53,7 +53,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Squirtgun Platform implementation for the Fabric mod loader.
  */
-public class FabricPlatform implements Platform {
+public final class FabricPlatform implements Platform {
 
 	private static final Logger LOGGER = Logger.getLogger(FabricPlatform.class.getSimpleName());
 	private static final List<String> PROXY_BRIDGING_MODS =

@@ -29,7 +29,10 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
 import org.jetbrains.annotations.NotNull;
 
-public class FabricConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
+/**
+ * Simple Squirtgun wrapper for the Fabric console "user".
+ */
+public final class FabricConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
 
 	private final FabricPlatform platform;
 
