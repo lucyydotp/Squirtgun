@@ -51,7 +51,16 @@ dependencies {
     modApi(include(project(":squirtgun-commands")) {
         exclude("net.kyori")
     })
+
+    // fabric-loom is kinda dumb
+    compileOnly(project(":squirtgun-api")) {
+        exclude("net.kyori")
+    }
+    compileOnly(project(":squirtgun-commands")) {
+        exclude("net.kyori")
+    }
 }
+
 
 publishing {
     publications {
