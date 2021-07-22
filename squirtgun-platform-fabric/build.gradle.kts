@@ -53,10 +53,10 @@ dependencies {
     })
 
     // fabric-loom is kinda dumb
-    compileOnly(project(":squirtgun-api")) {
+    compileOnlyApi(project(":squirtgun-api")) {
         exclude("net.kyori")
     }
-    compileOnly(project(":squirtgun-commands")) {
+    compileOnlyApi(project(":squirtgun-commands")) {
         exclude("net.kyori")
     }
 }

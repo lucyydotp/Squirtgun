@@ -31,7 +31,6 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.lucyy.squirtgun.command.context.StringContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
 import net.kyori.adventure.text.Component;
 import net.minecraft.server.command.ServerCommandSource;
@@ -40,22 +39,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * Command adapter between Fabric and Squirtgun command execution.
  */
 public class FabricNodeExecutor implements Command<ServerCommandSource>, SuggestionProvider<ServerCommandSource> {
 
-	private final CommandNode<PermissionHolder> commandNode;
+	private final CommandNode<SquirtgunUser> commandNode;
 	private final FormatProvider formatProvider;
-	private final FabricPlatform platform;
+	// Command registration happens <i>before</i> server initialization,
+	// however, commands can't be dispatched until after the server has initialized
+	private final Supplier<FabricPlatform> platformSupplier;
 
-	public FabricNodeExecutor(final @NotNull CommandNode<PermissionHolder> commandNode,
+	public FabricNodeExecutor(final @NotNull CommandNode<SquirtgunUser> commandNode,
 														final @NotNull FormatProvider formatProvider,
-														final @NotNull FabricPlatform platform) {
+														final @NotNull Supplier<FabricPlatform> platformSupplier) {
 		this.commandNode = Objects.requireNonNull(commandNode, "commandNode");
 		this.formatProvider = Objects.requireNonNull(formatProvider, "formatProvider");
-		this.platform = Objects.requireNonNull(platform, "platform");
+		this.platformSupplier = Objects.requireNonNull(platformSupplier, "platformSupplier");
 	}
 
 	@Override
@@ -64,7 +66,7 @@ public class FabricNodeExecutor implements Command<ServerCommandSource>, Suggest
 		final int i = input.indexOf(' ');
 		input = i > -1 ? input.substring(i + 1) : "";
 
-		final SquirtgunUser source = this.platform.fromCommandSource(context.getSource());
+		final SquirtgunUser source = this.platformSupplier.get().fromCommandSource(context.getSource());
 		final Component result = new StringContext<>(this.formatProvider, source, this.commandNode, input).execute();
 		if (result != null) {
 			source.sendMessage(result);
@@ -79,7 +81,7 @@ public class FabricNodeExecutor implements Command<ServerCommandSource>, Suggest
 		final int i = input.indexOf(' ');
 		input = i > -1 ? input.substring(i + 1) : "";
 
-		final SquirtgunUser source = this.platform.fromCommandSource(context.getSource());
+		final SquirtgunUser source = this.platformSupplier.get().fromCommandSource(context.getSource());
 		final List<String> suggestions = new StringContext<>(this.formatProvider, source, this.commandNode, input).tabComplete();
 		if (suggestions == null) {
 			return Suggestions.empty();
