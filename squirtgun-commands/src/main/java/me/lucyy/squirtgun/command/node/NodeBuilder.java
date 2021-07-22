@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * A builder to build a node. The minimum required fields are name and an execute function.
@@ -49,14 +50,14 @@ public class NodeBuilder<T extends PermissionHolder> {
 
 		private final String name;
 		private final String description;
-		private final CommandCondition condition;
+		private final Predicate<PermissionHolder> condition;
 		private final Function<CommandContext<T>, @Nullable Component> executes;
 		private final @Nullable CommandNode<T> next;
 		private final List<CommandArgument<?>> arguments;
 
 		private BuiltCommandNode(String name,
 								 String description,
-								 CommandCondition condition,
+								 Predicate<PermissionHolder> condition,
 								 Function<CommandContext<T>, @Nullable Component> executes,
 								 @Nullable CommandNode<T> next,
 								 List<CommandArgument<?>> arguments) {
@@ -84,7 +85,7 @@ public class NodeBuilder<T extends PermissionHolder> {
 		}
 
 		@Override
-		public @NotNull CommandCondition getCondition() {
+		public Predicate<PermissionHolder> getCondition() {
 			return condition;
 		}
 
@@ -101,7 +102,7 @@ public class NodeBuilder<T extends PermissionHolder> {
 
 	private String name;
 	private String description;
-	private CommandCondition condition = CommandCondition.empty();
+	private Predicate<PermissionHolder> condition = CommandCondition.empty();
 	private Function<CommandContext<T>, @Nullable Component> executes;
 	private CommandNode<T> next;
 
@@ -136,7 +137,7 @@ public class NodeBuilder<T extends PermissionHolder> {
 	 * @param condition the required condition
 	 * @return this
 	 */
-	public NodeBuilder<T> condition(CommandCondition condition) {
+	public NodeBuilder<T> condition(Predicate<PermissionHolder> condition) {
 		this.condition = condition;
 		return this;
 	}

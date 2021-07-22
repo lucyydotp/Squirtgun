@@ -26,7 +26,6 @@ package me.lucyy.squirtgun.command.node.subcommand;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
-import me.lucyy.squirtgun.command.condition.CommandCondition;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.node.AbstractNode;
 import me.lucyy.squirtgun.command.node.CommandNode;
@@ -36,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.locks.Condition;
+import java.util.function.Predicate;
 
 /**
  * A node that tab completes and acts as a "splitter" for other nodes.
@@ -59,7 +58,7 @@ public class SubcommandNode<T extends PermissionHolder> extends AbstractNode<T> 
     public static <T extends PermissionHolder> SubcommandNode<T> withHelp(
             String name,
             String description,
-            CommandCondition condition,
+            Predicate<PermissionHolder> condition,
             @NotNull CommandNode<T>... childNodes) {
         SubcommandNode<T> node = new SubcommandNode<>(name, description, condition, childNodes);
         node.setFallbackNode(new SubcommandHelpNode<>(node));
@@ -80,7 +79,7 @@ public class SubcommandNode<T extends PermissionHolder> extends AbstractNode<T> 
     public static <T extends PermissionHolder> SubcommandNode<T> withFallback(
             String name,
             String description,
-            @Nullable CommandCondition condition,
+            Predicate<PermissionHolder> condition,
             @NotNull CommandNode<T> fallback,
             @NotNull CommandNode<T>... childNodes) {
         SubcommandNode<T> node = new SubcommandNode<>(name, description, condition, childNodes);
@@ -101,7 +100,7 @@ public class SubcommandNode<T extends PermissionHolder> extends AbstractNode<T> 
     public static <T extends PermissionHolder> SubcommandNode<T> withBasicHelp(
             String name,
             String description,
-            @Nullable CommandCondition condition,
+            Predicate<PermissionHolder> condition,
             @NotNull CommandNode<T>... childNodes) {
         return new SubcommandNode<>(name, description, condition, childNodes);
     }
@@ -117,7 +116,7 @@ public class SubcommandNode<T extends PermissionHolder> extends AbstractNode<T> 
      */
     @SafeVarargs
     protected SubcommandNode(@NotNull String name, @NotNull String description,
-                             @Nullable CommandCondition condition, @NotNull CommandNode<T>... childNodes) {
+                             Predicate<PermissionHolder> condition, @NotNull CommandNode<T>... childNodes) {
         super(name, description, condition);
         Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
 

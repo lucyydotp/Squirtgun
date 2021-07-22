@@ -53,7 +53,7 @@ public class SubcommandNodeArgument<T extends PermissionHolder> extends Abstract
 	private Stream<? extends CommandNode<T>> getValidNodes(String name, PermissionHolder holder) {
 		return parent.getNodes().stream()
 				.filter(node -> node.getName().toLowerCase(Locale.ROOT).startsWith(name.toLowerCase(Locale.ROOT)))
-				.filter(node -> node.getCondition().canExecute(holder));
+				.filter(node -> node.getCondition().test(holder));
 	}
 
 	@Override

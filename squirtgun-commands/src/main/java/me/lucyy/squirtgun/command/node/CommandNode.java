@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * A node as part of a command chain.
@@ -66,7 +67,7 @@ public interface CommandNode<T extends PermissionHolder> {
 	 *
 	 * @return the condition, or {@link CommandCondition#empty()} by default
 	 */
-	default @NotNull CommandCondition getCondition() {
+	default Predicate<PermissionHolder> getCondition() {
 		return CommandCondition.empty();
 	}
 

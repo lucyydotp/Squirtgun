@@ -100,7 +100,7 @@ public class SubcommandHelpNode<T extends PermissionHolder> implements CommandNo
 				.append(Component.newline());
 
 		for (CommandNode<?> node : parentNode.getNodes()) {
-			if (node.getCondition().canExecute(context.getTarget())) {
+			if (node.getCondition().test(context.getTarget())) {
 				Component innerComp =
 						fmt.formatMain(parentNode.getName() + " ")
 						.append(fmt.formatAccent(node.getName()))

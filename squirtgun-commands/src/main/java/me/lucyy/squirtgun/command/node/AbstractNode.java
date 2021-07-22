@@ -24,22 +24,23 @@
 package me.lucyy.squirtgun.command.node;
 
 import com.google.common.base.Preconditions;
-import me.lucyy.squirtgun.command.condition.CommandCondition;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Predicate;
 
 public abstract class AbstractNode<T extends PermissionHolder> implements CommandNode<T> {
 
     private final String name;
     private final String description;
-    private final CommandCondition permission;
+    private final Predicate<PermissionHolder> condition;
 
-    protected AbstractNode(@NotNull String name, @NotNull String description, CommandCondition permission) {
+    protected AbstractNode(@NotNull String name, @NotNull String description, Predicate<PermissionHolder> condition) {
         Preconditions.checkNotNull(name, "Name must not be null");
         Preconditions.checkNotNull(description, "Description must not be null");
         this.name = name;
         this.description = description;
-        this.permission = permission;
+        this.condition = condition;
     }
 
     @Override
@@ -53,7 +54,7 @@ public abstract class AbstractNode<T extends PermissionHolder> implements Comman
     }
 
     @Override
-    public @NotNull CommandCondition getCondition() {
-        return permission;
+    public Predicate<PermissionHolder> getCondition() {
+        return condition;
     }
 }

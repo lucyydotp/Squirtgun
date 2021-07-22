@@ -25,39 +25,26 @@ package me.lucyy.squirtgun.command.condition;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 
+import java.util.function.Predicate;
+
 /**
  * TODO javadoc
  */
-@FunctionalInterface
-public interface CommandCondition {
+public final class CommandCondition {
 
-    static CommandCondition empty() {
+    public static Predicate<PermissionHolder> empty() {
         return holder -> true;
     }
 
-    static CommandCondition hasPermission(String permission) {
+    public static Predicate<PermissionHolder> hasPermission(String permission) {
         return holder -> holder.hasPermission(permission);
     }
 
-    static CommandCondition isPlayer() {
+    public static Predicate<PermissionHolder> isPlayer() {
         return holder -> holder instanceof SquirtgunPlayer;
     }
 
-    static CommandCondition isConsole() {
+    public static Predicate<PermissionHolder> isConsole() {
         return holder -> !(holder instanceof SquirtgunPlayer);
-    }
-
-    boolean canExecute(PermissionHolder holder);
-
-    default CommandCondition and(CommandCondition next) {
-        return holder -> this.canExecute(holder) && next.canExecute(holder);
-    }
-
-    default CommandCondition or(CommandCondition next) {
-        return holder -> this.canExecute(holder) || next.canExecute(holder);
-    }
-
-    default CommandCondition inverse() {
-        return holder -> !this.canExecute(holder);
     }
 }
