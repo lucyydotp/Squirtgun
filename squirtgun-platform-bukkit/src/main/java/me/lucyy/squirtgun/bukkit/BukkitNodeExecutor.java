@@ -67,7 +67,7 @@ public class BukkitNodeExecutor implements TabExecutor {
                              @NotNull String label,
                              @NotNull String[] args) {
         SquirtgunUser sender = platform.getUser(bukkitSender);
-        Component ret = new StringContext<>(formatter, sender, node, String.join(" ", args)).execute();
+        Component ret = new StringContext(formatter, sender, node, String.join(" ", args)).execute();
         if (ret != null) {
             sender.sendMessage(ret);
         }
@@ -79,7 +79,7 @@ public class BukkitNodeExecutor implements TabExecutor {
                                                 @NotNull Command command,
                                                 @NotNull String alias,
                                                 @NotNull String[] stringArgs) {
-        CommandContext<PermissionHolder> context = new StringContext<>(
+        CommandContext context = new StringContext(
                 formatter, platform.getUser(sender), node, String.join(" ", stringArgs));
         List<String> ret = context.tabComplete();
         return ret == null ? ImmutableList.of() : ret;

@@ -46,12 +46,12 @@ public final class GreedyStringArgument extends AbstractArgument<String> {
     }
 
     @Override
-    public String getValue(Queue<String> args, CommandContext<?> ctx) {
+    public String getValue(Queue<String> args, CommandContext ctx) {
         return String.join(" ", args);
     }
 
     @Override
-    public @NotNull List<String> tabComplete(Queue<String> value, CommandContext<?> ctx) {
+    public @NotNull List<String> tabComplete(Queue<String> value, CommandContext ctx) {
         value.poll();
         return ImmutableList.of(toString());
     }

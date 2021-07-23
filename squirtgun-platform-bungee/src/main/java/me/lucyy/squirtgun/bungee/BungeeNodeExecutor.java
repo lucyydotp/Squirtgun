@@ -61,7 +61,7 @@ public class BungeeNodeExecutor extends Command implements TabExecutor {
     @Override
     public void execute(CommandSender sender, String[] args) {
         SquirtgunUser user = platform.getUser(sender);
-        Component ret = new StringContext<>(formatter, user, node, String.join(" ", args)).execute();
+        Component ret = new StringContext(formatter, user, node, String.join(" ", args)).execute();
         if (ret != null) {
             user.sendMessage(ret);
         }
@@ -69,7 +69,7 @@ public class BungeeNodeExecutor extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        CommandContext<PermissionHolder> context = new StringContext<>(
+        CommandContext context = new StringContext(
                 formatter, platform.getUser(sender), node, String.join(" ", args));
         List<String> ret = context.tabComplete();
         return ret == null ? ImmutableList.of() : ret;

@@ -36,40 +36,40 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SubcommandNodeArgument<T extends PermissionHolder> extends AbstractArgument<CommandNode<T>> {
+public class SubcommandNodeArgument extends AbstractArgument<CommandNode<?>> {
 
-	private final SubcommandNode<T> parent;
+	private final SubcommandNode parent;
 
 	/**
 	 * @param parent      the node this argument belongs to
 	 * @param name        the argument's name
 	 * @param description the argument's description
 	 */
-	public SubcommandNodeArgument(SubcommandNode<T> parent, String name, String description) {
+	public SubcommandNodeArgument(SubcommandNode parent, String name, String description) {
 		super(name, description, false);
 		this.parent = parent;
 	}
 
-	private Stream<? extends CommandNode<T>> getValidNodes(String name, PermissionHolder holder) {
+	private Stream<? extends CommandNode<?>> getValidNodes(String name, PermissionHolder holder, CommandContext ctx) {
 		return parent.getNodes().stream()
 				.filter(node -> node.getName().toLowerCase(Locale.ROOT).startsWith(name.toLowerCase(Locale.ROOT)))
-				.filter(node -> node.getCondition().test(holder));
+				.filter(node -> node.getCondition().test(holder, ctx).isSuccessful());
 	}
 
 	@Override
-	public CommandNode<T> getValue(Queue<String> args, CommandContext<?> context) {
+	public CommandNode<?> getValue(Queue<String> args, CommandContext context) {
 		String raw = args.poll();
 		if (raw == null || raw.equals("")) return null;
-		return getValidNodes(raw, context.getTarget())
+		return getValidNodes(raw, context.getTarget(), context)
 				.min(Comparator.comparingInt(a -> a.getName().length()))
 				.orElse(null);
 	}
 
 	@Override
-	public @Nullable List<String> tabComplete(Queue<String> args, CommandContext<?> context) {
+	public @Nullable List<String> tabComplete(Queue<String> args, CommandContext context) {
 		String raw = args.poll();
 		if (raw == null) return null;
-		return getValidNodes(raw, context.getTarget())
+		return getValidNodes(raw, context.getTarget(), context)
 				.map(CommandNode::getName)
 				.collect(Collectors.toList());
 	}

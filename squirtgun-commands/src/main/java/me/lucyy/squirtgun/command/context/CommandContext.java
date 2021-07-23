@@ -33,19 +33,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * The context a command is executed in, responsible for parsin, tab-completing
+ * The context a command is executed in, responsible for parsing, tab-completing
  * and executing the command. It contains data such as the command target and
  * the arguments provided to it so far.
  *
- * @param <T> the subject type.
  * @since 2.0.0
  */
-public interface CommandContext<T extends PermissionHolder> {
+public interface CommandContext {
 
 	/**
 	 * Gets this command context's target.
 	 */
-	T getTarget();
+	PermissionHolder getTarget();
 
 	/**
 	 * Gets the value of an argument.
@@ -90,5 +89,5 @@ public interface CommandContext<T extends PermissionHolder> {
 	/**
 	 * Gets the last node in the chain that has been reached.
 	 */
-	CommandNode<T> getTail();
+	CommandNode<?> getTail();
 }

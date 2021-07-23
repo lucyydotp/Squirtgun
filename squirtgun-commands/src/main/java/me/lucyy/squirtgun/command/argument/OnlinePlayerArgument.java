@@ -44,13 +44,13 @@ public class OnlinePlayerArgument extends AbstractArgument<SquirtgunPlayer> {
 	}
 
 	@Override
-	public SquirtgunPlayer getValue(Queue<String> args, CommandContext<?> ctx) {
+	public SquirtgunPlayer getValue(Queue<String> args, CommandContext ctx) {
 		String name = args.poll();
 		return name == null || "".equals(name) ? null : platform.getPlayer(name);
 	}
 
 	@Override
-	public @Nullable List<String> tabComplete(Queue<String> args, CommandContext<?> ctx) {
+	public @Nullable List<String> tabComplete(Queue<String> args, CommandContext ctx) {
 		String name = args.poll();
 		return name == null ? null : platform.getOnlinePlayers()
 				.stream()

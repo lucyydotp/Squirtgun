@@ -26,7 +26,7 @@ package me.lucyy.squirtgun.command.node.subcommand;
 import com.google.common.collect.ImmutableList;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.argument.ListArgument;
-import me.lucyy.squirtgun.command.condition.CommandCondition;
+import me.lucyy.squirtgun.command.condition.Condition;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.command.node.HelpNode;
@@ -48,12 +48,12 @@ import java.util.stream.Collectors;
  *
  * @since 2.0.0
  */
-public class SubcommandHelpNode<T extends PermissionHolder> implements CommandNode<T> {
+public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
 
-	private final SubcommandNode<?> parentNode;
+	private final SubcommandNode parentNode;
 	private final CommandArgument<String> childArgument;
 
-	public SubcommandHelpNode(SubcommandNode<?> parentNode) {
+	public SubcommandHelpNode(SubcommandNode parentNode) {
 		this.parentNode = parentNode;
 		childArgument = new ListArgument("command",
 				"The command to get help for.",
@@ -80,7 +80,12 @@ public class SubcommandHelpNode<T extends PermissionHolder> implements CommandNo
 	}
 
 	@Override
-	public @Nullable CommandNode<T> next(CommandContext<T> context) {
+	public Condition<PermissionHolder, PermissionHolder> getCondition() {
+		return Condition.empty();
+	}
+
+	@Override
+	public @Nullable CommandNode<?> next(CommandContext context) {
 		String child = context.getArgumentValue(childArgument);
 		if (child == null) return null;
 
@@ -88,19 +93,19 @@ public class SubcommandHelpNode<T extends PermissionHolder> implements CommandNo
 				.filter(node -> node.getName().equals(child))
 				.findFirst();
 
-		return nodeWithGivenName.<CommandNode<T>>map(HelpNode::new).orElse(null);
+		return nodeWithGivenName.<CommandNode<?>>map(HelpNode::new).orElse(null);
 
 	}
 
 	@Override
-	public @Nullable Component execute(CommandContext<T> context) {
+	public @Nullable Component execute(CommandContext context) {
 		final FormatProvider fmt = context.getFormat();
 		Component out = Component.empty()
 				.append(TextFormatter.formatTitle("Commands:", fmt))
 				.append(Component.newline());
 
 		for (CommandNode<?> node : parentNode.getNodes()) {
-			if (node.getCondition().test(context.getTarget())) {
+			if (node.getCondition().test(context.getTarget(), context).isSuccessful()) {
 				Component innerComp =
 						fmt.formatMain(parentNode.getName() + " ")
 						.append(fmt.formatAccent(node.getName()))
