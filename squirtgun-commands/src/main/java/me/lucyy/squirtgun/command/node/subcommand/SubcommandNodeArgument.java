@@ -76,6 +76,6 @@ public class SubcommandNodeArgument extends AbstractArgument<CommandNode<?>> {
 
 	@Override
 	public boolean isOptional() {
-		return parent.getFallbackNode() == null;
+		return parent.getFallbackNode() != null;
 	}
 }

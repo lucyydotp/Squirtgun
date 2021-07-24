@@ -35,24 +35,29 @@ import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 @FunctionalInterface
 public interface Condition<T extends PermissionHolder, U extends PermissionHolder> {
 
-    Condition<PermissionHolder, SquirtgunPlayer> isPlayer = ((target, context) -> {
-        if (target instanceof SquirtgunPlayer) {
-            return new Result<>(true, (SquirtgunPlayer) target, null);
-        }
-        return new Result<>(false, null, "This command can only be run by a player.");
-    });
+    Condition<PermissionHolder, SquirtgunPlayer> isPlayer = (target, context) ->
+            target instanceof SquirtgunPlayer
+                    ? new Result<>(true, (SquirtgunPlayer) target, null)
+                    : new Result<>(false, null, "This command can only be run by a player.");
+
+    Condition<PermissionHolder, PermissionHolder> isPlayerCastless = (target, context) ->
+            target instanceof SquirtgunPlayer
+                    ? new Result<>(true, target, null)
+                    : new Result<>(false, null, "This command can only be run by a player.");
+
+    Condition<PermissionHolder, PermissionHolder> isConsole = (target, context) ->
+            target instanceof SquirtgunPlayer
+                    ? new Result<>(false, null, "This command can only be run from the console.")
+                    : new Result<>(true, target, null);
 
     static <V extends PermissionHolder> Condition<V, V> empty() {
         return (target, context) -> new Result<>(true, target, null);
     }
 
     static <V extends PermissionHolder> Condition<V, V> hasPermission(String permission) {
-        return ((target, context) -> {
-            if (target.hasPermission(permission)) {
-                return new Result<>(true, target, null);
-            }
-            return new Result<>(false, null, "No permission!");
-        });
+        return (target, context) -> target.hasPermission(permission)
+                ? new Result<>(true, target, null)
+                : new Result<>(false, null, "No permission!");
     }
 
     class Result<U> {
