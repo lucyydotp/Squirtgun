@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class BukkitNodeExecutor implements TabExecutor {
 
-    private final CommandNode<PermissionHolder> node;
+    private final CommandNode<?> node;
     private final FormatProvider formatter;
     private final BukkitPlatform platform;
 
@@ -55,7 +55,7 @@ public class BukkitNodeExecutor implements TabExecutor {
      * @param formatter the command sender to pass to the context
      * @param platform  the platform that this node belongs to
      */
-    public BukkitNodeExecutor(CommandNode<PermissionHolder> node, FormatProvider formatter, BukkitPlatform platform) {
+    public BukkitNodeExecutor(CommandNode<?> node, FormatProvider formatter, BukkitPlatform platform) {
         this.node = node;
         this.formatter = formatter;
         this.platform = platform;

@@ -35,7 +35,7 @@ import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 @FunctionalInterface
 public interface Condition<T extends PermissionHolder, U extends PermissionHolder> {
 
-    Condition<? extends PermissionHolder, SquirtgunPlayer> isPlayer = ((target, context) -> {
+    Condition<PermissionHolder, SquirtgunPlayer> isPlayer = ((target, context) -> {
         if (target instanceof SquirtgunPlayer) {
             return new Result<>(true, (SquirtgunPlayer) target, null);
         }
@@ -84,7 +84,7 @@ public interface Condition<T extends PermissionHolder, U extends PermissionHolde
     default <V extends PermissionHolder> Condition<T, V> and(Condition<? super U, V> other) {
         return ((target, context) -> {
             Result<U> first = this.test(target, context);
-            if (!first.isSuccessful()) return new Result<V>(false, null, first.getError());
+            if (!first.isSuccessful()) return new Result<>(false, null, first.getError());
 
             return other.test(first.getResult(), context);
         });
