@@ -81,7 +81,7 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
 
 	@Override
 	public Condition<PermissionHolder, PermissionHolder> getCondition() {
-		return Condition.empty();
+		return Condition.alwaysTrue();
 	}
 
 	@Override

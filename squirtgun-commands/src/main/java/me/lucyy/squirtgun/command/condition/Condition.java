@@ -50,7 +50,7 @@ public interface Condition<T extends PermissionHolder, U extends PermissionHolde
                     ? new Result<>(false, null, "This command can only be run from the console.")
                     : new Result<>(true, target, null);
 
-    static <V extends PermissionHolder> Condition<V, V> empty() {
+    static <V extends PermissionHolder> Condition<V, V> alwaysTrue() {
         return (target, context) -> new Result<>(true, target, null);
     }
 

@@ -42,7 +42,7 @@ public class CommandTests {
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(ctx -> component)
-                .condition(Condition.empty())
+                .condition(Condition.alwaysTrue())
                 .build();
 
         Component returned = new StringContext(new TestFormatter(),
@@ -85,7 +85,7 @@ public class CommandTests {
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
 		        .name("test")
                 .executes(x -> component)
-                .condition(Condition.empty())
+                .condition(Condition.alwaysTrue())
 		        .next(new NodeBuilder<>()
                         .name("test2")
 						.executes(ctx -> component)

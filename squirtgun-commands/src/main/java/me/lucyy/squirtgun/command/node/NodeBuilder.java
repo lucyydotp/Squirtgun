@@ -41,7 +41,7 @@ import java.util.function.Function;
 /**
  * A builder to build a node. The minimum required fields are name and an execute function.
  *
- * @param <T> the type to expect from the command context
+ * @param <T> the target type to build the node for
  * @since 2.0.0
  */
 public class NodeBuilder<T extends PermissionHolder> {

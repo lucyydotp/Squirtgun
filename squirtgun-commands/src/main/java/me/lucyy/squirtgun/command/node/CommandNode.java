@@ -32,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * A node as part of a command chain.
@@ -64,7 +63,7 @@ public interface CommandNode<T extends PermissionHolder> {
 
 	/**
 	 * Gets the condition needed to execute this node or any children. If not needed, use PermissionHolder as T and
-	 * return {@link Condition#empty()}
+	 * return {@link Condition#alwaysTrue()}
 	 *
 	 * @return the condition
 	 */
