@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class BukkitNodeExecutor implements TabExecutor {
 
-    private final CommandNode<PermissionHolder> node;
+    private final CommandNode<?> node;
     private final FormatProvider formatter;
     private final BukkitPlatform platform;
 
@@ -55,7 +55,7 @@ public class BukkitNodeExecutor implements TabExecutor {
      * @param formatter the command sender to pass to the context
      * @param platform  the platform that this node belongs to
      */
-    public BukkitNodeExecutor(CommandNode<PermissionHolder> node, FormatProvider formatter, BukkitPlatform platform) {
+    public BukkitNodeExecutor(CommandNode<?> node, FormatProvider formatter, BukkitPlatform platform) {
         this.node = node;
         this.formatter = formatter;
         this.platform = platform;
@@ -67,7 +67,7 @@ public class BukkitNodeExecutor implements TabExecutor {
                              @NotNull String label,
                              @NotNull String[] args) {
         SquirtgunUser sender = platform.getUser(bukkitSender);
-        Component ret = new StringContext<>(formatter, sender, node, String.join(" ", args)).execute();
+        Component ret = new StringContext(formatter, sender, node, String.join(" ", args)).execute();
         if (ret != null) {
             sender.sendMessage(ret);
         }
@@ -79,7 +79,7 @@ public class BukkitNodeExecutor implements TabExecutor {
                                                 @NotNull Command command,
                                                 @NotNull String alias,
                                                 @NotNull String[] stringArgs) {
-        CommandContext<PermissionHolder> context = new StringContext<>(
+        CommandContext context = new StringContext(
                 formatter, platform.getUser(sender), node, String.join(" ", stringArgs));
         List<String> ret = context.tabComplete();
         return ret == null ? ImmutableList.of() : ret;

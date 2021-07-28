@@ -58,7 +58,7 @@ public interface CommandArgument<T> {
 	 *                Be aware that arguments may not yet be populated.
 	 * @return the parsed string value of this argument.
 	 */
-	T getValue(Queue<String> args, CommandContext<? extends PermissionHolder> context);
+	T getValue(Queue<String> args, CommandContext context);
 
 	/**
 	 * Tab-completes this node.
@@ -68,7 +68,7 @@ public interface CommandArgument<T> {
 	 *                Be aware that arguments may not yet be populated.
 	 * @return the tabcompleted value of this node, or if not applicable, null
 	 */
-	@Nullable List<String> tabComplete(Queue<String> args, CommandContext<? extends PermissionHolder> context);
+	@Nullable List<String> tabComplete(Queue<String> args, CommandContext context);
 
 	/**
 	 * Gets whether this argument is optional or not. This should not change how the argument behaves.

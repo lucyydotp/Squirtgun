@@ -25,6 +25,7 @@ package me.lucyy.squirtgun.command.node;
 
 import com.google.common.base.Preconditions;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
+import me.lucyy.squirtgun.command.condition.Condition;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import net.kyori.adventure.text.Component;
@@ -34,12 +35,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
  * A builder to build a node. The minimum required fields are name and an execute function.
  *
- * @param <T> the type to expect from the command context
+ * @param <T> the target type to build the node for
  * @since 2.0.0
  */
 public class NodeBuilder<T extends PermissionHolder> {
@@ -48,27 +50,27 @@ public class NodeBuilder<T extends PermissionHolder> {
 
 		private final String name;
 		private final String description;
-		private final @Nullable String permission;
-		private final Function<CommandContext<T>, @Nullable Component> executes;
+		private final Condition<PermissionHolder, T> condition;
+		private final Function<CommandContext, @Nullable Component> executes;
 		private final @Nullable CommandNode<T> next;
 		private final List<CommandArgument<?>> arguments;
 
 		private BuiltCommandNode(String name,
 								 String description,
-								 @Nullable String permission,
-								 Function<CommandContext<T>, @Nullable Component> executes,
+								 Condition<PermissionHolder, T> condition,
+								 Function<CommandContext, @Nullable Component> executes,
 								 @Nullable CommandNode<T> next,
 								 List<CommandArgument<?>> arguments) {
 			this.name = name;
 			this.description = description;
-			this.permission = permission;
+			this.condition = condition;
 			this.executes = executes;
 			this.next = next;
 			this.arguments = arguments;
 		}
 
 		@Override
-		public @Nullable Component execute(CommandContext<T> context) {
+		public @Nullable Component execute(CommandContext context) {
 			return executes.apply(context);
 		}
 
@@ -83,8 +85,8 @@ public class NodeBuilder<T extends PermissionHolder> {
 		}
 
 		@Override
-		public @Nullable String getPermission() {
-			return permission;
+		public Condition<PermissionHolder, T> getCondition() {
+			return condition;
 		}
 
 		@Override
@@ -93,15 +95,15 @@ public class NodeBuilder<T extends PermissionHolder> {
 		}
 
 		@Override
-		public @Nullable CommandNode<T> next(CommandContext<T> context) {
+		public @Nullable CommandNode<T> next(CommandContext context) {
 			return next;
 		}
 	}
 
 	private String name;
 	private String description;
-	private String permission;
-	private Function<CommandContext<T>, @Nullable Component> executes;
+	private Condition<PermissionHolder, T> condition;
+	private Function<CommandContext, @Nullable Component> executes;
 	private CommandNode<T> next;
 
 	private final List<CommandArgument<?>> arguments = new ArrayList<>();
@@ -130,13 +132,14 @@ public class NodeBuilder<T extends PermissionHolder> {
 	}
 
 	/**
-	 * Sets this node's required permission.
+	 * Sets this node's required condition.
 	 *
-	 * @param permission the required permission or null if none is needed
+	 * @param condition the required condition
 	 * @return this
 	 */
-	public NodeBuilder<T> permission(@Nullable String permission) {
-		this.permission = permission;
+	public NodeBuilder<T> condition(Condition<PermissionHolder, T> condition) {
+		Preconditions.checkNotNull(condition, "Condition must not be null");
+		this.condition = condition;
 		return this;
 	}
 
@@ -147,7 +150,7 @@ public class NodeBuilder<T extends PermissionHolder> {
 	 *                 case nothing will be sent.
 	 * @return this
 	 */
-	public NodeBuilder<T> executes(@NotNull Function<CommandContext<T>, @Nullable Component> executes) {
+	public NodeBuilder<T> executes(@NotNull Function<CommandContext, @Nullable Component> executes) {
 		Preconditions.checkNotNull(executes, "Executes function must not be null");
 		this.executes = executes;
 		return this;
@@ -181,6 +184,11 @@ public class NodeBuilder<T extends PermissionHolder> {
 	 * @return a node built from the specified parameters.
 	 */
 	public CommandNode<T> build() {
-		return new BuiltCommandNode<>(name, description, permission, executes, next, arguments);
+		return new BuiltCommandNode<>(
+				Objects.requireNonNull(name),
+				description,
+				Objects.requireNonNull(condition),
+				Objects.requireNonNull(executes),
+				next, arguments);
 	}
 }

@@ -23,6 +23,7 @@
 
 package me.lucyy.squirtgun.tests;
 
+import me.lucyy.squirtgun.command.condition.Condition;
 import me.lucyy.squirtgun.command.context.StringContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.command.node.NodeBuilder;
@@ -41,9 +42,10 @@ public class CommandTests {
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(ctx -> component)
+                .condition(Condition.alwaysTrue())
                 .build();
 
-        Component returned = new StringContext<>(new TestFormatter(),
+        Component returned = new StringContext(new TestFormatter(),
                 x -> true, node, "test").execute();
         Assertions.assertEquals(returned, component);
     }
@@ -55,9 +57,9 @@ public class CommandTests {
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(ctx -> component)
-                .permission("test.permission")
+                .condition(Condition.hasPermission("test.permission"))
                 .build();
-        Component returned = new StringContext<>(new TestFormatter(),
+        Component returned = new StringContext(new TestFormatter(),
                 x -> false, node, "test").execute();
         Assertions.assertNotEquals(component, returned);
     }
@@ -69,9 +71,9 @@ public class CommandTests {
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(ctx -> component)
-                .permission("test.permission")
+                .condition(Condition.hasPermission("test.permission"))
                 .build();
-        Component returned = new StringContext<>(new TestFormatter(),
+        Component returned = new StringContext(new TestFormatter(),
                 x -> true, node, "test").execute();
         Assertions.assertEquals(component, returned);
     }
@@ -83,14 +85,15 @@ public class CommandTests {
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
 		        .name("test")
                 .executes(x -> component)
+                .condition(Condition.alwaysTrue())
 		        .next(new NodeBuilder<>()
                         .name("test2")
 						.executes(ctx -> component)
-                        .permission("you.dont.have.this.permission")
+                        .condition(Condition.hasPermission("you.dont.have.this.permission"))
                         .build()
                 )
 		        .build();
-        Component returned = new StringContext<>(new TestFormatter(),
+        Component returned = new StringContext(new TestFormatter(),
                 x -> false, node, "test2").execute();
         Assertions.assertEquals(component, returned);
     }

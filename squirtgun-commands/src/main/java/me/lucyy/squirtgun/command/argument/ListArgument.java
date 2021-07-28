@@ -47,13 +47,13 @@ public class ListArgument extends AbstractArgument<String> {
 	}
 
 	@Override
-	public String getValue(Queue<String> args, CommandContext<?> ctx) {
+	public String getValue(Queue<String> args, CommandContext ctx) {
 		String val = args.poll();
 		return val != null && values.contains(val) ? val : null;
 	}
 
 	@Override
-	public @Nullable List<String> tabComplete(Queue<String> value, CommandContext<?> ctx) {
+	public @Nullable List<String> tabComplete(Queue<String> value, CommandContext ctx) {
 		String top = value.poll();
 		if (top == null) return null;
 		return values.stream()

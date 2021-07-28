@@ -24,6 +24,7 @@
 package me.lucyy.squirtgun.command.context;
 
 import me.lucyy.squirtgun.command.argument.CommandArgument;
+import me.lucyy.squirtgun.command.condition.Condition;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
@@ -37,25 +38,24 @@ import java.util.stream.Collectors;
 /**
  * A command context that parses a raw string.
  */
-public class StringContext<T extends PermissionHolder> implements CommandContext<T> {
+public class StringContext implements CommandContext {
 
 	private final FormatProvider provider;
-	private final T target;
-	private final CommandNode<T> node;
+	private final PermissionHolder target;
+	private final CommandNode<?> node;
 	private final String raw;
 	private final LinkedHashMap<CommandArgument<?>, Object> argValues = new LinkedHashMap<>();
-	private CommandNode<T> tail;
+	private CommandNode<?> tail;
 
-	private void populateArguments(CommandNode<T> node, Queue<String> raw, boolean findValues) {
+	private void populateArguments(CommandNode<?> node, Queue<String> raw, boolean findValues) {
 		tail = node;
 		for (CommandArgument<?> arg : node.getArguments()) {
 			argValues.put(arg, findValues ? arg.getValue(raw, this) : null);
 		}
-		CommandNode<T> next = node.next(this);
+		CommandNode<?> next = node.next(this);
 		if (next == null) return;
 
-		String perm = next.getPermission();
-		if (perm != null && !getTarget().hasPermission(perm)) return;
+		if (!next.getCondition().test(getTarget(), this).isSuccessful()) return;
 
 		populateArguments(next, raw, findValues);
 	}
@@ -64,7 +64,7 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 		return new LinkedList<>(Arrays.asList(value.split(" ", -1)));
 	}
 
-	public StringContext(FormatProvider provider, T target, CommandNode<T> node, String value) {
+	public StringContext(FormatProvider provider, PermissionHolder target, CommandNode<?> node, String value) {
 		this.node = node;
 		this.raw = value;
 		this.provider = provider;
@@ -72,7 +72,7 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 	}
 
 	@Override
-	public T getTarget() {
+	public PermissionHolder getTarget() {
 		return target;
 	}
 
@@ -127,8 +127,10 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 	public Component execute() {
 		populateArguments(node, getArgsAsList(raw), true);
 
-		String perm = getTail().getPermission();
-		if (perm != null && !getTarget().hasPermission(perm)) return Component.text("No permission!");
+		Condition.Result<?> result = getTail().getCondition().test(getTarget(), this);
+		if (!result.isSuccessful()) return getFormat().getPrefix().append(
+				getFormat().formatMain(result.getError())
+		);
 
 		for (CommandArgument<?> argument : getTail().getArguments()) {
 			if (argument.isOptional() || getArgumentValue(argument) != null) continue;
@@ -145,7 +147,7 @@ public class StringContext<T extends PermissionHolder> implements CommandContext
 	}
 
 	@Override
-	public CommandNode<T> getTail() {
+	public CommandNode<?> getTail() {
 		return tail;
 	}
 }

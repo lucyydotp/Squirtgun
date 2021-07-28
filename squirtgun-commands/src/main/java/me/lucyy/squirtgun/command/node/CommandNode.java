@@ -23,6 +23,7 @@
 
 package me.lucyy.squirtgun.command.node;
 
+import me.lucyy.squirtgun.command.condition.Condition;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
@@ -47,7 +48,7 @@ public interface CommandNode<T extends PermissionHolder> {
 	 * @param context the context that this command was executed in
 	 * @return a component to optionally 
 	 */
-	@Nullable Component execute(CommandContext<T> context);
+	@Nullable Component execute(CommandContext context);
 
 	/**
 	 * Gets this node's name, which will be used as a literal if needed.
@@ -61,13 +62,12 @@ public interface CommandNode<T extends PermissionHolder> {
 	String getDescription();
 
 	/**
-	 * Gets the permission needed to execute this node or any children.
+	 * Gets the condition needed to execute this node or any children. If not needed, use PermissionHolder as T and
+	 * return {@link Condition#alwaysTrue()}
 	 *
-	 * @return the permission, or null if no permission is needed
+	 * @return the condition
 	 */
-	default @Nullable String getPermission() {
-		return null;
-	}
+	Condition<PermissionHolder, T> getCondition();
 
 	/**
 	 * Gets this command's arguments. By default, returns an empty list.
@@ -81,7 +81,7 @@ public interface CommandNode<T extends PermissionHolder> {
 	 *
 	 * @return the next node in the chain, or if this is the end of the chain, null
 	 */
-	default @Nullable CommandNode<T> next(CommandContext<T> context) {
+	default @Nullable CommandNode<? extends T> next(CommandContext context) {
 		return null;
 	}
 }

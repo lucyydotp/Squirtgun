@@ -28,11 +28,12 @@ import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.format.TextFormatter;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
 import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
-public class PluginInfoNode<T extends PermissionHolder> extends AbstractNode<T> {
+public class PluginInfoNode extends AbstractNode<SquirtgunUser> {
 
 	private final SquirtgunPlugin<?> plugin;
 
@@ -42,7 +43,7 @@ public class PluginInfoNode<T extends PermissionHolder> extends AbstractNode<T> 
 	}
 
 	@Override
-	public @Nullable Component execute(CommandContext<T> context) {
+	public @Nullable Component execute(CommandContext context) {
 		final FormatProvider fmt = context.getFormat();
 		final Component nl = Component.newline();
 		return Component.empty()

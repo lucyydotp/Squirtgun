@@ -24,6 +24,7 @@
 package me.lucyy.squirtgun.command.node;
 
 import me.lucyy.squirtgun.command.argument.CommandArgument;
+import me.lucyy.squirtgun.command.condition.Condition;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.format.TextFormatter;
@@ -41,7 +42,7 @@ import java.util.stream.Collectors;
  *
  * @since 2.0.0
  */
-public class HelpNode<T extends PermissionHolder> implements CommandNode<T> {
+public class HelpNode implements CommandNode<PermissionHolder> {
 
 	private final CommandNode<?> parentNode;
 
@@ -50,7 +51,7 @@ public class HelpNode<T extends PermissionHolder> implements CommandNode<T> {
 	}
 
 	@Override
-	public @Nullable Component execute(CommandContext<T> context) {
+	public @Nullable Component execute(CommandContext context) {
 		FormatProvider format = context.getFormat();
 		Component out = Component.empty()
 				.append(TextFormatter.formatTitle("Command Help", format))
@@ -92,6 +93,11 @@ public class HelpNode<T extends PermissionHolder> implements CommandNode<T> {
 	@Override
 	public String getDescription() {
 		return "Shows help on using this command.";
+	}
+
+	@Override
+	public Condition<PermissionHolder, PermissionHolder> getCondition() {
+		return Condition.alwaysTrue();
 	}
 
 	@Override
