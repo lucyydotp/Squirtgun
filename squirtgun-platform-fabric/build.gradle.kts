@@ -43,24 +43,15 @@ dependencies {
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}")
     modApi("me.lucko:fabric-permissions-api:${fabricPermissionsApiVersion}")
-    modApi(include("net.kyori:adventure-platform-fabric:${adventureFabricVersion}")!!)
+    modImplementation("net.kyori:adventure-platform-fabric:${adventureFabricVersion}")
 
-    modApi(include(project(":squirtgun-api")) {
+    api(include(project(":squirtgun-api")) {
         exclude("net.kyori")
     })
-    modApi(include(project(":squirtgun-commands")) {
+    api(include(project(":squirtgun-commands")) {
         exclude("net.kyori")
     })
-
-    // fabric-loom is kinda dumb
-    compileOnlyApi(project(":squirtgun-api")) {
-        exclude("net.kyori")
-    }
-    compileOnlyApi(project(":squirtgun-commands")) {
-        exclude("net.kyori")
-    }
 }
-
 
 publishing {
     publications {
@@ -70,7 +61,17 @@ publishing {
             artifact(tasks.javadocJar) { builtBy(tasks.javadocJar) }
 
             pom {
-                artifactId = artifactId
+                withXml {
+                    val deps = asNode().appendNode("dependencies")
+                    listOf(project(":squirtgun-api"), project(":squirtgun-commands")).forEach {
+                        val dep = deps.appendNode("dependency")
+                        dep.appendNode("groupId", it.group)
+                        dep.appendNode("artifactId", it.name)
+                        dep.appendNode("version", it.version)
+                        dep.appendNode("scope", "compile")
+                    }
+                }
+
                 description.set("A multipurpose library designed for Minecraft: Java Edition plugins.")
                 url.set("https://lucyy.me")
                 name.set("squirtgun")

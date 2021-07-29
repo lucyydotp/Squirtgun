@@ -54,7 +54,6 @@ subprojects {
                 create<MavenPublication>("mavenJava") {
                     from(components["java"])
                     pom {
-                        artifactId = artifactId
                         description.set("A multipurpose library designed for Minecraft: Java Edition plugins.")
                         url.set("https://lucyy.me")
                         name.set("squirtgun")
