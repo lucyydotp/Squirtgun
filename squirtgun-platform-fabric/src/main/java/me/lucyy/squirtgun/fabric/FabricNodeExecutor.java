@@ -67,7 +67,7 @@ public class FabricNodeExecutor implements Command<ServerCommandSource>, Suggest
 		input = i > -1 ? input.substring(i + 1) : "";
 
 		final SquirtgunUser source = this.platformSupplier.get().fromCommandSource(context.getSource());
-		final Component result = new StringContext<>(this.formatProvider, source, this.commandNode, input).execute();
+		final Component result = new StringContext(this.formatProvider, source, this.commandNode, input).execute();
 		if (result != null) {
 			source.sendMessage(result);
 		}
@@ -82,7 +82,7 @@ public class FabricNodeExecutor implements Command<ServerCommandSource>, Suggest
 		input = i > -1 ? input.substring(i + 1) : "";
 
 		final SquirtgunUser source = this.platformSupplier.get().fromCommandSource(context.getSource());
-		final List<String> suggestions = new StringContext<>(this.formatProvider, source, this.commandNode, input).tabComplete();
+		final List<String> suggestions = new StringContext(this.formatProvider, source, this.commandNode, input).tabComplete();
 		if (suggestions == null) {
 			return Suggestions.empty();
 		} else {
