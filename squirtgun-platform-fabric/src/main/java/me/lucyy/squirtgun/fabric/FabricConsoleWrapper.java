@@ -21,25 +21,33 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-repositories {
-    mavenCentral()
-}
+package me.lucyy.squirtgun.fabric;
 
-dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+import me.lucko.fabric.api.permissions.v0.Permissions;
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
+import org.jetbrains.annotations.NotNull;
 
-    testImplementation("net.kyori:adventure-api:4.8.1")
-    testImplementation("net.kyori:adventure-text-serializer-gson:4.8.1")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:4.8.1")
-    testImplementation("com.google.guava:guava:21.0")
-    testImplementation(project(":squirtgun-api"))
+/**
+ * Simple Squirtgun wrapper for the Fabric console "user".
+ */
+public final class FabricConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
 
-    api(project(":squirtgun-api"))
-}
+	private final FabricPlatform platform;
 
-tasks {
-    test {
-        useJUnitPlatform()
-    }
+	FabricConsoleWrapper(final FabricPlatform platform) {
+		this.platform = platform;
+	}
+
+	@Override
+	public boolean hasPermission(final String permission) {
+		// console being console, if the permission is undefined, it should always fallback to true
+		return Permissions.check(this.platform.getServer().getCommandSource(), permission, true);
+	}
+
+	@Override
+	public @NotNull Audience audience() {
+		return this.platform.getAudienceProvider().console();
+	}
 }

@@ -21,25 +21,14 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-repositories {
-    mavenCentral()
-}
+package me.lucyy.squirtgun.fabric;
 
-dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
+import net.kyori.adventure.audience.ForwardingAudience;
+import org.jetbrains.annotations.ApiStatus;
 
-    testImplementation("net.kyori:adventure-api:4.8.1")
-    testImplementation("net.kyori:adventure-text-serializer-gson:4.8.1")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:4.8.1")
-    testImplementation("com.google.guava:guava:21.0")
-    testImplementation(project(":squirtgun-api"))
-
-    api(project(":squirtgun-api"))
-}
-
-tasks {
-    test {
-        useJUnitPlatform()
-    }
-}
+/**
+ * Abstracted squirtgun player for the Fabric server.
+ */
+@ApiStatus.NonExtendable
+public interface FabricPlayer extends SquirtgunPlayer, ForwardingAudience.Single { }
