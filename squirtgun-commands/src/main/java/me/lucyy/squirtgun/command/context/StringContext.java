@@ -88,7 +88,7 @@ public class StringContext implements CommandContext {
         Optional<CommandArgument<?>> argument = argValues.keySet().stream()
                 .filter(arg -> arg.getName().equals(name))
                 .findFirst();
-        if (!argument.isPresent()) {
+        if (argument.isEmpty()) {
             throw new IllegalArgumentException(String.format("Argument %s does not exist", name));
         }
         return getArgumentValue(argument.get());

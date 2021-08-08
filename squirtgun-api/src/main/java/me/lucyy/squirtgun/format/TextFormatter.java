@@ -131,12 +131,13 @@ public class TextFormatter {
      *
      * @param charToRepeat the character to repeat
      * @param count        the amount of times to repeat it
+     *
+     * @deprecated use {@link String#repeat(int)}
      */
     @Contract(pure = true)
+    @Deprecated
     public static String repeat(@NotNull final String charToRepeat, final int count) {
-        final StringBuilder builder = new StringBuilder();
-        for (int x = 0; x < count; x++) builder.append(charToRepeat);
-        return builder.toString();
+        return charToRepeat.repeat(Math.max(0, count));
     }
 
     /**
@@ -194,7 +195,7 @@ public class TextFormatter {
                                        @NotNull final String character, @NotNull final TextDecoration[] formatters) {
         final int spaceLength = (CHAT_WIDTH - TextWidthFinder.findWidth(in) - 6) / 2; // take off 6 for two spaces
         final Component line = format.formatAccent(
-                repeat(character, spaceLength / TextWidthFinder.findWidth(character)),
+                character.repeat(spaceLength / TextWidthFinder.findWidth(character)),
                 formatters);
 
         Component centre = format.formatMain(" " + in + " ");

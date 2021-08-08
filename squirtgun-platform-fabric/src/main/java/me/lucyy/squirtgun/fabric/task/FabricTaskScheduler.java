@@ -62,6 +62,7 @@ public final class FabricTaskScheduler implements TaskScheduler {
     public void shutdown() {
         try {
             this.scheduler.shutdown();
+            //noinspection ResultOfMethodCallIgnored
             this.scheduler.awaitTermination(15L, TimeUnit.SECONDS);
         } catch (final InterruptedException exception) {
             // oh well

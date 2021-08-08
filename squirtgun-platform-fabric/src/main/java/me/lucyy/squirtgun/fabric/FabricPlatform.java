@@ -47,6 +47,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -81,7 +82,10 @@ public final class FabricPlatform implements Platform {
     }
 
     private void serverStarted(final MinecraftServer server) {
-        this.onlinePlayers = Lists.transform(getServer().getPlayerManager().getPlayerList(), this::asFabricPlayerOrDummy);
+        this.onlinePlayers = getServer().getPlayerManager().getPlayerList()
+                .stream()
+                .map(this::asFabricPlayerOrDummy)
+                .collect(Collectors.toList());
     }
 
     private void serverStopping(final MinecraftServer server) {
