@@ -48,6 +48,25 @@ import java.util.Set;
  */
 public class SubcommandNode extends AbstractNode<PermissionHolder> {
 
+    private final Set<CommandNode<?>> childNodes;
+    private final CommandArgument<CommandNode<?>> argument;
+    private CommandNode<?> fallbackNode;
+
+    /**
+     * @param name       this node's name
+     * @param condition  the condition needed to execute this node
+     * @param childNodes the child nodes
+     */
+    protected SubcommandNode(@NotNull String name, @NotNull String description,
+                             Condition<PermissionHolder, PermissionHolder> condition, @NotNull CommandNode<?>... childNodes) {
+        super(name, description, condition);
+        Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
+
+        this.childNodes = new HashSet<>(Arrays.asList(childNodes));
+
+        argument = new SubcommandNodeArgument(this, "subcommand", "The subcommand to execute");
+    }
+
     /**
      * Creates a node with an advanced help node.
      *
@@ -105,25 +124,6 @@ public class SubcommandNode extends AbstractNode<PermissionHolder> {
         return new SubcommandNode(name, description, condition, childNodes);
     }
 
-    private final Set<CommandNode<?>> childNodes;
-    private final CommandArgument<CommandNode<?>> argument;
-    private CommandNode<?> fallbackNode;
-
-    /**
-     * @param name       this node's name
-     * @param condition  the condition needed to execute this node
-     * @param childNodes the child nodes
-     */
-    protected SubcommandNode(@NotNull String name, @NotNull String description,
-                             Condition<PermissionHolder, PermissionHolder> condition, @NotNull CommandNode<?>... childNodes) {
-        super(name, description, condition);
-        Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
-
-        this.childNodes = new HashSet<>(Arrays.asList(childNodes));
-
-        argument = new SubcommandNodeArgument(this, "subcommand", "The subcommand to execute");
-    }
-
     /**
      * Gets the child nodes that this node holds.
      */
@@ -132,18 +132,18 @@ public class SubcommandNode extends AbstractNode<PermissionHolder> {
     }
 
     /**
+     * Gets the fallback node.
+     */
+    public @Nullable CommandNode<?> getFallbackNode() {
+        return fallbackNode;
+    }
+
+    /**
      * Sets the fallback node.
      */
     private void setFallbackNode(CommandNode<?> fallback) {
         fallbackNode = fallback;
         childNodes.add(fallback);
-    }
-
-    /**
-     * Gets the fallback node.
-     */
-    public @Nullable CommandNode<?> getFallbackNode() {
-        return fallbackNode;
     }
 
     @Override

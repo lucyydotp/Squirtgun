@@ -35,156 +35,160 @@ import java.util.function.Consumer;
  */
 public class Task {
 
-	public static Builder builder() {
-		return new Builder();
-	}
+    private final Consumer<Platform> action;
+    private final int delay;
+    private final int interval;
+    private final boolean isAsync;
+    private final long id;
 
-	public static Builder builder(final Consumer<Platform> action) {
-		return new Builder().action(action);
-	}
+    /**
+     * Creates a new task.
+     *
+     * @param action   the action to execute
+     * @param delay    how long to wait before executing this task
+     * @param interval how many ticks to wait between executing repeatedly, or -1 if it should not repeat.
+     * @param isAsync  whether to run this task asynchronously - how this happens is dictated by the platform.
+     */
+    private Task(final Consumer<Platform> action, final int delay, final int interval, final boolean isAsync, final long id) {
+        this.action = action;
+        this.delay = delay;
+        this.interval = interval;
+        this.isAsync = isAsync;
+        this.id = id;
+    }
 
-	public static Builder builder(final Runnable action) {
-		return new Builder().action(action);
-	}
+    public static Builder builder() {
+        return new Builder();
+    }
 
-	/**
-	 * A builder for a task.
-	 */
-	public static class Builder {
+    public static Builder builder(final Consumer<Platform> action) {
+        return new Builder().action(action);
+    }
 
-		private static final AtomicLong ID_SUPPLIER = new AtomicLong(0L);
+    public static Builder builder(final Runnable action) {
+        return new Builder().action(action);
+    }
 
-		private int interval = -1;
-		private int delay = 0;
-		private boolean isAsync = false;
-		private Consumer<Platform> action;
+    /**
+     * Whether this task is repeating.
+     */
+    public boolean isRepeating() {
+        return interval != -1;
+    }
 
-		public Builder interval(int interval) {
-			Preconditions.checkArgument(interval > 0, "Interval was not greater than 0");
-			this.interval = interval;
-			return this;
-		}
+    /**
+     * How long to wait before executing this task.
+     */
+    public int getDelay() {
+        return delay;
+    }
 
-		public Builder delay(int delay) {
-			Preconditions.checkArgument(delay > 0, "Delay was not greater than 0");
-			this.delay = delay;
-			return this;
-		}
+    /**
+     * How many ticks to wait between executing repeatedly, or -1 if it should not repeat.
+     */
+    public int getInterval() {
+        return interval;
+    }
 
-		public Builder async() {
-			this.isAsync = true;
-			return this;
-		}
+    /**
+     * Executes this task.
+     */
+    public void execute(Platform platform) {
+        action.accept(platform);
+    }
 
-		public Builder action(Consumer<Platform> action) {
-			this.action = action;
-			return this;
-		}
+    /**
+     * Whether this task should be run asynchronously.
+     */
+    public boolean isAsync() {
+        return isAsync;
+    }
 
-		public Builder action(Runnable action) {
-			this.action = p -> action.run();
-			return this;
-		}
+    /**
+     * Get the numeric ID assigned to this task.
+     *
+     * <p>Task IDs are auto-incremental and unique.</p>
+     *
+     * @return the task ID
+     */
+    public long getId() {
+        return this.id;
+    }
 
-		public Task build() {
-			Preconditions.checkNotNull(action, "Action has not been set");
-			return new Task(action, delay, interval, isAsync, ID_SUPPLIER.getAndIncrement());
-		}
-	}
+    @Override
+    public String toString() {
+        return "Task{"
+                + "id=" + this.id
+                + ", action=" + this.action
+                + ", delay=" + this.delay
+                + ", interval=" + this.interval
+                + ", isAsync=" + this.isAsync
+                + '}';
+    }
 
-	private final Consumer<Platform> action;
-	private final int delay;
-	private final int interval;
-	private final boolean isAsync;
-	private final long id;
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || other.getClass() != this.getClass()) {
+            return false;
+        }
 
-	/**
-	 * Creates a new task.
-	 *
-	 * @param action   the action to execute
-	 * @param delay    how long to wait before executing this task
-	 * @param interval how many ticks to wait between executing repeatedly, or -1 if it should not repeat.
-	 * @param isAsync  whether to run this task asynchronously - how this happens is dictated by the platform.
-	 */
-	private Task(final Consumer<Platform> action, final int delay, final int interval, final boolean isAsync, final long id) {
-		this.action = action;
-		this.delay = delay;
-		this.interval = interval;
-		this.isAsync = isAsync;
-		this.id = id;
-	}
+        final Task that = (Task) other;
+        return this.delay == that.delay
+                && this.interval == that.interval
+                && this.isAsync == that.isAsync
+                && this.id == that.id;
+    }
 
-	/**
-	 * Whether this task is repeating.
-	 */
-	public boolean isRepeating() {
-		return interval != -1;
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.delay, this.interval, this.isAsync, this.id);
+    }
 
-	/**
-	 * How long to wait before executing this task.
-	 */
-	public int getDelay() {
-		return delay;
-	}
+    /**
+     * A builder for a task.
+     */
+    public static class Builder {
 
-	/**
-	 * How many ticks to wait between executing repeatedly, or -1 if it should not repeat.
-	 */
-	public int getInterval() {
-		return interval;
-	}
+        private static final AtomicLong ID_SUPPLIER = new AtomicLong(0L);
 
-	/**
-	 * Executes this task.
-	 */
-	public void execute(Platform platform) {
-		action.accept(platform);
-	}
+        private int interval = -1;
+        private int delay = 0;
+        private boolean isAsync = false;
+        private Consumer<Platform> action;
 
-	/**
-	 * Whether this task should be run asynchronously.
-	 */
-	public boolean isAsync() {
-		return isAsync;
-	}
+        public Builder interval(int interval) {
+            Preconditions.checkArgument(interval > 0, "Interval was not greater than 0");
+            this.interval = interval;
+            return this;
+        }
 
-	/**
-	 * Get the numeric ID assigned to this task.
-	 *
-	 * <p>Task IDs are auto-incremental and unique.</p>
-	 *
-	 * @return the task ID
-	 */
-	public long getId() {
-		return this.id;
-	}
+        public Builder delay(int delay) {
+            Preconditions.checkArgument(delay > 0, "Delay was not greater than 0");
+            this.delay = delay;
+            return this;
+        }
 
-	@Override
-	public String toString() {
-		return "Task{"
-					 + "id=" + this.id
-					 + ", action=" + this.action
-					 + ", delay=" + this.delay
-					 + ", interval=" + this.interval
-					 + ", isAsync=" + this.isAsync
-					 + '}';
-	}
+        public Builder async() {
+            this.isAsync = true;
+            return this;
+        }
 
-	@Override
-	public boolean equals(final Object other) {
-		if (this == other) { return true; }
-		if (other == null || other.getClass() != this.getClass()) { return false; }
+        public Builder action(Consumer<Platform> action) {
+            this.action = action;
+            return this;
+        }
 
-		final Task that = (Task) other;
-		return this.delay == that.delay
-					 && this.interval == that.interval
-					 && this.isAsync == that.isAsync
-					 && this.id == that.id;
-	}
+        public Builder action(Runnable action) {
+            this.action = p -> action.run();
+            return this;
+        }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.delay, this.interval, this.isAsync, this.id);
-	}
+        public Task build() {
+            Preconditions.checkNotNull(action, "Action has not been set");
+            return new Task(action, delay, interval, isAsync, ID_SUPPLIER.getAndIncrement());
+        }
+    }
 }

@@ -55,158 +55,157 @@ import static java.util.Objects.requireNonNull;
  */
 public final class FabricPlatform implements Platform {
 
-	private static final Logger LOGGER = Logger.getLogger(FabricPlatform.class.getSimpleName());
-	private static final List<String> PROXY_BRIDGING_MODS =
-			List.of("fabricproxy",  // fabricproxy has been superseded by fabricproxy-lite, TODO drop off the list?
-							"fabricproxy-lite");
+    private static final Logger LOGGER = Logger.getLogger(FabricPlatform.class.getSimpleName());
+    private static final List<String> PROXY_BRIDGING_MODS =
+            List.of("fabricproxy",  // fabricproxy has been superseded by fabricproxy-lite, TODO drop off the list?
+                    "fabricproxy-lite");
+    private final FabricTaskScheduler taskScheduler;
+    private final FabricConsoleWrapper consoleWrapper;
+    private final FabricListenerAdapter listenerAdapter = new FabricListenerAdapter();
+    private MinecraftServer server;
+    private FabricServerAudiences audiences;
+    private List<SquirtgunPlayer> onlinePlayers = List.of();  // default to empty list until server has started
 
-	private MinecraftServer server;
-	private FabricServerAudiences audiences;
-	private List<SquirtgunPlayer> onlinePlayers = List.of();  // default to empty list until server has started
-	private final FabricTaskScheduler taskScheduler;
-	private final FabricConsoleWrapper consoleWrapper;
-	private final FabricListenerAdapter listenerAdapter = new FabricListenerAdapter();
+    /**
+     * Create the Squirtgun's Fabric "platform" for the server.
+     *
+     * @param server server instance to work with
+     */
+    public FabricPlatform(final @NotNull MinecraftServer server) {
+        this.server = requireNonNull(server, "server");
+        this.audiences = FabricServerAudiences.of(server);
+        this.taskScheduler = new FabricTaskScheduler(this);
+        this.consoleWrapper = new FabricConsoleWrapper(this);
+        ServerLifecycleEvents.SERVER_STOPPING.register(this::serverStopping);
+        ServerLifecycleEvents.SERVER_STARTED.register(this::serverStarted);
+    }
 
-	/**
-	 * Create the Squirtgun's Fabric "platform" for the server.
-	 *
-	 * @param server server instance to work with
-	 */
-	public FabricPlatform(final @NotNull MinecraftServer server) {
-		this.server = requireNonNull(server, "server");
-		this.audiences = FabricServerAudiences.of(server);
-		this.taskScheduler = new FabricTaskScheduler(this);
-		this.consoleWrapper = new FabricConsoleWrapper(this);
-		ServerLifecycleEvents.SERVER_STOPPING.register(this::serverStopping);
-		ServerLifecycleEvents.SERVER_STARTED.register(this::serverStarted);
-	}
+    private void serverStarted(final MinecraftServer server) {
+        this.onlinePlayers = Lists.transform(getServer().getPlayerManager().getPlayerList(), this::asFabricPlayerOrDummy);
+    }
 
-	private void serverStarted(final MinecraftServer server) {
-		this.onlinePlayers = Lists.transform(getServer().getPlayerManager().getPlayerList(), this::asFabricPlayerOrDummy);
-	}
+    private void serverStopping(final MinecraftServer server) {
+        this.taskScheduler.shutdown();
+        this.server = null;
+        this.audiences = null;
+    }
 
-	private void serverStopping(final MinecraftServer server) {
-		this.taskScheduler.shutdown();
-		this.server = null;
-		this.audiences = null;
-	}
+    /**
+     * Get the server instance this platform is working with.
+     *
+     * @return the server instance
+     */
+    public MinecraftServer getServer() {  // TODO mark as @Nullable instead of forcefully failing?
+        return requireNonNull(this.server, "Cannot access the server without a server running");
+    }
 
-	/**
-	 * Get the server instance this platform is working with.
-	 *
-	 * @return the server instance
-	 */
-	public MinecraftServer getServer() {  // TODO mark as @Nullable instead of forcefully failing?
-		return requireNonNull(this.server, "Cannot access the server without a server running");
-	}
+    /**
+     * Get Adventure's audience provider for this server.
+     *
+     * @return the server audience provider
+     */
+    public FabricServerAudiences getAudienceProvider() {  // TODO mark as @Nullable instead of forcefully failing?
+        return requireNonNull(this.audiences, "Cannot access the audience provider without a server running");
+    }
 
-	/**
-	 * Get Adventure's audience provider for this server.
-	 *
-	 * @return the server audience provider
-	 */
-	public FabricServerAudiences getAudienceProvider() {  // TODO mark as @Nullable instead of forcefully failing?
-		return requireNonNull(this.audiences, "Cannot access the audience provider without a server running");
-	}
+    @Override
+    public String name() {
+        return "Fabric";
+    }
 
-	@Override
-	public String name() {
-		return "Fabric";
-	}
+    @Override
+    public Logger getLogger() {
+        return LOGGER;
+    }
 
-	@Override
-	public Logger getLogger() {
-		return LOGGER;
-	}
+    @Override
+    public void log(final Component component) {
+        getAudienceProvider().console().sendMessage(component);
+    }
 
-	@Override
-	public void log(final Component component) {
-		getAudienceProvider().console().sendMessage(component);
-	}
+    @Override
+    public AuthMode getAuthMode() {
+        final MinecraftServer server = getServer();
+        if (server instanceof DedicatedServer) {
+            if (PROXY_BRIDGING_MODS.stream().anyMatch(FabricLoader.getInstance()::isModLoaded)) {
+                return AuthMode.BUNGEE;
+            } else {
+                return ((DedicatedServer) server).getProperties().onlineMode ? AuthMode.ONLINE : AuthMode.OFFLINE;
+            }
+        } else {
+            return AuthMode.ONLINE;  // https://github.com/lucyy-mc/Squirtgun/pull/29#discussion_r658576670
+        }
+    }
 
-	@Override
-	public AuthMode getAuthMode() {
-		final MinecraftServer server = getServer();
-		if (server instanceof DedicatedServer) {
-			if (PROXY_BRIDGING_MODS.stream().anyMatch(FabricLoader.getInstance()::isModLoaded)) {
-				return AuthMode.BUNGEE;
-			} else {
-				return ((DedicatedServer) server).getProperties().onlineMode ? AuthMode.ONLINE : AuthMode.OFFLINE;
-			}
-		} else {
-			return AuthMode.ONLINE;  // https://github.com/lucyy-mc/Squirtgun/pull/29#discussion_r658576670
-		}
-	}
+    @Override
+    public FabricTaskScheduler getTaskScheduler() {
+        return this.taskScheduler;
+    }
 
-	@Override
-	public FabricTaskScheduler getTaskScheduler() {
-		return this.taskScheduler;
-	}
+    @Override
+    public void registerEventListener(final EventListener listener) {
+        this.listenerAdapter.addListener(listener);
+    }
 
-	@Override
-	public void registerEventListener(final EventListener listener) {
-		this.listenerAdapter.addListener(listener);
-	}
+    @Override
+    public void unregisterEventListener(final EventListener listener) {
+        this.listenerAdapter.removeListener(listener);
+    }
 
-	@Override
-	public void unregisterEventListener(final EventListener listener) {
-		this.listenerAdapter.removeListener(listener);
-	}
+    /**
+     * Wraps a {@link ServerCommandSource} in a {@link SquirtgunUser}.
+     *
+     * <p>If the command source entity is a player entity, this method calls and returns
+     * {@link #getPlayer(ServerPlayerEntity)}, elsewise it returns {@link #getConsole()}.</p>
+     *
+     * @param commandSource {@link ServerCommandSource} to adapt
+     * @return corresponding {@link SquirtgunUser}
+     */
+    public @NotNull SquirtgunUser fromCommandSource(final @NotNull ServerCommandSource commandSource) {
+        final Entity entity = requireNonNull(commandSource, "commandSource").getEntity();
+        if (entity instanceof ServerPlayerEntity) {
+            return getPlayer((ServerPlayerEntity) entity);
+        } else {
+            return getConsole();
+        }
+    }
 
-	/**
-	 * Wraps a {@link ServerCommandSource} in a {@link SquirtgunUser}.
-	 *
-	 * <p>If the command source entity is a player entity, this method calls and returns
-	 * {@link #getPlayer(ServerPlayerEntity)}, elsewise it returns {@link #getConsole()}.</p>
-	 *
-	 * @param commandSource {@link ServerCommandSource} to adapt
-	 * @return corresponding {@link SquirtgunUser}
-	 */
-	public @NotNull SquirtgunUser fromCommandSource(final @NotNull ServerCommandSource commandSource) {
-		final Entity entity = requireNonNull(commandSource, "commandSource").getEntity();
-		if (entity instanceof ServerPlayerEntity) {
-			return getPlayer((ServerPlayerEntity) entity);
-		} else {
-			return getConsole();
-		}
-	}
+    @Override
+    public FabricConsoleWrapper getConsole() {
+        return this.consoleWrapper;
+    }
 
-	@Override
-	public FabricConsoleWrapper getConsole() {
-		return this.consoleWrapper;
-	}
+    @Override
+    public FabricPlayer getPlayer(final UUID uuid) {
+        return asFabricPlayerOrDummy(getServer().getPlayerManager().getPlayer(requireNonNull(uuid, "uuid")));
+    }
 
-	@Override
-	public FabricPlayer getPlayer(final UUID uuid) {
-		return asFabricPlayerOrDummy(getServer().getPlayerManager().getPlayer(requireNonNull(uuid, "uuid")));
-	}
+    @Override
+    public FabricPlayer getPlayer(final String name) {
+        return asFabricPlayerOrDummy(getServer().getPlayerManager().getPlayer(requireNonNull(name, "name")));
+    }
 
-	@Override
-	public FabricPlayer getPlayer(final String name) {
-		return asFabricPlayerOrDummy(getServer().getPlayerManager().getPlayer(requireNonNull(name, "name")));
-	}
+    /**
+     * Wraps a {@link ServerPlayerEntity} in a {@link FabricPlayer}.
+     *
+     * @param player player entity to wrap
+     * @return Squirtgun's Fabric player wrapper
+     */
+    public @NotNull FabricPlayer getPlayer(final @Nullable ServerPlayerEntity player) {
+        return asFabricPlayerOrDummy(player);
+    }
 
-	/**
-	 * Wraps a {@link ServerPlayerEntity} in a {@link FabricPlayer}.
-	 *
-	 * @param player player entity to wrap
-	 * @return Squirtgun's Fabric player wrapper
-	 */
-	public @NotNull FabricPlayer getPlayer(final @Nullable ServerPlayerEntity player) {
-		return asFabricPlayerOrDummy(player);
-	}
+    @Override
+    public List<SquirtgunPlayer> getOnlinePlayers() {
+        return this.onlinePlayers;
+    }
 
-	@Override
-	public List<SquirtgunPlayer> getOnlinePlayers() {
-		return this.onlinePlayers;
-	}
+    @Override
+    public Path getConfigPath(final SquirtgunPlugin<?> plugin) {
+        return FabricLoader.getInstance().getConfigDir().resolve(plugin.getPluginName());
+    }
 
-	@Override
-	public Path getConfigPath(final SquirtgunPlugin<?> plugin) {
-		return FabricLoader.getInstance().getConfigDir().resolve(plugin.getPluginName());
-	}
-
-	private FabricPlayer asFabricPlayerOrDummy(final ServerPlayerEntity player) {
-		return player == null ? DummyFabricPlayer.INSTANCE : new FabricPlayerImpl(player, getAudienceProvider().audience(player));
-	}
+    private FabricPlayer asFabricPlayerOrDummy(final ServerPlayerEntity player) {
+        return player == null ? DummyFabricPlayer.INSTANCE : new FabricPlayerImpl(player, getAudienceProvider().audience(player));
+    }
 }

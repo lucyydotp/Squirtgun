@@ -31,16 +31,16 @@ import java.util.Scanner;
  * A simple class containing the framework's version.
  */
 public class Squirtgun {
-	/**
-	 * The framework's version.
-	 */
-	public static final String VERSION;
+    /**
+     * The framework's version.
+     */
+    public static final String VERSION;
 
-	static {
-		InputStream file = Squirtgun.class.getClassLoader().getResourceAsStream("squirtgun-version.txt");
-		Objects.requireNonNull(file);
-		VERSION = new Scanner(file)
-				.useDelimiter("\\A")
-				.next();
-	}
+    static {
+        InputStream file = Squirtgun.class.getClassLoader().getResourceAsStream("squirtgun-version.txt");
+        Objects.requireNonNull(file);
+        VERSION = new Scanner(file)
+                .useDelimiter("\\A")
+                .next();
+    }
 }

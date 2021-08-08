@@ -31,38 +31,39 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 enum DummyFabricPlayer implements FabricPlayer {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public UUID getUuid() {
-		return Util.NIL_UUID;
-	}
+    @Override
+    public UUID getUuid() {
+        return Util.NIL_UUID;
+    }
 
-	@Override
-	public String getUsername() {
-		return "null";
-	}
+    @Override
+    public String getUsername() {
+        return "null";
+    }
 
-	@Override
-	public boolean isOnline() {
-		return false;
-	}
+    @Override
+    public boolean isOnline() {
+        return false;
+    }
 
-	@Override
-	public boolean hasPermission(final String permission) {
-		return false;
-	}
+    @Override
+    public boolean hasPermission(final String permission) {
+        return false;
+    }
 
-	@Override
-	public Gamemode getGamemode() {
-		return Gamemode.SURVIVAL;
-	}
+    @Override
+    public Gamemode getGamemode() {
+        return Gamemode.SURVIVAL;
+    }
 
-	@Override
-	public void setGamemode(final Gamemode mode) { }
+    @Override
+    public void setGamemode(final Gamemode mode) {
+    }
 
-	@Override
-	public @NotNull Audience audience() {
-		return Audience.empty();
-	}
+    @Override
+    public @NotNull Audience audience() {
+        return Audience.empty();
+    }
 }

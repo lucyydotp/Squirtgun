@@ -36,6 +36,7 @@ import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,74 +51,74 @@ import java.util.stream.Collectors;
  */
 public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
 
-	private final SubcommandNode parentNode;
-	private final CommandArgument<String> childArgument;
+    private final SubcommandNode parentNode;
+    private final CommandArgument<String> childArgument;
 
-	public SubcommandHelpNode(SubcommandNode parentNode) {
-		this.parentNode = parentNode;
-		childArgument = new ListArgument("command",
-				"The command to get help for.",
-				true,
-				parentNode.getNodes().stream()
-						.map(CommandNode::getName)
-						.collect(Collectors.toList())
-				);
-	}
+    public SubcommandHelpNode(SubcommandNode parentNode) {
+        this.parentNode = parentNode;
+        childArgument = new ListArgument("command",
+                "The command to get help for.",
+                true,
+                parentNode.getNodes().stream()
+                        .map(CommandNode::getName)
+                        .collect(Collectors.toList())
+        );
+    }
 
-	@Override
-	public @NotNull List<CommandArgument<?>> getArguments() {
-		return ImmutableList.of(childArgument);
-	}
+    @Override
+    public @NotNull List<CommandArgument<?>> getArguments() {
+        return ImmutableList.of(childArgument);
+    }
 
-	@Override
-	public @NotNull String getName() {
-		return "help";
-	}
+    @Override
+    public @NotNull String getName() {
+        return "help";
+    }
 
-	@Override
-	public String getDescription() {
-		return "Shows this screen.";
-	}
+    @Override
+    public String getDescription() {
+        return "Shows this screen.";
+    }
 
-	@Override
-	public Condition<PermissionHolder, PermissionHolder> getCondition() {
-		return Condition.alwaysTrue();
-	}
+    @Override
+    public Condition<PermissionHolder, PermissionHolder> getCondition() {
+        return Condition.alwaysTrue();
+    }
 
-	@Override
-	public @Nullable CommandNode<?> next(CommandContext context) {
-		String child = context.getArgumentValue(childArgument);
-		if (child == null) return null;
+    @Override
+    public @Nullable CommandNode<?> next(CommandContext context) {
+        String child = context.getArgumentValue(childArgument);
+        if (child == null) return null;
 
-		Optional<? extends CommandNode<?>> nodeWithGivenName = parentNode.getNodes().stream()
-				.filter(node -> node.getName().equals(child))
-				.findFirst();
+        Optional<? extends CommandNode<?>> nodeWithGivenName = parentNode.getNodes().stream()
+                .filter(node -> node.getName().equals(child))
+                .findFirst();
 
-		return nodeWithGivenName.<CommandNode<?>>map(HelpNode::new).orElse(null);
+        return nodeWithGivenName.<CommandNode<?>>map(HelpNode::new).orElse(null);
 
-	}
+    }
 
-	@Override
-	public @Nullable Component execute(CommandContext context) {
-		final FormatProvider fmt = context.getFormat();
-		Component out = Component.empty()
-				.append(TextFormatter.formatTitle("Commands:", fmt))
-				.append(Component.newline());
+    @Override
+    public @Nullable Component execute(CommandContext context) {
+        final FormatProvider fmt = context.getFormat();
+        Component out = Component.empty()
+                .append(TextFormatter.formatTitle("Commands:", fmt))
+                .append(Component.newline());
 
-		for (CommandNode<?> node : parentNode.getNodes()) {
-			if (node.getCondition().test(context.getTarget(), context).isSuccessful()) {
-				Component innerComp =
-						fmt.formatMain(parentNode.getName() + " ")
-						.append(fmt.formatAccent(node.getName()))
-						.append(fmt.formatMain(" - " + node.getDescription()))
-						.append(Component.text("\n"));
-				out = out.append(innerComp);
-			}
-		}
+        for (CommandNode<?> node : parentNode.getNodes()) {
+            if (node.getCondition().test(context.getTarget(), context).isSuccessful()) {
+                Component innerComp =
+                        fmt.formatMain(parentNode.getName() + " ")
+                                .append(fmt.formatAccent(node.getName()))
+                                .append(fmt.formatMain(" - " + node.getDescription()))
+                                .append(Component.text("\n"));
+                out = out.append(innerComp);
+            }
+        }
 
-		out = out.append(Component.newline())
-				.append(TextFormatter.formatTitle("*", fmt));
+        out = out.append(Component.newline())
+                .append(TextFormatter.formatTitle("*", fmt));
 
-		return out;
-	}
+        return out;
+    }
 }

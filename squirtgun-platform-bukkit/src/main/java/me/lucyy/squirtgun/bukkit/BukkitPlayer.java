@@ -32,15 +32,16 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * SquirtgunPlayer implementation for Bukkit.
  */
 public class BukkitPlayer implements SquirtgunPlayer, ForwardingAudience.Single {
 
-    private final OfflinePlayer parent;
-    private final Audience audience;
     private static final EnumMap<org.bukkit.GameMode, Gamemode> gamemodeMap = new EnumMap<>(org.bukkit.GameMode.class);
 
     static {
@@ -49,6 +50,9 @@ public class BukkitPlayer implements SquirtgunPlayer, ForwardingAudience.Single 
         gamemodeMap.put(GameMode.ADVENTURE, Gamemode.ADVENTURE);
         gamemodeMap.put(GameMode.SPECTATOR, Gamemode.SPECTATOR);
     }
+
+    private final OfflinePlayer parent;
+    private final Audience audience;
 
     public BukkitPlayer(OfflinePlayer parent, Audience audience) {
         this.parent = parent;
@@ -96,7 +100,7 @@ public class BukkitPlayer implements SquirtgunPlayer, ForwardingAudience.Single 
 
             // both enums are fully mapped so this is safe
             Objects.requireNonNull(bukkitMode);
-	        ((Player) parent).setGameMode(bukkitMode);
+            ((Player) parent).setGameMode(bukkitMode);
         }
     }
 

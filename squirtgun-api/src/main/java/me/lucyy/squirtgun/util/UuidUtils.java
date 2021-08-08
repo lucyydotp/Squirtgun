@@ -29,27 +29,27 @@ import java.util.UUID;
  * Various utilities for formatting UUIDs.
  */
 public class UuidUtils {
-	/**
-	 * Converts a UUID to a string, removing hyphens.
-	 *
-	 * @param uuid the UUID to convert to a string
-	 * @return the string form of a UUID with no hyphens.
-	 */
-	public static String toString(UUID uuid) {
-		return uuid.toString().replace("-", "");
-	}
+    /**
+     * Converts a UUID to a string, removing hyphens.
+     *
+     * @param uuid the UUID to convert to a string
+     * @return the string form of a UUID with no hyphens.
+     */
+    public static String toString(UUID uuid) {
+        return uuid.toString().replace("-", "");
+    }
 
-	/**
-	 * Converts a UUID, either with or without dashes, to a string. Hyphens are optional.
-	 *
-	 * @param name the string to parse
-	 * @return the parsed UUID
-	 * @throws IllegalArgumentException if the provided string is incorrectly formatted
-	 */
-	public static UUID fromString(String name) {
-		return UUID.fromString(name.replaceFirst(
-			"(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
-			"$1-$2-$3-$4-$5")
-		);
-	}
+    /**
+     * Converts a UUID, either with or without dashes, to a string. Hyphens are optional.
+     *
+     * @param name the string to parse
+     * @return the parsed UUID
+     * @throws IllegalArgumentException if the provided string is incorrectly formatted
+     */
+    public static UUID fromString(String name) {
+        return UUID.fromString(name.replaceFirst(
+                "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                "$1-$2-$3-$4-$5")
+        );
+    }
 }

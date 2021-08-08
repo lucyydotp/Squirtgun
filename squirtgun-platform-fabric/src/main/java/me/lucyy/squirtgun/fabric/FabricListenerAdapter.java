@@ -36,30 +36,31 @@ import java.util.UUID;
 
 class FabricListenerAdapter {
 
-	private final Set<EventListener> listeners = Collections.newSetFromMap(new IdentityHashMap<>());
+    private final Set<EventListener> listeners = Collections.newSetFromMap(new IdentityHashMap<>());
 
-	{
-		ServerPlayConnectionEvents.JOIN.register(this::playerJoin);
-		ServerPlayConnectionEvents.DISCONNECT.register(this::playerDisconnect);
-	}
+    {
+        ServerPlayConnectionEvents.JOIN.register(this::playerJoin);
+        ServerPlayConnectionEvents.DISCONNECT.register(this::playerDisconnect);
+    }
 
-	FabricListenerAdapter() { }
+    FabricListenerAdapter() {
+    }
 
-	void addListener(final EventListener listener) {
-		this.listeners.add(listener);
-	}
+    void addListener(final EventListener listener) {
+        this.listeners.add(listener);
+    }
 
-	void removeListener(final EventListener listener) {
-		this.listeners.remove(listener);
-	}
+    void removeListener(final EventListener listener) {
+        this.listeners.remove(listener);
+    }
 
-	private void playerJoin(final ServerPlayNetworkHandler handler, final PacketSender sender, final MinecraftServer server) {
-		final UUID uuid = handler.player.getUuid();
-		this.listeners.forEach(listener -> listener.onPlayerJoin(uuid));
-	}
+    private void playerJoin(final ServerPlayNetworkHandler handler, final PacketSender sender, final MinecraftServer server) {
+        final UUID uuid = handler.player.getUuid();
+        this.listeners.forEach(listener -> listener.onPlayerJoin(uuid));
+    }
 
-	private void playerDisconnect(final ServerPlayNetworkHandler handler, final MinecraftServer server) {
-		final UUID uuid = handler.player.getUuid();
-		this.listeners.forEach(listener -> listener.onPlayerLeave(uuid));
-	}
+    private void playerDisconnect(final ServerPlayNetworkHandler handler, final MinecraftServer server) {
+        final UUID uuid = handler.player.getUuid();
+        this.listeners.forEach(listener -> listener.onPlayerLeave(uuid));
+    }
 }

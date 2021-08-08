@@ -28,15 +28,15 @@ import me.lucyy.squirtgun.platform.Gamemode;
 import java.util.UUID;
 
 public interface SquirtgunPlayer extends SquirtgunUser {
-	UUID getUuid();
+    UUID getUuid();
 
-	String getUsername();
+    String getUsername();
 
-	boolean isOnline();
+    boolean isOnline();
 
-	boolean hasPermission(String permission);
+    boolean hasPermission(String permission);
 
-	Gamemode getGamemode();
+    Gamemode getGamemode();
 
-	void setGamemode(Gamemode mode);
+    void setGamemode(Gamemode mode);
 }

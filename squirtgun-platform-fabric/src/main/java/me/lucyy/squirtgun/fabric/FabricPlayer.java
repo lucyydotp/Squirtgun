@@ -31,4 +31,5 @@ import org.jetbrains.annotations.ApiStatus;
  * Abstracted squirtgun player for the Fabric server.
  */
 @ApiStatus.NonExtendable
-public interface FabricPlayer extends SquirtgunPlayer, ForwardingAudience.Single { }
+public interface FabricPlayer extends SquirtgunPlayer, ForwardingAudience.Single {
+}

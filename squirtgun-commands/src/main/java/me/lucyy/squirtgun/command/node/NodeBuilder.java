@@ -46,149 +46,148 @@ import java.util.function.Function;
  */
 public class NodeBuilder<T extends PermissionHolder> {
 
-	private static class BuiltCommandNode<T extends PermissionHolder> implements CommandNode<T> {
+    private final List<CommandArgument<?>> arguments = new ArrayList<>();
+    private String name;
+    private String description;
+    private Condition<PermissionHolder, T> condition;
+    private Function<CommandContext, @Nullable Component> executes;
+    private CommandNode<T> next;
 
-		private final String name;
-		private final String description;
-		private final Condition<PermissionHolder, T> condition;
-		private final Function<CommandContext, @Nullable Component> executes;
-		private final @Nullable CommandNode<T> next;
-		private final List<CommandArgument<?>> arguments;
+    /**
+     * Sets this node's name.
+     *
+     * @param name the new name to set
+     * @return this
+     */
+    public NodeBuilder<T> name(@NotNull String name) {
+        Preconditions.checkNotNull(name, "Name must not be null");
+        this.name = name;
+        return this;
+    }
 
-		private BuiltCommandNode(String name,
-								 String description,
-								 Condition<PermissionHolder, T> condition,
-								 Function<CommandContext, @Nullable Component> executes,
-								 @Nullable CommandNode<T> next,
-								 List<CommandArgument<?>> arguments) {
-			this.name = name;
-			this.description = description;
-			this.condition = condition;
-			this.executes = executes;
-			this.next = next;
-			this.arguments = arguments;
-		}
+    /**
+     * Sets this node's description.
+     *
+     * @param description the new description to set - this should be a short, 1-line sentence
+     * @return this
+     */
+    public NodeBuilder<T> description(@NotNull String description) {
+        this.description = description;
+        return this;
+    }
 
-		@Override
-		public @Nullable Component execute(CommandContext context) {
-			return executes.apply(context);
-		}
+    /**
+     * Sets this node's required condition.
+     *
+     * @param condition the required condition
+     * @return this
+     */
+    public NodeBuilder<T> condition(Condition<PermissionHolder, T> condition) {
+        Preconditions.checkNotNull(condition, "Condition must not be null");
+        this.condition = condition;
+        return this;
+    }
 
-		@Override
-		public @NotNull String getName() {
-			return name;
-		}
+    /**
+     * Sets the function to execute this node.
+     *
+     * @param executes the function. It should return a component to display to the sender. This may be null, in which
+     *                 case nothing will be sent.
+     * @return this
+     */
+    public NodeBuilder<T> executes(@NotNull Function<CommandContext, @Nullable Component> executes) {
+        Preconditions.checkNotNull(executes, "Executes function must not be null");
+        this.executes = executes;
+        return this;
+    }
 
-		@Override
-		public String getDescription() {
-			return description;
-		}
+    /**
+     * Sets the next node in the chain. Typically you don't need this, the default value of null will suffice.
+     *
+     * @param next a possibly null next node
+     * @return this
+     */
+    public NodeBuilder<T> next(@Nullable CommandNode<T> next) {
+        this.next = next;
+        return this;
+    }
 
-		@Override
-		public Condition<PermissionHolder, T> getCondition() {
-			return condition;
-		}
+    /**
+     * Adds arguments to this node.
+     *
+     * @param arguments arguments to add, in order, to the list
+     * @return this
+     */
+    public NodeBuilder<T> arguments(@NotNull CommandArgument<?>... arguments) {
+        this.arguments.addAll(Arrays.asList(arguments));
+        return this;
+    }
 
-		@Override
-		public @NotNull List<CommandArgument<?>> getArguments() {
-			return arguments;
-		}
+    /**
+     * Builds this node, throwing a {@link NullPointerException} if an argument is incorrect or missing.
+     *
+     * @return a node built from the specified parameters.
+     */
+    public CommandNode<T> build() {
+        return new BuiltCommandNode<>(
+                Objects.requireNonNull(name),
+                description,
+                Objects.requireNonNull(condition),
+                Objects.requireNonNull(executes),
+                next, arguments);
+    }
 
-		@Override
-		public @Nullable CommandNode<T> next(CommandContext context) {
-			return next;
-		}
-	}
+    private static class BuiltCommandNode<T extends PermissionHolder> implements CommandNode<T> {
 
-	private String name;
-	private String description;
-	private Condition<PermissionHolder, T> condition;
-	private Function<CommandContext, @Nullable Component> executes;
-	private CommandNode<T> next;
+        private final String name;
+        private final String description;
+        private final Condition<PermissionHolder, T> condition;
+        private final Function<CommandContext, @Nullable Component> executes;
+        private final @Nullable CommandNode<T> next;
+        private final List<CommandArgument<?>> arguments;
 
-	private final List<CommandArgument<?>> arguments = new ArrayList<>();
+        private BuiltCommandNode(String name,
+                                 String description,
+                                 Condition<PermissionHolder, T> condition,
+                                 Function<CommandContext, @Nullable Component> executes,
+                                 @Nullable CommandNode<T> next,
+                                 List<CommandArgument<?>> arguments) {
+            this.name = name;
+            this.description = description;
+            this.condition = condition;
+            this.executes = executes;
+            this.next = next;
+            this.arguments = arguments;
+        }
 
-	/**
-	 * Sets this node's name.
-	 *
-	 * @param name the new name to set
-	 * @return this
-	 */
-	public NodeBuilder<T> name(@NotNull String name) {
-		Preconditions.checkNotNull(name, "Name must not be null");
-		this.name = name;
-		return this;
-	}
+        @Override
+        public @Nullable Component execute(CommandContext context) {
+            return executes.apply(context);
+        }
 
-	/**
-	 * Sets this node's description.
-	 *
-	 * @param description the new description to set - this should be a short, 1-line sentence
-	 * @return this
-	 */
-	public NodeBuilder<T> description(@NotNull String description) {
-		this.description = description;
-		return this;
-	}
+        @Override
+        public @NotNull String getName() {
+            return name;
+        }
 
-	/**
-	 * Sets this node's required condition.
-	 *
-	 * @param condition the required condition
-	 * @return this
-	 */
-	public NodeBuilder<T> condition(Condition<PermissionHolder, T> condition) {
-		Preconditions.checkNotNull(condition, "Condition must not be null");
-		this.condition = condition;
-		return this;
-	}
+        @Override
+        public String getDescription() {
+            return description;
+        }
 
-	/**
-	 * Sets the function to execute this node.
-	 *
-	 * @param executes the function. It should return a component to display to the sender. This may be null, in which
-	 *                 case nothing will be sent.
-	 * @return this
-	 */
-	public NodeBuilder<T> executes(@NotNull Function<CommandContext, @Nullable Component> executes) {
-		Preconditions.checkNotNull(executes, "Executes function must not be null");
-		this.executes = executes;
-		return this;
-	}
+        @Override
+        public Condition<PermissionHolder, T> getCondition() {
+            return condition;
+        }
 
-	/**
-	 * Sets the next node in the chain. Typically you don't need this, the default value of null will suffice.
-	 *
-	 * @param next a possibly null next node
-	 * @return this
-	 */
-	public NodeBuilder<T> next(@Nullable CommandNode<T> next) {
-		this.next = next;
-		return this;
-	}
+        @Override
+        public @NotNull List<CommandArgument<?>> getArguments() {
+            return arguments;
+        }
 
-	/**
-	 * Adds arguments to this node.
-	 *
-	 * @param arguments arguments to add, in order, to the list
-	 * @return this
-	 */
-	public NodeBuilder<T> arguments(@NotNull CommandArgument<?>... arguments) {
-		this.arguments.addAll(Arrays.asList(arguments));
-		return this;
-	}
-
-	/**
-	 * Builds this node, throwing a {@link NullPointerException} if an argument is incorrect or missing.
-	 *
-	 * @return a node built from the specified parameters.
-	 */
-	public CommandNode<T> build() {
-		return new BuiltCommandNode<>(
-				Objects.requireNonNull(name),
-				description,
-				Objects.requireNonNull(condition),
-				Objects.requireNonNull(executes),
-				next, arguments);
-	}
+        @Override
+        public @Nullable CommandNode<T> next(CommandContext context) {
+            return next;
+        }
+    }
 }

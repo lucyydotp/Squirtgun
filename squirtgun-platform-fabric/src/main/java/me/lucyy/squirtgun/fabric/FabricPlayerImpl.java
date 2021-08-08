@@ -36,56 +36,56 @@ import java.util.UUID;
 
 class FabricPlayerImpl implements FabricPlayer {
 
-	private static final BiMap<GameMode, Gamemode> GAMEMODE_BIMAP = EnumBiMap.create(GameMode.class, Gamemode.class);
+    private static final BiMap<GameMode, Gamemode> GAMEMODE_BIMAP = EnumBiMap.create(GameMode.class, Gamemode.class);
 
-	static {
-		GAMEMODE_BIMAP.put(GameMode.SURVIVAL, Gamemode.SURVIVAL);
-		GAMEMODE_BIMAP.put(GameMode.CREATIVE, Gamemode.CREATIVE);
-		GAMEMODE_BIMAP.put(GameMode.ADVENTURE, Gamemode.ADVENTURE);
-		GAMEMODE_BIMAP.put(GameMode.SPECTATOR, Gamemode.SPECTATOR);
-	}
+    static {
+        GAMEMODE_BIMAP.put(GameMode.SURVIVAL, Gamemode.SURVIVAL);
+        GAMEMODE_BIMAP.put(GameMode.CREATIVE, Gamemode.CREATIVE);
+        GAMEMODE_BIMAP.put(GameMode.ADVENTURE, Gamemode.ADVENTURE);
+        GAMEMODE_BIMAP.put(GameMode.SPECTATOR, Gamemode.SPECTATOR);
+    }
 
-	private final ServerPlayerEntity handle;
-	private final Audience audience;
+    private final ServerPlayerEntity handle;
+    private final Audience audience;
 
-	FabricPlayerImpl(final ServerPlayerEntity handle, final Audience audience) {
-		this.handle = handle;
-		this.audience = audience;
-	}
+    FabricPlayerImpl(final ServerPlayerEntity handle, final Audience audience) {
+        this.handle = handle;
+        this.audience = audience;
+    }
 
-	@Override
-	public UUID getUuid() {
-		return this.handle.getUuid();
-	}
+    @Override
+    public UUID getUuid() {
+        return this.handle.getUuid();
+    }
 
-	@Override
-	public String getUsername() {
-		return this.handle.getEntityName();
-	}
+    @Override
+    public String getUsername() {
+        return this.handle.getEntityName();
+    }
 
-	@Override
-	public boolean isOnline() {
-		// a "player" is always online to be a player - TODO use GameProfile and NbtCompound?
-		return true;
-	}
+    @Override
+    public boolean isOnline() {
+        // a "player" is always online to be a player - TODO use GameProfile and NbtCompound?
+        return true;
+    }
 
-	@Override
-	public boolean hasPermission(final String permission) {
-		return Permissions.check(this.handle, permission, 3);  // 3 = op level 3 (2nd to last, "admins")
-	}
+    @Override
+    public boolean hasPermission(final String permission) {
+        return Permissions.check(this.handle, permission, 3);  // 3 = op level 3 (2nd to last, "admins")
+    }
 
-	@Override
-	public Gamemode getGamemode() {
-		return GAMEMODE_BIMAP.get(this.handle.interactionManager.getGameMode());
-	}
+    @Override
+    public Gamemode getGamemode() {
+        return GAMEMODE_BIMAP.get(this.handle.interactionManager.getGameMode());
+    }
 
-	@Override
-	public void setGamemode(final Gamemode mode) {
-		this.handle.changeGameMode(GAMEMODE_BIMAP.inverse().get(mode));
-	}
+    @Override
+    public void setGamemode(final Gamemode mode) {
+        this.handle.changeGameMode(GAMEMODE_BIMAP.inverse().get(mode));
+    }
 
-	@Override
-	public @NotNull Audience audience() {
-		return this.audience;
-	}
+    @Override
+    public @NotNull Audience audience() {
+        return this.audience;
+    }
 }

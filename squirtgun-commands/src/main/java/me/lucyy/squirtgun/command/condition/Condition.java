@@ -35,82 +35,82 @@ import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 @FunctionalInterface
 public interface Condition<T extends PermissionHolder, U extends PermissionHolder> {
 
-	static Condition<PermissionHolder, SquirtgunPlayer> isPlayer() {
-		return (target, context) ->
-				target instanceof SquirtgunPlayer
-						? new Result<>(true, (SquirtgunPlayer) target, null)
-						: new Result<>(false, null, "This command can only be run by a player.");
-	}
+    static Condition<PermissionHolder, SquirtgunPlayer> isPlayer() {
+        return (target, context) ->
+                target instanceof SquirtgunPlayer
+                        ? new Result<>(true, (SquirtgunPlayer) target, null)
+                        : new Result<>(false, null, "This command can only be run by a player.");
+    }
 
-	static Condition<PermissionHolder, PermissionHolder> isPlayerCastless() {
-		return (target, context) ->
-				target instanceof SquirtgunPlayer
-						? new Result<>(true, target, null)
-						: new Result<>(false, null, "This command can only be run by a player.");
-	}
+    static Condition<PermissionHolder, PermissionHolder> isPlayerCastless() {
+        return (target, context) ->
+                target instanceof SquirtgunPlayer
+                        ? new Result<>(true, target, null)
+                        : new Result<>(false, null, "This command can only be run by a player.");
+    }
 
-	static Condition<PermissionHolder, PermissionHolder> isConsole() {
-		return (target, context) ->
-				target instanceof SquirtgunPlayer
-						? new Result<>(false, null, "This command can only be run from the console.")
-						: new Result<>(true, target, null);
-	}
+    static Condition<PermissionHolder, PermissionHolder> isConsole() {
+        return (target, context) ->
+                target instanceof SquirtgunPlayer
+                        ? new Result<>(false, null, "This command can only be run from the console.")
+                        : new Result<>(true, target, null);
+    }
 
-	static <V extends PermissionHolder> Condition<V, V> alwaysTrue() {
-		return (target, context) -> new Result<>(true, target, null);
-	}
+    static <V extends PermissionHolder> Condition<V, V> alwaysTrue() {
+        return (target, context) -> new Result<>(true, target, null);
+    }
 
-	static <V extends PermissionHolder> Condition<V, V> hasPermission(String permission) {
-		return (target, context) -> target.hasPermission(permission)
-				? new Result<>(true, target, null)
-				: new Result<>(false, null, "No permission!");
-	}
+    static <V extends PermissionHolder> Condition<V, V> hasPermission(String permission) {
+        return (target, context) -> target.hasPermission(permission)
+                ? new Result<>(true, target, null)
+                : new Result<>(false, null, "No permission!");
+    }
 
-	class Result<U> {
-		private final boolean successful;
-		private final U result;
-		private final String error;
+    Result<U> test(T target, CommandContext context);
 
-		public Result(boolean successful, U result, String error) {
-			this.successful = successful;
-			this.result = result;
-			this.error = error;
-		}
+    default <V extends PermissionHolder> Condition<T, V> and(Condition<? super U, V> other) {
+        return ((target, context) -> {
+            Result<U> first = this.test(target, context);
+            if (!first.isSuccessful()) return new Result<>(false, null, first.getError());
 
-		public boolean isSuccessful() {
-			return successful;
-		}
+            return other.test(first.getResult(), context);
+        });
+    }
 
-		public final boolean isFailure() {
-			return !isSuccessful();
-		}
+    default Condition<T, U> or(Condition<? super T, U> other) {
+        return ((target, context) -> {
+            Result<U> first = this.test(target, context);
+            if (first.isSuccessful()) return first;
 
-		public U getResult() {
-			return result;
-		}
+            return other.test(target, context);
+        });
+    }
 
-		public String getError() {
-			return error;
-		}
-	}
+    class Result<U> {
+        private final boolean successful;
+        private final U result;
+        private final String error;
 
-	Result<U> test(T target, CommandContext context);
+        public Result(boolean successful, U result, String error) {
+            this.successful = successful;
+            this.result = result;
+            this.error = error;
+        }
 
-	default <V extends PermissionHolder> Condition<T, V> and(Condition<? super U, V> other) {
-		return ((target, context) -> {
-			Result<U> first = this.test(target, context);
-			if (!first.isSuccessful()) return new Result<>(false, null, first.getError());
+        public boolean isSuccessful() {
+            return successful;
+        }
 
-			return other.test(first.getResult(), context);
-		});
-	}
+        public final boolean isFailure() {
+            return !isSuccessful();
+        }
 
-	default Condition<T, U> or(Condition<? super T, U> other) {
-		return ((target, context) -> {
-			Result<U> first = this.test(target, context);
-			if (first.isSuccessful()) return first;
+        public U getResult() {
+            return result;
+        }
 
-			return other.test(target, context);
-		});
-	}
+        public String getError() {
+            return error;
+        }
+    }
 }

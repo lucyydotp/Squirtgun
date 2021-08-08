@@ -77,10 +77,12 @@ public abstract class SquirtgunPlugin<P extends Platform> {
     /**
      * Called when the plugin is enabled. By default, does nothing.
      */
-    public void onEnable() { }
+    public void onEnable() {
+    }
 
     /**
      * Called when the plugin is disabled. By default, does nothing.
      */
-    public void onDisable() { }
+    public void onDisable() {
+    }
 }

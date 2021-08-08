@@ -31,22 +31,22 @@ import org.jetbrains.annotations.NotNull;
 
 public class TestFormatter implements FormatProvider {
 
-	@Override
-	public Component formatMain(@NotNull String input, TextDecoration[] formatters) {
-		Component out = Component.text(input, NamedTextColor.WHITE);
-		for (TextDecoration deco : formatters) out = out.decorate(deco);
-		return out;
-	}
+    @Override
+    public Component formatMain(@NotNull String input, TextDecoration[] formatters) {
+        Component out = Component.text(input, NamedTextColor.WHITE);
+        for (TextDecoration deco : formatters) out = out.decorate(deco);
+        return out;
+    }
 
-	@Override
-	public Component formatAccent(@NotNull String input, TextDecoration[] formatters) {
-		Component out = Component.text(input, NamedTextColor.YELLOW);
-		for (TextDecoration deco : formatters) out = out.decorate(deco);
-		return out;
-	}
+    @Override
+    public Component formatAccent(@NotNull String input, TextDecoration[] formatters) {
+        Component out = Component.text(input, NamedTextColor.YELLOW);
+        for (TextDecoration deco : formatters) out = out.decorate(deco);
+        return out;
+    }
 
-	@Override
-	public Component getPrefix() {
-		return Component.empty();
-	}
+    @Override
+    public Component getPrefix() {
+        return Component.empty();
+    }
 }

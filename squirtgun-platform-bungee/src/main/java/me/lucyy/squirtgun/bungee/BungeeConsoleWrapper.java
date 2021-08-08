@@ -33,19 +33,19 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BungeeConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
 
-	private final Audience audience;
+    private final Audience audience;
 
-	public BungeeConsoleWrapper(Audience audience) {
-		this.audience = audience;
-	}
+    public BungeeConsoleWrapper(Audience audience) {
+        this.audience = audience;
+    }
 
-	@Override
-	public boolean hasPermission(String permission) {
-		return true;
-	}
+    @Override
+    public boolean hasPermission(String permission) {
+        return true;
+    }
 
-	@Override
-	public @NotNull Audience audience() {
-		return audience;
-	}
+    @Override
+    public @NotNull Audience audience() {
+        return audience;
+    }
 }

@@ -30,22 +30,22 @@ import net.kyori.adventure.text.Component;
  * Update checking mechanism for Spigot plugins.
  */
 public class SpigotUpdateChecker extends UpdateChecker {
-	/**
-	 * Creates a new update checker, and schedule update checking every 3 hours.
-	 *
-	 * @param plugin             the plugin to check against
-	 * @param pluginId           the numeric spigot resource id
-	 * @param updateMessage      the message to show in console and to players with the listener permission on join
-	 * @param listenerPermission if a player holds this permission and an update is available, they will be sent the update message in chat
-	 */
-	public SpigotUpdateChecker(SquirtgunPlugin<?> plugin, int pluginId, Component updateMessage, String listenerPermission) {
-		super(plugin, "https://api.spigotmc.org/legacy/update.php?resource=" + pluginId,
-			updateMessage, listenerPermission);
-	}
+    /**
+     * Creates a new update checker, and schedule update checking every 3 hours.
+     *
+     * @param plugin             the plugin to check against
+     * @param pluginId           the numeric spigot resource id
+     * @param updateMessage      the message to show in console and to players with the listener permission on join
+     * @param listenerPermission if a player holds this permission and an update is available, they will be sent the update message in chat
+     */
+    public SpigotUpdateChecker(SquirtgunPlugin<?> plugin, int pluginId, Component updateMessage, String listenerPermission) {
+        super(plugin, "https://api.spigotmc.org/legacy/update.php?resource=" + pluginId,
+                updateMessage, listenerPermission);
+    }
 
-	@Override
-	protected boolean checkDataForUpdate(String input) {
-		return getPlugin().getPluginVersion().equals(input);
-	}
+    @Override
+    protected boolean checkDataForUpdate(String input) {
+        return getPlugin().getPluginVersion().equals(input);
+    }
 }
 

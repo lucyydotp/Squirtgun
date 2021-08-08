@@ -27,6 +27,7 @@ import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.platform.Platform;
 import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
@@ -36,26 +37,26 @@ import java.util.stream.Collectors;
  * provide any player, regardless of if they are online or not.
  */
 public class OnlinePlayerArgument extends AbstractArgument<SquirtgunPlayer> {
-	private final Platform platform;
+    private final Platform platform;
 
-	public OnlinePlayerArgument(String name, String description, boolean isOptional, Platform platform) {
-		super(name, description, isOptional);
-		this.platform = platform;
-	}
+    public OnlinePlayerArgument(String name, String description, boolean isOptional, Platform platform) {
+        super(name, description, isOptional);
+        this.platform = platform;
+    }
 
-	@Override
-	public SquirtgunPlayer getValue(Queue<String> args, CommandContext ctx) {
-		String name = args.poll();
-		return name == null || "".equals(name) ? null : platform.getPlayer(name);
-	}
+    @Override
+    public SquirtgunPlayer getValue(Queue<String> args, CommandContext ctx) {
+        String name = args.poll();
+        return name == null || "".equals(name) ? null : platform.getPlayer(name);
+    }
 
-	@Override
-	public @Nullable List<String> tabComplete(Queue<String> args, CommandContext ctx) {
-		String name = args.poll();
-		return name == null ? null : platform.getOnlinePlayers()
-				.stream()
-				.map(SquirtgunPlayer::getUsername)
-				.filter(username -> username.startsWith(name))
-				.collect(Collectors.toList());
-	}
+    @Override
+    public @Nullable List<String> tabComplete(Queue<String> args, CommandContext ctx) {
+        String name = args.poll();
+        return name == null ? null : platform.getOnlinePlayers()
+                .stream()
+                .map(SquirtgunPlayer::getUsername)
+                .filter(username -> username.startsWith(name))
+                .collect(Collectors.toList());
+    }
 }

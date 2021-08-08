@@ -37,48 +37,48 @@ import java.util.regex.Pattern;
  * This is an internal class, you shouldn't need to use it.
  */
 public final class RgbGradientPattern implements FormatPattern {
-	final Pattern pattern = Pattern.compile("\\{(#[A-Fa-f0-9]{6}):?([klmno]+)?>}(.*)\\{(#[A-Fa-f0-9]{6})<}");
+    final Pattern pattern = Pattern.compile("\\{(#[A-Fa-f0-9]{6}):?([klmno]+)?>}(.*)\\{(#[A-Fa-f0-9]{6})<}");
 
-	private static int clamp(final int in) {
-		if (in > 255) return 255;
-		return Math.max(in, 0);
-	}
+    private static int clamp(final int in) {
+        if (in > 255) return 255;
+        return Math.max(in, 0);
+    }
 
-	private static Component fade(final String col1, final String col2, final String formats, final String text) {
-		Component component = Component.empty();
+    private static Component fade(final String col1, final String col2, final String formats, final String text) {
+        Component component = Component.empty();
 
-		final TextColor color1 = TextColor.fromCSSHexString(col1);
-		assert color1 != null;
+        final TextColor color1 = TextColor.fromCSSHexString(col1);
+        assert color1 != null;
 
-		// special case for single-length characters
-		if (text.length() == 1) return component.append(Component.text(text).color(color1));
+        // special case for single-length characters
+        if (text.length() == 1) return component.append(Component.text(text).color(color1));
 
-		final TextColor color2 = TextColor.fromCSSHexString(col2);
-		assert color2 != null;
+        final TextColor color2 = TextColor.fromCSSHexString(col2);
+        assert color2 != null;
 
-		final int[] reds = TextFormatter.fade(text.length(), color1.red(), color2.red());
-		final int[] greens = TextFormatter.fade(text.length(), color1.green(), color2.green());
-		final int[] blues = TextFormatter.fade(text.length(), color1.blue(), color2.blue());
+        final int[] reds = TextFormatter.fade(text.length(), color1.red(), color2.red());
+        final int[] greens = TextFormatter.fade(text.length(), color1.green(), color2.green());
+        final int[] blues = TextFormatter.fade(text.length(), color1.blue(), color2.blue());
 
 
-		for (int x = 0; x < text.length(); x++) {
-			final TextColor color = TextColor.color(clamp(reds[x]), clamp(greens[x]), clamp(blues[x]));
-			component = component.append(Component.text(text.charAt(x), color));
-		}
+        for (int x = 0; x < text.length(); x++) {
+            final TextColor color = TextColor.color(clamp(reds[x]), clamp(greens[x]), clamp(blues[x]));
+            component = component.append(Component.text(text.charAt(x), color));
+        }
 
-		return TextFormatter.applyLegacyDecorations(component, formats);
-	}
+        return TextFormatter.applyLegacyDecorations(component, formats);
+    }
 
-	@Override
-	public @Nullable Component process(@NotNull String in, String formatter) {
-		final Matcher matcher = pattern.matcher(in);
-		if (!matcher.find()) return null;
+    @Override
+    public @Nullable Component process(@NotNull String in, String formatter) {
+        final Matcher matcher = pattern.matcher(in);
+        if (!matcher.find()) return null;
 
-		final String col1 = matcher.group(1);
-		String formatters = formatter;
-		if (formatters == null) formatters = matcher.group(2);
-		final String text = matcher.group(3);
-		final String col2 = matcher.group(4);
-		return fade(col1, col2, formatters, text);
-	}
+        final String col1 = matcher.group(1);
+        String formatters = formatter;
+        if (formatters == null) formatters = matcher.group(2);
+        final String text = matcher.group(3);
+        final String col2 = matcher.group(4);
+        return fade(col1, col2, formatters, text);
+    }
 }

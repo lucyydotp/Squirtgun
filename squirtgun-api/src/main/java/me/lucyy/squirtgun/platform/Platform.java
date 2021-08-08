@@ -23,8 +23,8 @@
 
 package me.lucyy.squirtgun.platform;
 
-import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
 import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
+import me.lucyy.squirtgun.platform.audience.SquirtgunUser;
 import me.lucyy.squirtgun.platform.scheduler.TaskScheduler;
 import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
@@ -42,70 +42,75 @@ import java.util.logging.Logger;
  * @since 2.0.0
  */
 public interface Platform {
-	/**
-	 * Gets this platform's user-friendly name.
-	 */
-	String name();
+    /**
+     * Gets this platform's user-friendly name.
+     */
+    String name();
 
-	/**
-	 * Gets the plugin's logger for logging text to the console.
-	 */
-	Logger getLogger();
+    /**
+     * Gets the plugin's logger for logging text to the console.
+     */
+    Logger getLogger();
 
-	/**
-	 * Logs a formatted component to the console.
-	 * @param component the component to log
-	 */
-	void log(Component component);
+    /**
+     * Logs a formatted component to the console.
+     *
+     * @param component the component to log
+     */
+    void log(Component component);
 
-	/**
-	 * Gets the server's authentication mode.
-	 */
-	AuthMode getAuthMode();
+    /**
+     * Gets the server's authentication mode.
+     */
+    AuthMode getAuthMode();
 
-	/**
-	 * Gets the server's task scheduler.
-	 */
-	TaskScheduler getTaskScheduler();
+    /**
+     * Gets the server's task scheduler.
+     */
+    TaskScheduler getTaskScheduler();
 
-	/**
-	 * Registers an event listener.
-	 * @param listener the listener to register
-	 */
-	void registerEventListener(EventListener listener);
+    /**
+     * Registers an event listener.
+     *
+     * @param listener the listener to register
+     */
+    void registerEventListener(EventListener listener);
 
-	/**
-	 * Unregisters an event listener. If the listener is not registered, this does nothing.
-	 * @param listener the listener to unregister.
-	 */
-	void unregisterEventListener(EventListener listener);
+    /**
+     * Unregisters an event listener. If the listener is not registered, this does nothing.
+     *
+     * @param listener the listener to unregister.
+     */
+    void unregisterEventListener(EventListener listener);
 
-	/**
-	 * Gets the console as a permissible audience. This can be used to send messages.
-	 */
-	SquirtgunUser getConsole();
+    /**
+     * Gets the console as a permissible audience. This can be used to send messages.
+     */
+    SquirtgunUser getConsole();
 
-	/**
-	 * Gets a player by UUID.
-	 * @param uuid the UUID of the player to get
-	 * @return the player
-	 */
-	SquirtgunPlayer getPlayer(UUID uuid);
+    /**
+     * Gets a player by UUID.
+     *
+     * @param uuid the UUID of the player to get
+     * @return the player
+     */
+    SquirtgunPlayer getPlayer(UUID uuid);
 
-	/**
-	 * Gets a player by cached name.
-	 * @param name the name of the player to get
-	 * @return the player with the given name, or null if a player with that name has not played on the server before.
-	 */
-	@Nullable SquirtgunPlayer getPlayer(String name);
+    /**
+     * Gets a player by cached name.
+     *
+     * @param name the name of the player to get
+     * @return the player with the given name, or null if a player with that name has not played on the server before.
+     */
+    @Nullable SquirtgunPlayer getPlayer(String name);
 
-	/**
-	 * Gets a list of all online players.
-	 */
-	List<SquirtgunPlayer> getOnlinePlayers();
+    /**
+     * Gets a list of all online players.
+     */
+    List<SquirtgunPlayer> getOnlinePlayers();
 
-	/**
-	 * Gets a path to a directory where config files specific to a plugin can be stored.
-	 */
-	Path getConfigPath(SquirtgunPlugin<?> plugin);
+    /**
+     * Gets a path to a directory where config files specific to a plugin can be stored.
+     */
+    Path getConfigPath(SquirtgunPlugin<?> plugin);
 }

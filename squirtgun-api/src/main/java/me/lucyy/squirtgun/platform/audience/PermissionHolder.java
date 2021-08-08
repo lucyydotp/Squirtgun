@@ -29,11 +29,11 @@ package me.lucyy.squirtgun.platform.audience;
 @FunctionalInterface
 public interface PermissionHolder {
 
-	/**
-	 * Gets whether the target holds the provided permission.
-	 *
-	 * @param permission the permission to check
-	 * @return if the target holds the given permission
-	 */
-	boolean hasPermission(String permission);
+    /**
+     * Gets whether the target holds the provided permission.
+     *
+     * @param permission the permission to check
+     * @return if the target holds the given permission
+     */
+    boolean hasPermission(String permission);
 }

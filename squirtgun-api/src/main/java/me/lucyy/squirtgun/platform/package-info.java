@@ -23,7 +23,7 @@
 
 /**
  * Abstraction around server APIs to use one codebase for multiple platforms.
- *
+ * <p>
  * Documentation is a work-in-progress for this package.
  */
 package me.lucyy.squirtgun.platform;

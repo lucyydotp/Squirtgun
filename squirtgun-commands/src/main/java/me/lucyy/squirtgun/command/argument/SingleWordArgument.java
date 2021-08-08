@@ -35,23 +35,23 @@ import java.util.Queue;
  */
 public final class SingleWordArgument extends AbstractArgument<String> {
 
-	/**
-	 * @param name        the argument's name
-	 * @param description the argument's description
-	 * @param isOptional  whether the argument is optional
-	 */
-	public SingleWordArgument(String name, String description, boolean isOptional) {
-		super(name, description, isOptional);
-	}
+    /**
+     * @param name        the argument's name
+     * @param description the argument's description
+     * @param isOptional  whether the argument is optional
+     */
+    public SingleWordArgument(String name, String description, boolean isOptional) {
+        super(name, description, isOptional);
+    }
 
-	@Override
-	public String getValue(Queue<String> args, CommandContext ctx) {
-		return args.poll();
-	}
+    @Override
+    public String getValue(Queue<String> args, CommandContext ctx) {
+        return args.poll();
+    }
 
-	@Override
-	public @NotNull List<String> tabComplete(Queue<String> value, CommandContext ctx) {
-		value.poll();
-		return ImmutableList.of(toString());
-	}
+    @Override
+    public @NotNull List<String> tabComplete(Queue<String> value, CommandContext ctx) {
+        value.poll();
+        return ImmutableList.of(toString());
+    }
 }

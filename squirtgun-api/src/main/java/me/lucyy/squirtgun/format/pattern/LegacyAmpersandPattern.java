@@ -34,11 +34,11 @@ import org.jetbrains.annotations.Nullable;
  * This is an internal class, you shouldn't need to use it.
  */
 public class LegacyAmpersandPattern implements FormatPattern {
-	@Override
-	public @Nullable Component process(final @NotNull String in, final String formattersOverride) {
-		if (!in.contains("&")) return null;
-		return TextFormatter.applyLegacyDecorations(
-			LegacyComponentSerializer.legacyAmpersand().deserialize(in),
-			formattersOverride);
-	}
+    @Override
+    public @Nullable Component process(final @NotNull String in, final String formattersOverride) {
+        if (!in.contains("&")) return null;
+        return TextFormatter.applyLegacyDecorations(
+                LegacyComponentSerializer.legacyAmpersand().deserialize(in),
+                formattersOverride);
+    }
 }

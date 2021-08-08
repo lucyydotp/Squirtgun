@@ -34,29 +34,29 @@ import java.util.List;
 import java.util.UUID;
 
 public class BungeeListenerAdapter implements Listener {
-	private final List<EventListener> listeners = new ArrayList<>();
+    private final List<EventListener> listeners = new ArrayList<>();
 
-	public void addListener(EventListener listener) {
-		listeners.add(listener);
-	}
+    public void addListener(EventListener listener) {
+        listeners.add(listener);
+    }
 
-	public void removeListener(EventListener listener) {
-		listeners.remove(listener);
-	}
+    public void removeListener(EventListener listener) {
+        listeners.remove(listener);
+    }
 
-	@EventHandler
-	public void onPlayerJoin(LoginEvent e) {
-		UUID uuid = e.getConnection().getUniqueId();
-		for (EventListener listener : listeners) {
-			listener.onPlayerJoin(uuid);
-		}
-	}
+    @EventHandler
+    public void onPlayerJoin(LoginEvent e) {
+        UUID uuid = e.getConnection().getUniqueId();
+        for (EventListener listener : listeners) {
+            listener.onPlayerJoin(uuid);
+        }
+    }
 
-	@EventHandler
-	public void onPlayerQuit(PlayerDisconnectEvent e) {
-		UUID uuid = e.getPlayer().getUniqueId();
-		for (EventListener listener : listeners) {
-			listener.onPlayerLeave(uuid);
-		}
-	}
+    @EventHandler
+    public void onPlayerQuit(PlayerDisconnectEvent e) {
+        UUID uuid = e.getPlayer().getUniqueId();
+        for (EventListener listener : listeners) {
+            listener.onPlayerLeave(uuid);
+        }
+    }
 }

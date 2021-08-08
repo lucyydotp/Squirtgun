@@ -23,13 +23,14 @@
 
 package me.lucyy.squirtgun.command.context;
 
+import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -41,53 +42,52 @@ import java.util.List;
  */
 public interface CommandContext {
 
-	/**
-	 * Gets this command context's target.
-	 */
-	PermissionHolder getTarget();
+    /**
+     * Gets this command context's target.
+     */
+    PermissionHolder getTarget();
 
-	/**
-	 * Gets the value of an argument.
-	 *
-	 * @param argument the argument to get the value for
-	 * @return the value if available - if unset then null
-	 */
-	@Nullable
-	<U> U getArgumentValue(CommandArgument<U> argument);
+    /**
+     * Gets the value of an argument.
+     *
+     * @param argument the argument to get the value for
+     * @return the value if available - if unset then null
+     */
+    @Nullable <U> U getArgumentValue(CommandArgument<U> argument);
 
-	/**
-	 * Gets the value of an argument by name.
-	 *
-	 * @param name the name of the argument to get the value for
-	 * @return the value if available, if unset then null.
-	 * @throws IllegalArgumentException if the name given is not a registered argument
-	 */
-	@Nullable
-	Object getArgumentValue(String name);
+    /**
+     * Gets the value of an argument by name.
+     *
+     * @param name the name of the argument to get the value for
+     * @return the value if available, if unset then null.
+     * @throws IllegalArgumentException if the name given is not a registered argument
+     */
+    @Nullable
+    Object getArgumentValue(String name);
 
-	/**
-	 * Gets the raw input given to this context.
-	 */
-	String getRaw();
+    /**
+     * Gets the raw input given to this context.
+     */
+    String getRaw();
 
-	/**
-	 * Gets the format provider to use in message decoration.
-	 */
-	@NotNull
-	FormatProvider getFormat();
+    /**
+     * Gets the format provider to use in message decoration.
+     */
+    @NotNull
+    FormatProvider getFormat();
 
-	/**
-	 * Gets a list of entries for tab completion.
-	 */
-	@Nullable List<String> tabComplete();
+    /**
+     * Gets a list of entries for tab completion.
+     */
+    @Nullable List<String> tabComplete();
 
-	/**
-	 * Executes the command.
-	 */
-	Component execute();
+    /**
+     * Executes the command.
+     */
+    Component execute();
 
-	/**
-	 * Gets the last node in the chain that has been reached.
-	 */
-	CommandNode<?> getTail();
+    /**
+     * Gets the last node in the chain that has been reached.
+     */
+    CommandNode<?> getTail();
 }

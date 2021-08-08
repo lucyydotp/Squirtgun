@@ -30,7 +30,7 @@ import net.kyori.adventure.audience.ForwardingAudience;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.UUID;
 
 /**
  * SquirtgunPlayer implementation for Bukkit.

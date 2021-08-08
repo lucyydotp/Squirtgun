@@ -43,55 +43,55 @@ import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
  */
 public final class FabricTaskScheduler implements TaskScheduler {
 
-	private static final long MSPT = 50L;
+    private static final long MSPT = 50L;
 
-	private final FabricPlatform platform;
-	private final MinecraftServer server;
-	private final Map<Task, ScheduledFuture<?>> taskMap = new LinkedHashMap<>();
-	private final ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor(new DefaultThreadFactory("squirtgun-fabric-scheduler"));
+    private final FabricPlatform platform;
+    private final MinecraftServer server;
+    private final Map<Task, ScheduledFuture<?>> taskMap = new LinkedHashMap<>();
+    private final ScheduledExecutorService scheduler = newSingleThreadScheduledExecutor(new DefaultThreadFactory("squirtgun-fabric-scheduler"));
 
-	public FabricTaskScheduler(final FabricPlatform platform) {
-		this.platform = platform;
-		this.server = platform.getServer();
-	}
+    public FabricTaskScheduler(final FabricPlatform platform) {
+        this.platform = platform;
+        this.server = platform.getServer();
+    }
 
-	/**
-	 * Shuts down and the underlying scheduler, cancels queued tasks and waits for them to
-	 * finish execution.
-	 */
-	public void shutdown() {
-		try {
-			this.scheduler.shutdown();
-			this.scheduler.awaitTermination(15L, TimeUnit.SECONDS);
-		} catch (final InterruptedException exception) {
-			// oh well
-			exception.printStackTrace();
-		}
-	}
+    /**
+     * Shuts down and the underlying scheduler, cancels queued tasks and waits for them to
+     * finish execution.
+     */
+    public void shutdown() {
+        try {
+            this.scheduler.shutdown();
+            this.scheduler.awaitTermination(15L, TimeUnit.SECONDS);
+        } catch (final InterruptedException exception) {
+            // oh well
+            exception.printStackTrace();
+        }
+    }
 
-	@Override
-	public void start(final Task task) {
-		cancel(task);
+    @Override
+    public void start(final Task task) {
+        cancel(task);
 
-		final ScheduledFuture<?> future =
-				task.isRepeating()
-				? this.scheduler.scheduleWithFixedDelay(runTask(task), task.getDelay() * MSPT, task.getInterval() * MSPT, TimeUnit.MILLISECONDS)
-				: this.scheduler.schedule(runTask(task), task.getDelay() * 50L, TimeUnit.MILLISECONDS);
-		this.taskMap.put(task, future);
-	}
+        final ScheduledFuture<?> future =
+                task.isRepeating()
+                        ? this.scheduler.scheduleWithFixedDelay(runTask(task), task.getDelay() * MSPT, task.getInterval() * MSPT, TimeUnit.MILLISECONDS)
+                        : this.scheduler.schedule(runTask(task), task.getDelay() * 50L, TimeUnit.MILLISECONDS);
+        this.taskMap.put(task, future);
+    }
 
-	@Override
-	public void cancel(final Task task) {
-		Optional.ofNullable(this.taskMap.remove(task)).ifPresent(future -> future.cancel(false));
-	}
+    @Override
+    public void cancel(final Task task) {
+        Optional.ofNullable(this.taskMap.remove(task)).ifPresent(future -> future.cancel(false));
+    }
 
-	private Runnable runTask(final Task task) {
-		return () -> {
-			if (task.isAsync()) {
-				task.execute(this.platform);
-			} else {
-				this.server.execute(() -> task.execute(this.platform));
-			}
-		};
-	}
+    private Runnable runTask(final Task task) {
+        return () -> {
+            if (task.isAsync()) {
+                task.execute(this.platform);
+            } else {
+                this.server.execute(() -> task.execute(this.platform));
+            }
+        };
+    }
 }

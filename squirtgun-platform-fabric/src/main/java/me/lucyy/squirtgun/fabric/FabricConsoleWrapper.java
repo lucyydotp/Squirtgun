@@ -34,20 +34,20 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class FabricConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
 
-	private final FabricPlatform platform;
+    private final FabricPlatform platform;
 
-	FabricConsoleWrapper(final FabricPlatform platform) {
-		this.platform = platform;
-	}
+    FabricConsoleWrapper(final FabricPlatform platform) {
+        this.platform = platform;
+    }
 
-	@Override
-	public boolean hasPermission(final String permission) {
-		// console being console, if the permission is undefined, it should always fallback to true
-		return Permissions.check(this.platform.getServer().getCommandSource(), permission, true);
-	}
+    @Override
+    public boolean hasPermission(final String permission) {
+        // console being console, if the permission is undefined, it should always fallback to true
+        return Permissions.check(this.platform.getServer().getCommandSource(), permission, true);
+    }
 
-	@Override
-	public @NotNull Audience audience() {
-		return this.platform.getAudienceProvider().console();
-	}
+    @Override
+    public @NotNull Audience audience() {
+        return this.platform.getAudienceProvider().console();
+    }
 }

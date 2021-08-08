@@ -46,48 +46,48 @@ import java.util.function.Supplier;
  */
 public class FabricNodeExecutor implements Command<ServerCommandSource>, SuggestionProvider<ServerCommandSource> {
 
-	private final CommandNode<SquirtgunUser> commandNode;
-	private final FormatProvider formatProvider;
-	// Command registration happens <i>before</i> server initialization,
-	// however, commands can't be dispatched until after the server has initialized
-	private final Supplier<FabricPlatform> platformSupplier;
+    private final CommandNode<SquirtgunUser> commandNode;
+    private final FormatProvider formatProvider;
+    // Command registration happens <i>before</i> server initialization,
+    // however, commands can't be dispatched until after the server has initialized
+    private final Supplier<FabricPlatform> platformSupplier;
 
-	public FabricNodeExecutor(final @NotNull CommandNode<SquirtgunUser> commandNode,
-														final @NotNull FormatProvider formatProvider,
-														final @NotNull Supplier<FabricPlatform> platformSupplier) {
-		this.commandNode = Objects.requireNonNull(commandNode, "commandNode");
-		this.formatProvider = Objects.requireNonNull(formatProvider, "formatProvider");
-		this.platformSupplier = Objects.requireNonNull(platformSupplier, "platformSupplier");
-	}
+    public FabricNodeExecutor(final @NotNull CommandNode<SquirtgunUser> commandNode,
+                              final @NotNull FormatProvider formatProvider,
+                              final @NotNull Supplier<FabricPlatform> platformSupplier) {
+        this.commandNode = Objects.requireNonNull(commandNode, "commandNode");
+        this.formatProvider = Objects.requireNonNull(formatProvider, "formatProvider");
+        this.platformSupplier = Objects.requireNonNull(platformSupplier, "platformSupplier");
+    }
 
-	@Override
-	public int run(final CommandContext<ServerCommandSource> context) {
-		String input = context.getInput();
-		final int i = input.indexOf(' ');
-		input = i > -1 ? input.substring(i + 1) : "";
+    @Override
+    public int run(final CommandContext<ServerCommandSource> context) {
+        String input = context.getInput();
+        final int i = input.indexOf(' ');
+        input = i > -1 ? input.substring(i + 1) : "";
 
-		final SquirtgunUser source = this.platformSupplier.get().fromCommandSource(context.getSource());
-		final Component result = new StringContext(this.formatProvider, source, this.commandNode, input).execute();
-		if (result != null) {
-			source.sendMessage(result);
-		}
+        final SquirtgunUser source = this.platformSupplier.get().fromCommandSource(context.getSource());
+        final Component result = new StringContext(this.formatProvider, source, this.commandNode, input).execute();
+        if (result != null) {
+            source.sendMessage(result);
+        }
 
-		return Command.SINGLE_SUCCESS;
-	}
+        return Command.SINGLE_SUCCESS;
+    }
 
-	@Override
-	public CompletableFuture<Suggestions> getSuggestions(final CommandContext<ServerCommandSource> context, final SuggestionsBuilder builder) {
-		String input = context.getInput();
-		final int i = input.indexOf(' ');
-		input = i > -1 ? input.substring(i + 1) : "";
+    @Override
+    public CompletableFuture<Suggestions> getSuggestions(final CommandContext<ServerCommandSource> context, final SuggestionsBuilder builder) {
+        String input = context.getInput();
+        final int i = input.indexOf(' ');
+        input = i > -1 ? input.substring(i + 1) : "";
 
-		final SquirtgunUser source = this.platformSupplier.get().fromCommandSource(context.getSource());
-		final List<String> suggestions = new StringContext(this.formatProvider, source, this.commandNode, input).tabComplete();
-		if (suggestions == null) {
-			return Suggestions.empty();
-		} else {
-			suggestions.forEach(builder::suggest);
-			return builder.buildFuture();
-		}
-	}
+        final SquirtgunUser source = this.platformSupplier.get().fromCommandSource(context.getSource());
+        final List<String> suggestions = new StringContext(this.formatProvider, source, this.commandNode, input).tabComplete();
+        if (suggestions == null) {
+            return Suggestions.empty();
+        } else {
+            suggestions.forEach(builder::suggest);
+            return builder.buildFuture();
+        }
+    }
 }
