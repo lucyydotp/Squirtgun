@@ -21,19 +21,19 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
-    }
+package net.lucypoulton.squirtgun.platform.audience;
+
+/**
+ * An entity capable of holding permissions and executing commands.
+ */
+@FunctionalInterface
+public interface PermissionHolder {
+
+    /**
+     * Gets whether the target holds the provided permission.
+     *
+     * @param permission the permission to check
+     * @return if the target holds the given permission
+     */
+    boolean hasPermission(String permission);
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

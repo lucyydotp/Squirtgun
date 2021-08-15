@@ -21,19 +21,22 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
-    }
+package net.lucypoulton.squirtgun.platform.audience;
+
+import net.lucypoulton.squirtgun.platform.Gamemode;
+
+import java.util.UUID;
+
+public interface SquirtgunPlayer extends SquirtgunUser {
+    UUID getUuid();
+
+    String getUsername();
+
+    boolean isOnline();
+
+    boolean hasPermission(String permission);
+
+    Gamemode getGamemode();
+
+    void setGamemode(Gamemode mode);
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

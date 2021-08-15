@@ -21,19 +21,42 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
+package net.lucypoulton.squirtgun.bukkit;
+
+import net.lucypoulton.squirtgun.platform.EventListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class BukkitListenerAdapter implements Listener {
+    private final List<EventListener> listeners = new ArrayList<>();
+
+    public void addListener(EventListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(EventListener listener) {
+        listeners.remove(listener);
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        UUID uuid = e.getPlayer().getUniqueId();
+        for (EventListener listener : listeners) {
+            listener.onPlayerJoin(uuid);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        UUID uuid = e.getPlayer().getUniqueId();
+        for (EventListener listener : listeners) {
+            listener.onPlayerLeave(uuid);
+        }
     }
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

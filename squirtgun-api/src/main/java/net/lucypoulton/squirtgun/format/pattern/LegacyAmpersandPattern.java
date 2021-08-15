@@ -21,19 +21,24 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
+package net.lucypoulton.squirtgun.format.pattern;
+
+import net.lucypoulton.squirtgun.format.TextFormatter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * The legacy ampersand pattern.
+ * This is an internal class, you shouldn't need to use it.
+ */
+public class LegacyAmpersandPattern implements FormatPattern {
+    @Override
+    public @Nullable Component process(final @NotNull String in, final String formattersOverride) {
+        if (!in.contains("&")) return null;
+        return TextFormatter.applyLegacyDecorations(
+                LegacyComponentSerializer.legacyAmpersand().deserialize(in),
+                formattersOverride);
     }
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

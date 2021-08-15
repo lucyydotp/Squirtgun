@@ -21,19 +21,15 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
-    }
+package net.lucypoulton.squirtgun.fabric;
+
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+import net.kyori.adventure.audience.ForwardingAudience;
+import org.jetbrains.annotations.ApiStatus;
+
+/**
+ * Abstracted squirtgun player for the Fabric server.
+ */
+@ApiStatus.NonExtendable
+public interface FabricPlayer extends SquirtgunPlayer, ForwardingAudience.Single {
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

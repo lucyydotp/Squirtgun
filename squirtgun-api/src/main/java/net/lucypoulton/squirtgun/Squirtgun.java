@@ -21,19 +21,26 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
+package net.lucypoulton.squirtgun;
+
+import java.io.InputStream;
+import java.util.Objects;
+import java.util.Scanner;
+
+/**
+ * A simple class containing the framework's version.
+ */
+public class Squirtgun {
+    /**
+     * The framework's version.
+     */
+    public static final String VERSION;
+
+    static {
+        InputStream file = Squirtgun.class.getClassLoader().getResourceAsStream("squirtgun-version.txt");
+        Objects.requireNonNull(file);
+        VERSION = new Scanner(file)
+                .useDelimiter("\\A")
+                .next();
     }
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

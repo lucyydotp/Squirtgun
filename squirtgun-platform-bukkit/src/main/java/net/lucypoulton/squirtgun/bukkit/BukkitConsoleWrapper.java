@@ -21,19 +21,32 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
+package net.lucypoulton.squirtgun.bukkit;
+
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * CommandSender wrapper for the console.
+ */
+public class BukkitConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
+
+    private final Audience audience;
+
+    public BukkitConsoleWrapper(Audience audience) {
+        this.audience = audience;
+    }
+
+    @Override
+    public boolean hasPermission(String permission) {
+        return Bukkit.getServer().getConsoleSender().hasPermission(permission);
+    }
+
+    @Override
+    public @NotNull Audience audience() {
+        return audience;
     }
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

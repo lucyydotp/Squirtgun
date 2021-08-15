@@ -21,19 +21,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
-    }
+package net.lucypoulton.squirtgun.platform.audience;
+
+import net.kyori.adventure.audience.Audience;
+
+/**
+ * An empty interface extending PermissionHolder and Audience.
+ */
+public interface SquirtgunUser extends PermissionHolder, Audience {
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

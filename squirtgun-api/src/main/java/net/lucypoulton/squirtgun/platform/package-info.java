@@ -21,19 +21,9 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
-    }
-}
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)
+/**
+ * Abstraction around server APIs to use one codebase for multiple platforms.
+ * <p>
+ * Documentation is a work-in-progress for this package.
+ */
+package net.lucypoulton.squirtgun.platform;

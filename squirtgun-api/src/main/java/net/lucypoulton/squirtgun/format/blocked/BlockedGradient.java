@@ -21,19 +21,33 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
+package net.lucypoulton.squirtgun.format.blocked;
+
+import net.kyori.adventure.text.format.TextColor;
+
+/**
+ * A blocked gradient - somewhat akin to a striped flag, represents solid and
+ * evenly-distributed blocks of colour.
+ */
+public class BlockedGradient {
+    private final TextColor[] cols;
+    private final String[] names;
+
+    public BlockedGradient(String[] names, TextColor... cols) {
+        this.names = names;
+        this.cols = cols;
+    }
+
+    public BlockedGradient(String name, TextColor... cols) {
+        this.names = new String[]{name};
+        this.cols = cols;
+    }
+
+    public String[] getNames() {
+        return names;
+    }
+
+    public TextColor[] getCols() {
+        return cols;
     }
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

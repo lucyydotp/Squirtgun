@@ -28,7 +28,7 @@ plugins {
 }
 
 version = "2.0.0-pre6-SNAPSHOT"
-group = "me.lucyy"
+group = "net.lucypoulton"
 
 subprojects {
     version = rootProject.version
@@ -55,7 +55,7 @@ subprojects {
                     from(components["java"])
                     pom {
                         description.set("A multipurpose library designed for Minecraft: Java Edition plugins.")
-                        url.set("https://lucyy.me")
+                        url.set("https://lucypoulton.net")
                         name.set("squirtgun")
                         licenses {
                             license {
@@ -67,7 +67,7 @@ subprojects {
                             developer {
                                 id.set("lucyy-mc")
                                 name.set("Lucy Poulton")
-                                email.set("lucy@poulton.xyz")
+                                email.set("lucy@lucypoulton.net")
                             }
                         }
                         scm {

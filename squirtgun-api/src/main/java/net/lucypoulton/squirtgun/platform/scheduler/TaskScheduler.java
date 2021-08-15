@@ -21,19 +21,25 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
-    }
+package net.lucypoulton.squirtgun.platform.scheduler;
+
+/**
+ * Responsible for scheduling tasks to occur later.
+ * Heavily inspired by Bukkit's scheduler.
+ */
+public interface TaskScheduler {
+
+    /**
+     * Schedules a task for execution.
+     *
+     * @param task the task to run
+     */
+    void start(Task task);
+
+    /**
+     * Cancels a task.
+     *
+     * @param task the task to cancel
+     */
+    void cancel(Task task);
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

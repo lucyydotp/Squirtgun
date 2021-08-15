@@ -21,19 +21,30 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
+package net.lucypoulton.squirtgun.update;
+
+import net.lucypoulton.squirtgun.platform.EventListener;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
+
+import java.util.UUID;
+
+class UpdateListener extends EventListener {
+    private final UpdateChecker checker;
+    private final SquirtgunPlugin<?> plugin;
+
+    public UpdateListener(UpdateChecker checker, SquirtgunPlugin<?> plugin) {
+        super(plugin);
+        this.checker = checker;
+        this.plugin = plugin;
+    }
+
+    @Override
+    public void onPlayerJoin(UUID uuid) {
+        super.onPlayerJoin(uuid);
+        SquirtgunPlayer player = plugin.getPlatform().getPlayer(uuid);
+        if (checker.checkDataForUpdate() && player.hasPermission(checker.getListenerPermission())) {
+            player.sendMessage(checker.getUpdateMessage());
+        }
     }
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

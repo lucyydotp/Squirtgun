@@ -21,19 +21,49 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
+package net.lucypoulton.squirtgun.fabric;
+
+import net.lucypoulton.squirtgun.platform.Gamemode;
+import net.kyori.adventure.audience.Audience;
+import net.minecraft.util.Util;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
+
+enum DummyFabricPlayer implements FabricPlayer {
+    INSTANCE;
+
+    @Override
+    public UUID getUuid() {
+        return Util.NIL_UUID;
+    }
+
+    @Override
+    public String getUsername() {
+        return "null";
+    }
+
+    @Override
+    public boolean isOnline() {
+        return false;
+    }
+
+    @Override
+    public boolean hasPermission(final String permission) {
+        return false;
+    }
+
+    @Override
+    public Gamemode getGamemode() {
+        return Gamemode.SURVIVAL;
+    }
+
+    @Override
+    public void setGamemode(final Gamemode mode) {
+    }
+
+    @Override
+    public @NotNull Audience audience() {
+        return Audience.empty();
     }
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

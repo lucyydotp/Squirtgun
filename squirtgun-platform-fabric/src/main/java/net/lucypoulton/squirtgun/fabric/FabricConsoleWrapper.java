@@ -21,19 +21,33 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
+package net.lucypoulton.squirtgun.fabric;
+
+import me.lucko.fabric.api.permissions.v0.Permissions;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * Simple Squirtgun wrapper for the Fabric console "user".
+ */
+public final class FabricConsoleWrapper implements SquirtgunUser, ForwardingAudience.Single {
+
+    private final FabricPlatform platform;
+
+    FabricConsoleWrapper(final FabricPlatform platform) {
+        this.platform = platform;
+    }
+
+    @Override
+    public boolean hasPermission(final String permission) {
+        // console being console, if the permission is undefined, it should always fallback to true
+        return Permissions.check(this.platform.getServer().getCommandSource(), permission, true);
+    }
+
+    @Override
+    public @NotNull Audience audience() {
+        return this.platform.getAudienceProvider().console();
     }
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)

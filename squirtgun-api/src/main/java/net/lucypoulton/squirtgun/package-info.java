@@ -21,19 +21,17 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
-    }
-}
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)
+/**
+ * Squirtgun is a general-purpose, cross-platform Minecraft Java edition library,
+ * designed to make plugin development a little easier. Originally known as LucyCommonLib,
+ * named after the original author, it's now been updated beyond all recognition and is
+ * slightly less crappy.
+ * <br>
+ * <br>
+ * Squirtgun is designed to be platform-agnostic - if there's an implementation available
+ * for a certain platform, your code will run on it. It makes use of popular libraries like
+ * Kyori's Adventure to handle rich text. Everything else has been written to be simple and
+ * similar to existing APIs while also being flexible and powerful. Also builders because
+ * normal constructors are for boring people.
+ */
+package net.lucypoulton.squirtgun;

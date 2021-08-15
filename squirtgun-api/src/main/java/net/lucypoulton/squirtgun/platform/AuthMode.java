@@ -21,19 +21,21 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
+package net.lucypoulton.squirtgun.platform;
+
+public enum AuthMode {
+    OFFLINE("-c"),
+    ONLINE(""),
+    BUNGEE("-b");
+
+    private final String value;
+
+    AuthMode(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }
-
-rootProject.name = "squirtgun"
-
-include(
-        "squirtgun-api",
-        "squirtgun-commands",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
-)
