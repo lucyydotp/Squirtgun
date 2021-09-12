@@ -20,20 +20,12 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
-    }
+repositories {
+    mavenCentral()
+    maven("https://m2.dv8tion.net/releases")
 }
 
-rootProject.name = "squirtgun"
-
-include(
-    "squirtgun-api",
-    "squirtgun-platform-bukkit",
-    "squirtgun-platform-bungee",
-    "squirtgun-platform-fabric",
-    "squirtgun-platform-discord"
-)
+dependencies {
+    api(project(":squirtgun-api"))
+    api("net.dv8tion:JDA:4.3.0_277")
+}

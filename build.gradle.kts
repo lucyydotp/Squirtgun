@@ -25,6 +25,7 @@ plugins {
     `java-library`
     `maven-publish`
     signing
+    checkstyle
 }
 
 version = "2.0.0-pre6-SNAPSHOT"
@@ -38,6 +39,7 @@ subprojects {
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
+    apply(plugin = "checkstyle")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_11
