@@ -24,6 +24,7 @@
 package net.lucypoulton.squirtgun.command.node;
 
 import net.lucypoulton.squirtgun.Squirtgun;
+import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.format.TextFormatter;
@@ -37,7 +38,7 @@ public class PluginInfoNode extends AbstractNode<SquirtgunUser> {
     private final SquirtgunPlugin<?> plugin;
 
     public PluginInfoNode(String name, SquirtgunPlugin<?> plugin) {
-        super(name, "Shows information about this plugin.", null);
+        super(name, "Shows information about this plugin.", Condition.alwaysTrue());
         this.plugin = plugin;
     }
 

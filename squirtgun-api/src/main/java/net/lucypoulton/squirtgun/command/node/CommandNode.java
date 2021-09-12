@@ -68,7 +68,7 @@ public interface CommandNode<T extends PermissionHolder> {
      *
      * @return the condition
      */
-    Condition<PermissionHolder, T> getCondition();
+    @NotNull Condition<PermissionHolder, T> getCondition();
 
     /**
      * Gets this command's arguments. By default, returns an empty list.

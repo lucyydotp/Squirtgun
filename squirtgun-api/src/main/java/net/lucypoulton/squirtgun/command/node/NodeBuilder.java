@@ -82,7 +82,7 @@ public class NodeBuilder<T extends PermissionHolder> {
      * @param condition the required condition
      * @return this
      */
-    public NodeBuilder<T> condition(Condition<PermissionHolder, T> condition) {
+    public NodeBuilder<T> condition(@NotNull Condition<PermissionHolder, T> condition) {
         Preconditions.checkNotNull(condition, "Condition must not be null");
         this.condition = condition;
         return this;
