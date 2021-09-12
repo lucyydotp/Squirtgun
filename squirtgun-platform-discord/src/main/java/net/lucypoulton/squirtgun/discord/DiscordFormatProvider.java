@@ -61,6 +61,6 @@ public enum DiscordFormatProvider implements FormatProvider {
 
     @Override
     public Component getPrefix() {
-        return null;
+        return Component.empty();
     }
 }
