@@ -27,7 +27,12 @@ import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 
 /**
- * TODO javadoc
+ * A condition that must be satisfied in order for a command to run.
+ * <p>
+ * Conditions are transformative - they have an input and an output type. For example,
+ * {@link #isPlayer()} accepts a PermissionHolder and outputs a SquirtgunPlayer, this
+ * means that a CommandNode of type SquirtgunPlayer can be chained after one of type
+ * PermissionHolder. If the condition is not met, then a message is displayed.
  *
  * @param <T> the input holder type
  * @param <U> the outputted holder type
@@ -35,39 +40,67 @@ import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 @FunctionalInterface
 public interface Condition<T extends PermissionHolder, U extends PermissionHolder> {
 
+    /**
+     * A condition ensuring the target is a {@link SquirtgunPlayer}.
+     */
     static Condition<PermissionHolder, SquirtgunPlayer> isPlayer() {
         return (target, context) ->
-                target instanceof SquirtgunPlayer
-                        ? new Result<>(true, (SquirtgunPlayer) target, null)
-                        : new Result<>(false, null, "This command can only be run by a player.");
+            target instanceof SquirtgunPlayer
+                ? new Result<>(true, (SquirtgunPlayer) target, null)
+                : new Result<>(false, null, "This command can only be run by a player.");
     }
 
+    /**
+     * A condition ensuring the target is a {@link SquirtgunPlayer}, without casting.
+     */
     static Condition<PermissionHolder, PermissionHolder> isPlayerCastless() {
         return (target, context) ->
-                target instanceof SquirtgunPlayer
-                        ? new Result<>(true, target, null)
-                        : new Result<>(false, null, "This command can only be run by a player.");
+            target instanceof SquirtgunPlayer
+                ? new Result<>(true, target, null)
+                : new Result<>(false, null, "This command can only be run by a player.");
     }
 
+    /**
+     * A condition ensuring the target is the console.
+     */
     static Condition<PermissionHolder, PermissionHolder> isConsole() {
         return (target, context) ->
-                target instanceof SquirtgunPlayer
-                        ? new Result<>(false, null, "This command can only be run from the console.")
-                        : new Result<>(true, target, null);
+            target instanceof SquirtgunPlayer
+                ? new Result<>(false, null, "This command can only be run from the console.")
+                : new Result<>(true, target, null);
     }
 
+    /**
+     * A condition that will always pass, carrying out no casting.
+     */
     static <V extends PermissionHolder> Condition<V, V> alwaysTrue() {
         return (target, context) -> new Result<>(true, target, null);
     }
 
+    /**
+     * A condition that checks for a permission.
+     */
     static <V extends PermissionHolder> Condition<V, V> hasPermission(String permission) {
         return (target, context) -> target.hasPermission(permission)
-                ? new Result<>(true, target, null)
-                : new Result<>(false, null, "No permission!");
+            ? new Result<>(true, target, null)
+            : new Result<>(false, null, "No permission!");
     }
 
+    /**
+     * Test the condition.
+     * @param target the target to test against
+     * @param context the command context
+     * @return a {@link Result<U>} that has a non-null result when successful, and a non-null error when not
+     */
     Result<U> test(T target, CommandContext context);
 
+    /**
+     * Combines two conditions with the same output type and a contravariant input type in such a way that the test
+     * passes when both tests are successful.
+     *
+     * @param other the second test
+     * @return a condition that passes when both conditions pass
+     */
     default <V extends PermissionHolder> Condition<T, V> and(Condition<? super U, V> other) {
         return ((target, context) -> {
             Result<U> first = this.test(target, context);
@@ -77,6 +110,13 @@ public interface Condition<T extends PermissionHolder, U extends PermissionHolde
         });
     }
 
+    /**
+     * Combines two conditions with the same output type and a contravariant input type in such a way that the test
+     * passes when either or both tests are successful.
+     *
+     * @param other the second test
+     * @return a condition that passes when either or both conditions pass
+     */
     default Condition<T, U> or(Condition<? super T, U> other) {
         return ((target, context) -> {
             Result<U> first = this.test(target, context);
@@ -86,6 +126,10 @@ public interface Condition<T extends PermissionHolder, U extends PermissionHolde
         });
     }
 
+    /**
+     * The result of a test.
+     * @param <U> the output type of the test
+     */
     class Result<U> {
         private final boolean successful;
         private final U result;
@@ -97,18 +141,31 @@ public interface Condition<T extends PermissionHolder, U extends PermissionHolde
             this.error = error;
         }
 
+        /**
+         * Whether the test passed.
+         */
         public boolean isSuccessful() {
             return successful;
         }
 
+        /**
+         * Whether the test failed - inverse of {@link #isSuccessful()}.
+         */
         public final boolean isFailure() {
             return !isSuccessful();
         }
 
+        /**
+         * Gets the result of the test. When the test has failed, this may be null.
+         */
         public U getResult() {
             return result;
         }
 
+        /**
+         * Gets the error, if any, that this test encountered, When the test has passed,
+         * this may be null.
+         */
         public String getError() {
             return error;
         }

@@ -27,11 +27,18 @@ import net.lucypoulton.squirtgun.discord.DiscordPlatform;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
+import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
 
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * A Platform implementation for standalone Discord bots.
+ */
 public class StandaloneDiscordPlatform extends DiscordPlatform {
 
     private final TaskScheduler scheduler = new StandaloneTaskScheduler(this);
@@ -60,7 +67,6 @@ public class StandaloneDiscordPlatform extends DiscordPlatform {
 
     @Override
     public Logger getLogger() {
-        // fixme - is this right?
         return Logger.getGlobal();
     }
 
@@ -72,5 +78,18 @@ public class StandaloneDiscordPlatform extends DiscordPlatform {
     @Override
     public SquirtgunUser getConsole() {
         return console;
+    }
+
+    @Override
+    public Path getConfigPath(SquirtgunPlugin<?> plugin) {
+        URL url = getClass().getProtectionDomain().getCodeSource().getLocation();
+        try {
+            // up one for the directory
+            return Path.of(url.toURI()).getParent();
+        } catch (URISyntaxException e) {
+            // this shouldn't happen
+            e.printStackTrace();
+        }
+        return null;
     }
 }

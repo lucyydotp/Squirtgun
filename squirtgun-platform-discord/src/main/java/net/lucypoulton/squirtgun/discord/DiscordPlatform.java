@@ -36,13 +36,14 @@ import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
 
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * A Platform implementation for a JDA instance.
- * TODO
  */
 public abstract class DiscordPlatform implements Platform {
 
@@ -114,12 +115,6 @@ public abstract class DiscordPlatform implements Platform {
     @Override
     public List<SquirtgunPlayer> getOnlinePlayers() {
         return List.of();
-    }
-
-    // TODO
-    @Override
-    public Path getConfigPath(SquirtgunPlugin<?> plugin) {
-        return null;
     }
 
     @Override
