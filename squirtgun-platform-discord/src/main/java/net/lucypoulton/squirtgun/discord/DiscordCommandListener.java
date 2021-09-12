@@ -28,13 +28,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
-import net.lucypoulton.squirtgun.discord.adventure.DiscordAudiences;
-import net.lucypoulton.squirtgun.platform.Platform;
+import net.lucypoulton.squirtgun.format.FormatProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public class DiscordCommandListener extends ListenerAdapter {
@@ -45,19 +43,22 @@ public class DiscordCommandListener extends ListenerAdapter {
     private final Predicate<TextChannel> canAccept;
 
     private final Map<String, CommandNode<?>> nodes = new HashMap<>();
+    private final Map<String, FormatProvider> formatProviders = new HashMap<>();
 
     public DiscordCommandListener(DiscordPlatform platform, String prefix, boolean ignoreBots, Predicate<TextChannel> canAccept) {
         this.platform = platform;
         this.prefix = prefix;
         this.ignoreBots = ignoreBots;
         this.canAccept = canAccept;
+        platform.jda().addEventListener(this);
     }
 
-    public void registerCommand(CommandNode<?> node) {
+    public void registerCommand(CommandNode<?> node, FormatProvider formatProvider) {
         if (nodes.containsKey(node.getName())) {
             throw new IllegalArgumentException("Node with given name already exists!");
         }
         nodes.put(node.getName(), node);
+        formatProviders.put(node.getName(), formatProvider);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class DiscordCommandListener extends ListenerAdapter {
         String[] parts = cmdRaw.split(" ", 2);
         CommandNode<?> node = nodes.get(parts[0]);
         if (node == null) return;
-        Component ret = new StringContext(null,
+        Component ret = new StringContext(formatProviders.get(node.getName()),
                         platform.audiences().user(event.getAuthor()),
                         node, parts.length == 2 ? parts[1] : "")
                 .execute();

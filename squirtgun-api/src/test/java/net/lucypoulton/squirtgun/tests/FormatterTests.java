@@ -89,7 +89,7 @@ public class FormatterTests {
                 "{\"strikethrough\":true,\"color\":\"yellow\",\"extra\":[{\"strikethrough\":false," +
                         "\"color\":\"white\",\"text\":\" test 12345 \"},{\"strikethrough\":true,\"color\":\"yellow\"," +
                         "\"text\":\"                                \"}],\"text\":\"                                \"}",
-                ser(TextFormatter.formatTitle("test 12345", new TestFormatter())));
+                ser(new TestFormatter().formatTitle("test 12345")));
     }
 
     @Test

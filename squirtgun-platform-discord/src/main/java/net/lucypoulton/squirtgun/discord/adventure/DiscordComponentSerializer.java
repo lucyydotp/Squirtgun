@@ -43,7 +43,7 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
     private static final Map<TextDecoration, String> DECORATION_MARKUP = Map.of(
             TextDecoration.BOLD, "**",
             TextDecoration.ITALIC, "*",
-            TextDecoration.UNDERLINED, "_",
+            TextDecoration.UNDERLINED, "__",
             TextDecoration.STRIKETHROUGH, "~~",
             TextDecoration.OBFUSCATED, "||"
     );

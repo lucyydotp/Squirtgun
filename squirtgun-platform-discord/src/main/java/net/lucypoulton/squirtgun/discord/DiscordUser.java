@@ -41,6 +41,7 @@ public abstract class DiscordUser implements SquirtgunPlayer {
 
     /**
      * Not supported by Discord - always returns false
+     *
      * @return false
      */
     @Override
@@ -56,13 +57,12 @@ public abstract class DiscordUser implements SquirtgunPlayer {
                             final @NotNull Component component,
                             final @NotNull MessageType type) {
         discordUser().openPrivateChannel()
-                .queue(channel -> channel.sendMessage(
-                        DiscordComponentSerializer.INSTANCE.serialize(component)).queue()
-                );
+            .queue(channel -> channel.sendMessage(DiscordComponentSerializer.INSTANCE.serialize(component)).queue());
     }
 
     /**
      * Discord obviously doesn't have gamemodes, returns a special value
+     *
      * @return a unique Gamemode specific to Discord
      */
     @Override

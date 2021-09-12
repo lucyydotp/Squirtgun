@@ -24,16 +24,37 @@ package net.lucypoulton.squirtgun.discord.standalone;
 
 import net.dv8tion.jda.api.JDA;
 import net.lucypoulton.squirtgun.discord.DiscordPlatform;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class StandaloneDiscordPlatform extends DiscordPlatform {
 
     private final TaskScheduler scheduler = new StandaloneTaskScheduler(this);
+    private final SquirtgunUser console = new StandaloneConsoleWrapper(this);
 
     public StandaloneDiscordPlatform(JDA jda) {
         super(jda);
+    }
+
+    /**
+     * Throws an {@link IllegalStateException} - this method is <b>not supported standalone</b>
+     */
+    @Override
+    public SquirtgunPlayer getPlayer(UUID uuid) {
+        throw new IllegalStateException("Standalone");
+    }
+
+    /**
+     * Throws an {@link IllegalStateException} - this method is <b>not supported standalone</b>
+     */
+    @Override
+    public @Nullable SquirtgunPlayer getPlayer(String name) {
+        throw new IllegalStateException("Standalone");
     }
 
     @Override
@@ -45,5 +66,10 @@ public class StandaloneDiscordPlatform extends DiscordPlatform {
     @Override
     public TaskScheduler getTaskScheduler() {
         return scheduler;
+    }
+
+    @Override
+    public SquirtgunUser getConsole() {
+        return console;
     }
 }

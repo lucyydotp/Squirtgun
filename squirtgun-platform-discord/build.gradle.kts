@@ -28,4 +28,5 @@ repositories {
 dependencies {
     api(project(":squirtgun-api"))
     api("net.dv8tion:JDA:4.3.0_277")
+    implementation("net.kyori:adventure-text-serializer-plain:4.9.1")
 }

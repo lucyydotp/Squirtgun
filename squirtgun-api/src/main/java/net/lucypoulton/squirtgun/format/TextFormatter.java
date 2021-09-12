@@ -161,8 +161,10 @@ public class TextFormatter {
      * @param in     the text to use as a title
      * @param format the format to apply to the string
      * @return a formatted string, ready to send to the player
+     * @deprecated use {@link FormatProvider#formatTitle(String)}
      */
     @Contract(pure = true)
+    @Deprecated
     public static Component formatTitle(@NotNull final String in, @NotNull final FormatProvider format) {
         return centreText(in, format, TITLE_SEPARATOR, new TextDecoration[]{TextDecoration.STRIKETHROUGH});
     }

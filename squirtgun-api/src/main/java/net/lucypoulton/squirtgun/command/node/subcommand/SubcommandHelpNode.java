@@ -102,7 +102,7 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
     public @Nullable Component execute(CommandContext context) {
         final FormatProvider fmt = context.getFormat();
         Component out = Component.empty()
-                .append(TextFormatter.formatTitle("Commands:", fmt))
+                .append(fmt.formatTitle("Commands:"))
                 .append(Component.newline());
 
         for (CommandNode<?> node : parentNode.getNodes()) {
@@ -117,7 +117,7 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
         }
 
         out = out.append(Component.newline())
-                .append(TextFormatter.formatTitle("*", fmt));
+                .append(fmt.formatFooter("*"));
 
         return out;
     }

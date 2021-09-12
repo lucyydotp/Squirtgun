@@ -46,7 +46,7 @@ public class PluginInfoNode extends AbstractNode<SquirtgunUser> {
         final FormatProvider fmt = context.getFormat();
         final Component nl = Component.newline();
         return Component.empty()
-                .append(TextFormatter.formatTitle(plugin.getPluginName(), fmt))
+                .append(fmt.formatTitle(plugin.getPluginName()))
                 .append(nl).append(nl)
                 .append(fmt.formatMain(plugin.getPluginName() + " version "))
                 .append(fmt.formatAccent(plugin.getPluginVersion())).append(nl)
@@ -59,6 +59,6 @@ public class PluginInfoNode extends AbstractNode<SquirtgunUser> {
                 .append(fmt.formatMain("Using platform "))
                 .append(fmt.formatAccent(plugin.getPlatform().name()))
                 .append(nl).append(nl)
-                .append(TextFormatter.formatTitle("*", fmt));
+                .append(fmt.formatFooter("*"));
     }
 }

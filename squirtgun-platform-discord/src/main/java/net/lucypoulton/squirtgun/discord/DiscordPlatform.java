@@ -48,14 +48,17 @@ public abstract class DiscordPlatform implements Platform {
 
     private final JDA jda;
     private final DiscordAudiences audiences;
+    private final DiscordCommandListener listener;
 
-    protected JDA jda() {
+    public JDA jda() {
         return jda;
     }
 
     protected DiscordPlatform(JDA jda) {
         this.jda = jda;
         audiences = new StandaloneDiscordAudiences(jda);
+        // fixme - hardcoded for testing
+        listener = new DiscordCommandListener(this, "~", true, x -> true);
     }
 
     @Override
@@ -86,26 +89,31 @@ public abstract class DiscordPlatform implements Platform {
     public void unregisterEventListener(EventListener listener) {
     }
 
+    /**
+     * Gets a SquirtgunPlayer from a user's Minecraft UUID.
+     * @param uuid the UUID of the player to get
+     * @return a SquirtgunPlayer if the user is known and has a linked Discord account, otherwise null
+     */
     @Override
-    public SquirtgunUser getConsole() {
-        return null;
-    }
+    public abstract SquirtgunPlayer getPlayer(UUID uuid);
 
+    /**
+     * Gets a SquirtgunPlayer from a user's Minecraft username.
+     * @param name the name of the player to get
+     * @return a SquirtgunPlayer if the user is known has a linked Discord account, otherwise null
+     */
     @Override
-    public SquirtgunPlayer getPlayer(UUID uuid) {
-        return null;
-    }
+    public abstract @Nullable SquirtgunPlayer getPlayer(String name);
 
-    @Override
-    public @Nullable SquirtgunPlayer getPlayer(String name) {
-        return null;
-    }
-
+    /**
+     * @return an empty list - this method is not applicable to Discord
+     */
     @Override
     public List<SquirtgunPlayer> getOnlinePlayers() {
-        return null;
+        return List.of();
     }
 
+    // TODO
     @Override
     public Path getConfigPath(SquirtgunPlugin<?> plugin) {
         return null;
@@ -113,7 +121,7 @@ public abstract class DiscordPlatform implements Platform {
 
     @Override
     public void registerCommand(CommandNode<?> node, FormatProvider provider) {
-
+        listener.registerCommand(node, provider);
     }
 
     @Override

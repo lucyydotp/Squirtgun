@@ -22,36 +22,32 @@
  */
 package net.lucypoulton.squirtgun.discord.standalone;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.kyori.adventure.audience.Audience;
-import net.lucypoulton.squirtgun.discord.adventure.ChannelAudience;
-import net.lucypoulton.squirtgun.discord.adventure.DiscordAudiences;
+import net.kyori.adventure.audience.MessageType;
+import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.lucypoulton.squirtgun.discord.DiscordPlatform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class StandaloneDiscordAudiences implements DiscordAudiences {
+public class StandaloneConsoleWrapper implements SquirtgunUser, Audience {
 
-    private final JDA jda;
+    private final DiscordPlatform platform;
 
-    public StandaloneDiscordAudiences(JDA jda) {
-        this.jda = jda;
+    public StandaloneConsoleWrapper(DiscordPlatform platform) {
+        this.platform = platform;
     }
 
     @Override
-    public @NotNull Audience channel(TextChannel channel) {
-        return new ChannelAudience(channel);
+    public boolean hasPermission(String permission) {
+        return true;
     }
 
     @Override
-    public @Nullable Audience channel(String channelId) {
-        return null;
-    }
-
-    @Override
-    public @NotNull SquirtgunUser user(User user) {
-        return new StandaloneDiscordUser(user);
+    public void sendMessage(final @NotNull Identity source,
+                            final @NotNull Component component,
+                            final @NotNull MessageType type) {
+        platform.getLogger().info(PlainTextComponentSerializer.plainText().serialize(component));
     }
 }
