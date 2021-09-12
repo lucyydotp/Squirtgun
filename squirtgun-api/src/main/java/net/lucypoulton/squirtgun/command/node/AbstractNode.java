@@ -53,7 +53,7 @@ public abstract class AbstractNode<T extends PermissionHolder> implements Comman
     }
 
     @Override
-    public Condition<PermissionHolder, T> getCondition() {
+    public @NotNull Condition<PermissionHolder, T> getCondition() {
         return condition;
     }
 }

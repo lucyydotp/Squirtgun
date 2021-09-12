@@ -31,7 +31,6 @@ import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.argument.ListArgument;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.format.FormatProvider;
-import net.lucypoulton.squirtgun.format.TextFormatter;
 import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -81,7 +80,7 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
     }
 
     @Override
-    public Condition<PermissionHolder, PermissionHolder> getCondition() {
+    public @NotNull Condition<PermissionHolder, PermissionHolder> getCondition() {
         return Condition.alwaysTrue();
     }
 

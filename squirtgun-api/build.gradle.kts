@@ -26,17 +26,17 @@ repositories {
 }
 
 dependencies {
-    val ADVENTURE_VERSION = "4.9.1"
+    val adventureVersion = "4.9.1"
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 
-    testImplementation("net.kyori:adventure-api:$ADVENTURE_VERSION")
-    testImplementation("net.kyori:adventure-text-serializer-gson:$ADVENTURE_VERSION")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:$ADVENTURE_VERSION")
+    testImplementation("net.kyori:adventure-api:$adventureVersion")
+    testImplementation("net.kyori:adventure-text-serializer-gson:$adventureVersion")
+    testImplementation("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     testImplementation("com.google.guava:guava:21.0")
 
-    api("net.kyori:adventure-api:$ADVENTURE_VERSION")
-    api("net.kyori:adventure-text-serializer-legacy:$ADVENTURE_VERSION")
+    api("net.kyori:adventure-api:$adventureVersion")
+    api("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     compileOnlyApi("com.google.guava:guava:21.0") {
         because("It's the version Minecraft is bundled with")
     }

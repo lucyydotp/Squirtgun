@@ -97,7 +97,7 @@ public class HelpNode implements CommandNode<PermissionHolder> {
     }
 
     @Override
-    public Condition<PermissionHolder, PermissionHolder> getCondition() {
+    public @NotNull Condition<PermissionHolder, PermissionHolder> getCondition() {
         return Condition.alwaysTrue();
     }
 

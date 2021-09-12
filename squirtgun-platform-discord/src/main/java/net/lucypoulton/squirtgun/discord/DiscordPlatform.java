@@ -20,8 +20,9 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.lucypoulton.squirtgun.discord;import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.User;
+package net.lucypoulton.squirtgun.discord;
+
+import net.dv8tion.jda.api.JDA;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.discord.adventure.DiscordAudiences;
@@ -32,7 +33,6 @@ import net.lucypoulton.squirtgun.platform.AuthMode;
 import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,6 +68,7 @@ public abstract class DiscordPlatform implements Platform {
 
     /**
      * Authentication mode is not relevant to Discord so always returns offline
+     *
      * @return {@link AuthMode#OFFLINE}
      */
     @Override
@@ -91,6 +92,7 @@ public abstract class DiscordPlatform implements Platform {
 
     /**
      * Gets a DiscordUser from a user's Minecraft UUID.
+     *
      * @param uuid the UUID of the player to get
      * @return a SquirtgunPlayer if the user is known and has a linked Discord account, otherwise null
      */
@@ -99,6 +101,7 @@ public abstract class DiscordPlatform implements Platform {
 
     /**
      * Gets a DiscordUser from a user's Minecraft username.
+     *
      * @param name the name of the player to get
      * @return a SquirtgunPlayer if the user is known has a linked Discord account, otherwise null
      */
