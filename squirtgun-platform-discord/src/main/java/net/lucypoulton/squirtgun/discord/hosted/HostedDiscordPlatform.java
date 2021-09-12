@@ -20,11 +20,14 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.lucypoulton.squirtgun.discord.standalone;
+package net.lucypoulton.squirtgun.discord.hosted;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.User;
 import net.lucypoulton.squirtgun.discord.DiscordPlatform;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
+import net.lucypoulton.squirtgun.platform.Platform;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
 import org.jetbrains.annotations.Nullable;
@@ -32,45 +35,48 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class StandaloneDiscordPlatform extends DiscordPlatform {
+public class HostedDiscordPlatform extends DiscordPlatform {
 
-    private final TaskScheduler scheduler = new StandaloneTaskScheduler(this);
-    private final SquirtgunUser console = new StandaloneConsoleWrapper(this);
+    private final Platform parent;
+    private final DiscordLinkHandler linkHandler;
 
-    public StandaloneDiscordPlatform(JDA jda) {
+    protected HostedDiscordPlatform(JDA jda, Platform parent, DiscordLinkHandler linkHandler) {
         super(jda);
-        System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-7s] %5$s %n");
+        this.parent = parent;
+        this.linkHandler = linkHandler;
     }
 
-    /**
-     * Throws an {@link IllegalStateException} - this method is <b>not supported standalone</b>
-     */
-    @Override
-    public DiscordUser getPlayer(UUID uuid) {
-        throw new IllegalStateException("Standalone");
-    }
-
-    /**
-     * Throws an {@link IllegalStateException} - this method is <b>not supported standalone</b>
-     */
-    @Override
-    public @Nullable DiscordUser getPlayer(String name) {
-        throw new IllegalStateException("Standalone");
+    public Platform parent() {
+        return parent;
     }
 
     @Override
     public Logger getLogger() {
-        // fixme - is this right?
-        return Logger.getGlobal();
+        return parent.getLogger();
     }
 
     @Override
     public TaskScheduler getTaskScheduler() {
-        return scheduler;
+        return parent.getTaskScheduler();
     }
 
     @Override
     public SquirtgunUser getConsole() {
-        return console;
+        return parent.getConsole();
+    }
+
+    @Override
+    public DiscordUser getPlayer(UUID uuid) {
+        String id = linkHandler.getDiscordId(uuid);
+        if (id == null) return null;
+        User user = jda().getUserById(id);
+        if (user == null) return null;
+        return audiences().user(user);
+    }
+
+    @Override
+    public @Nullable DiscordUser getPlayer(String name) {
+        SquirtgunPlayer player = parent().getPlayer(name);
+        return player == null ? null : getPlayer(player.getUuid());
     }
 }

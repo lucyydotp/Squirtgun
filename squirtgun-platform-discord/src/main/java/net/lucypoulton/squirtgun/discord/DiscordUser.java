@@ -77,4 +77,6 @@ public abstract class DiscordUser implements SquirtgunPlayer {
     public void setGamemode(Gamemode mode) {
 
     }
+
+
 }

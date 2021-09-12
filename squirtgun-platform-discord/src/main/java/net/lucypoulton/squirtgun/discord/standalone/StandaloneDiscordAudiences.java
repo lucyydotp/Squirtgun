@@ -22,23 +22,15 @@
  */
 package net.lucypoulton.squirtgun.discord.standalone;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.kyori.adventure.audience.Audience;
+import net.lucypoulton.squirtgun.discord.DiscordUser;
 import net.lucypoulton.squirtgun.discord.adventure.ChannelAudience;
 import net.lucypoulton.squirtgun.discord.adventure.DiscordAudiences;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class StandaloneDiscordAudiences implements DiscordAudiences {
-
-    private final JDA jda;
-
-    public StandaloneDiscordAudiences(JDA jda) {
-        this.jda = jda;
-    }
 
     @Override
     public @NotNull Audience channel(TextChannel channel) {
@@ -46,12 +38,7 @@ public class StandaloneDiscordAudiences implements DiscordAudiences {
     }
 
     @Override
-    public @Nullable Audience channel(String channelId) {
-        return null;
-    }
-
-    @Override
-    public @NotNull SquirtgunUser user(User user) {
+    public @NotNull DiscordUser user(User user) {
         return new StandaloneDiscordUser(user);
     }
 }

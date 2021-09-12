@@ -56,7 +56,7 @@ public abstract class DiscordPlatform implements Platform {
 
     protected DiscordPlatform(JDA jda) {
         this.jda = jda;
-        audiences = new StandaloneDiscordAudiences(jda);
+        audiences = new StandaloneDiscordAudiences();
         // fixme - hardcoded for testing
         listener = new DiscordCommandListener(this, "~", true, x -> true);
     }
@@ -90,20 +90,20 @@ public abstract class DiscordPlatform implements Platform {
     }
 
     /**
-     * Gets a SquirtgunPlayer from a user's Minecraft UUID.
+     * Gets a DiscordUser from a user's Minecraft UUID.
      * @param uuid the UUID of the player to get
      * @return a SquirtgunPlayer if the user is known and has a linked Discord account, otherwise null
      */
     @Override
-    public abstract SquirtgunPlayer getPlayer(UUID uuid);
+    public abstract @Nullable DiscordUser getPlayer(UUID uuid);
 
     /**
-     * Gets a SquirtgunPlayer from a user's Minecraft username.
+     * Gets a DiscordUser from a user's Minecraft username.
      * @param name the name of the player to get
      * @return a SquirtgunPlayer if the user is known has a linked Discord account, otherwise null
      */
     @Override
-    public abstract @Nullable SquirtgunPlayer getPlayer(String name);
+    public abstract @Nullable DiscordUser getPlayer(String name);
 
     /**
      * @return an empty list - this method is not applicable to Discord

@@ -20,20 +20,11 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.lucypoulton.squirtgun.discord.adventure;
+package net.lucypoulton.squirtgun.discord.hosted;
 
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.kyori.adventure.audience.Audience;
-import net.lucypoulton.squirtgun.discord.DiscordUser;
-import org.jetbrains.annotations.NotNull;
+import java.util.UUID;
 
-/**
- * TODO
- */
-public interface DiscordAudiences {
-
-    @NotNull Audience channel(TextChannel channel);
-
-    @NotNull DiscordUser user(User user);
+public interface DiscordLinkHandler {
+    String getDiscordId(UUID uuid);
+    UUID getMinecraftUuid(String discordId);
 }

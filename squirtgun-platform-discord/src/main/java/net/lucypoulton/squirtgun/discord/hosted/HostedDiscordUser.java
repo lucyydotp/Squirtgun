@@ -20,20 +20,50 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.lucypoulton.squirtgun.discord.adventure;
+package net.lucypoulton.squirtgun.discord.hosted;
 
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.kyori.adventure.audience.Audience;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
-import org.jetbrains.annotations.NotNull;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+
+import java.util.UUID;
 
 /**
- * TODO
+ * A SquirtgunUser that's linked to a parent user.
  */
-public interface DiscordAudiences {
+public class HostedDiscordUser extends DiscordUser {
 
-    @NotNull Audience channel(TextChannel channel);
+    private final SquirtgunPlayer parent;
+    private final User user;
 
-    @NotNull DiscordUser user(User user);
+    public HostedDiscordUser(SquirtgunPlayer parent, User user) {
+        this.parent = parent;
+        this.user = user;
+    }
+
+    /**
+     * Gets the user's Minecraft username
+     */
+    @Override
+    public String getUsername() {
+        return parent.getUsername();
+    }
+
+    /**
+     * Gets the user's Minecraft UUID
+     */
+    @Override
+    public UUID getUuid() {
+        return parent.getUuid();
+    }
+
+    @Override
+    public boolean hasPermission(String permission) {
+        return parent.hasPermission(permission);
+    }
+
+    @Override
+    public User discordUser() {
+        return user;
+    }
 }

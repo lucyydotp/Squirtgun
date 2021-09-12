@@ -20,20 +20,39 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.lucypoulton.squirtgun.discord.adventure;
+package net.lucypoulton.squirtgun.discord.hosted;
 
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.kyori.adventure.audience.Audience;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
+import net.lucypoulton.squirtgun.discord.adventure.ChannelAudience;
+import net.lucypoulton.squirtgun.discord.adventure.DiscordAudiences;
+import net.lucypoulton.squirtgun.discord.standalone.StandaloneDiscordUser;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * TODO
- */
-public interface DiscordAudiences {
+import java.util.UUID;
 
-    @NotNull Audience channel(TextChannel channel);
+public class HostedDiscordAudiences implements DiscordAudiences {
 
-    @NotNull DiscordUser user(User user);
+    private final DiscordLinkHandler linkHandler;
+    private final HostedDiscordPlatform platform;
+
+    public HostedDiscordAudiences(DiscordLinkHandler linkHandler, HostedDiscordPlatform platform) {
+        this.linkHandler = linkHandler;
+        this.platform = platform;
+    }
+
+    @Override
+    public @NotNull Audience channel(TextChannel channel) {
+        return new ChannelAudience(channel);
+    }
+
+    @Override
+    public @NotNull DiscordUser user(User user) {
+        UUID mcUuid = linkHandler.getMinecraftUuid(user.getId());
+        if (mcUuid == null) return new StandaloneDiscordUser(user);
+
+        return new HostedDiscordUser(platform.parent().getPlayer(mcUuid), user);
+    }
 }
