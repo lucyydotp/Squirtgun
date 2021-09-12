@@ -20,8 +20,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import net.dv8tion.jda.api.JDA;
+package net.lucypoulton.squirtgun.discord;import net.dv8tion.jda.api.JDA;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.AuthMode;
@@ -29,7 +28,6 @@ import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
-import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,19 +61,18 @@ public abstract class DiscordPlatform implements Platform {
         return AuthMode.OFFLINE;
     }
 
-    @Override
-    public TaskScheduler getTaskScheduler() {
-        return null;
-    }
-
+    /**
+     * This method has not been implemented, events will not be triggered. See issue #40.
+     */
     @Override
     public void registerEventListener(EventListener listener) {
-
     }
 
+    /**
+     * This method has not been implemented, events will not be triggered. See issue #40.
+     */
     @Override
     public void unregisterEventListener(EventListener listener) {
-
     }
 
     @Override

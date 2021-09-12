@@ -20,34 +20,36 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package net.lucypoulton.squirtgun.discord.standalone;
 
-repositories {
-    mavenCentral()
-}
+import net.dv8tion.jda.api.entities.User;
+import net.kyori.adventure.audience.MessageType;
+import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.Component;
+import net.lucypoulton.squirtgun.discord.DiscordUser;
+import net.lucypoulton.squirtgun.discord.adventure.DiscordComponentSerializer;
+import org.jetbrains.annotations.NotNull;
 
-dependencies {
-    val ADVENTURE_VERSION = "4.9.1"
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+public class StandaloneDiscordUser implements DiscordUser {
 
-    testImplementation("net.kyori:adventure-api:$ADVENTURE_VERSION")
-    testImplementation("net.kyori:adventure-text-serializer-gson:$ADVENTURE_VERSION")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:$ADVENTURE_VERSION")
-    testImplementation("com.google.guava:guava:21.0")
+    private final User user;
 
-    api("net.kyori:adventure-api:$ADVENTURE_VERSION")
-    api("net.kyori:adventure-text-serializer-legacy:$ADVENTURE_VERSION")
-    compileOnlyApi("com.google.guava:guava:21.0") {
-        because("It's the version Minecraft is bundled with")
+    public StandaloneDiscordUser(User user) {
+        this.user = user;
     }
-    compileOnlyApi("com.google.code.gson:gson:2.8.0") {
-        because("It's the version Minecraft is bundled with")
-    }
-    compileOnlyApi("org.jetbrains:annotations:21.0.1")
-}
 
-tasks {
-    test {
-        useJUnitPlatform()
+    @Override
+    public boolean hasPermission(String permission) {
+        return false; // TODO
+    }
+
+    @Override
+    public void sendMessage(final @NotNull Identity source,
+                            final @NotNull Component component,
+                            final @NotNull MessageType type) {
+        user.openPrivateChannel()
+                .queue(channel -> channel.sendMessage(
+                        DiscordComponentSerializer.INSTANCE.serialize(component)).queue()
+                );
     }
 }

@@ -20,34 +20,9 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package net.lucypoulton.squirtgun.discord;
 
-repositories {
-    mavenCentral()
-}
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 
-dependencies {
-    val ADVENTURE_VERSION = "4.9.1"
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
-
-    testImplementation("net.kyori:adventure-api:$ADVENTURE_VERSION")
-    testImplementation("net.kyori:adventure-text-serializer-gson:$ADVENTURE_VERSION")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:$ADVENTURE_VERSION")
-    testImplementation("com.google.guava:guava:21.0")
-
-    api("net.kyori:adventure-api:$ADVENTURE_VERSION")
-    api("net.kyori:adventure-text-serializer-legacy:$ADVENTURE_VERSION")
-    compileOnlyApi("com.google.guava:guava:21.0") {
-        because("It's the version Minecraft is bundled with")
-    }
-    compileOnlyApi("com.google.code.gson:gson:2.8.0") {
-        because("It's the version Minecraft is bundled with")
-    }
-    compileOnlyApi("org.jetbrains:annotations:21.0.1")
-}
-
-tasks {
-    test {
-        useJUnitPlatform()
-    }
+public interface DiscordUser extends SquirtgunUser {
 }
