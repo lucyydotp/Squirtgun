@@ -28,12 +28,13 @@ import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.format.TextFormatter;
+import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
-public class PluginInfoNode extends AbstractNode<SquirtgunUser> {
+public class PluginInfoNode extends AbstractNode<PermissionHolder> {
 
     private final SquirtgunPlugin<?> plugin;
 

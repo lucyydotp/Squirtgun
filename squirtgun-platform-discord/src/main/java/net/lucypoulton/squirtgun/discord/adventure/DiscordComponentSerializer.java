@@ -41,11 +41,11 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
     INSTANCE;
 
     private static final Map<TextDecoration, String> DECORATION_MARKUP = Map.of(
-            TextDecoration.BOLD, "**",
-            TextDecoration.ITALIC, "*",
-            TextDecoration.UNDERLINED, "__",
-            TextDecoration.STRIKETHROUGH, "~~",
-            TextDecoration.OBFUSCATED, "||"
+        TextDecoration.BOLD, "**",
+        TextDecoration.ITALIC, "*",
+        TextDecoration.UNDERLINED, "__",
+        TextDecoration.STRIKETHROUGH, "~~",
+        TextDecoration.OBFUSCATED, "||"
     );
 
     @Override
@@ -61,20 +61,19 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
         TextComponent text = (TextComponent) component;
 
         String formatters = text.decorations().entrySet().stream()
-                .filter(entry -> entry.getValue().equals(TextDecoration.State.TRUE))
-                .map(entry -> DECORATION_MARKUP.get(entry.getKey()))
-                .collect(Collectors.joining());
+            .filter(entry -> entry.getValue().equals(TextDecoration.State.TRUE))
+            .map(entry -> DECORATION_MARKUP.get(entry.getKey()))
+            .collect(Collectors.joining());
 
         StringBuilder output = new StringBuilder();
 
         output.append(formatters);
-        output.append(text.content());
+        output.append(text.content().replaceAll("(?<sym>[*_~|])", "\\\\${sym}"));
         output.append(new StringBuilder(formatters).reverse());
 
         for (Component next : text.children()) {
             output.append(serialize(next));
         }
-
         return output.toString();
     }
 }
