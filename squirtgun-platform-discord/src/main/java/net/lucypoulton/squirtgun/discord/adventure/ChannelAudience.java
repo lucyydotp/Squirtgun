@@ -22,7 +22,31 @@
  */
 package net.lucypoulton.squirtgun.discord.adventure;
 
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.MessageType;
+import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * An audience that corresponds to a Discord channel.
+ */
 public class ChannelAudience implements Audience {
+
+    private final TextChannel channel;
+
+    public ChannelAudience(TextChannel channel) {
+        this.channel = channel;
+    }
+
+    /**
+     * Sends a message to the channel.
+     */
+    @Override
+    public void sendMessage(final @NotNull Identity source,
+                            final @NotNull Component component,
+                            final @NotNull MessageType type) {
+        channel.sendMessage(DiscordComponentSerializer.INSTANCE.serialize(component)).queue();
+    }
 }

@@ -22,35 +22,28 @@
  */
 package net.lucypoulton.squirtgun.discord.standalone;
 
-import net.dv8tion.jda.api.entities.User;
-import net.lucypoulton.squirtgun.discord.DiscordUser;
+import net.dv8tion.jda.api.JDA;
+import net.lucypoulton.squirtgun.discord.DiscordPlatform;
+import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
 
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
+import java.util.logging.Logger;
 
-public class StandaloneDiscordUser extends DiscordUser {
+public class StandaloneDiscordPlatform extends DiscordPlatform {
 
-    private final User user;
+    private final TaskScheduler scheduler = new StandaloneTaskScheduler(this);
 
-    public StandaloneDiscordUser(User user) {
-        this.user = user;
-    }
-
-    /**
-     * @return a generated UUID, derived from the user's Discord account ID
-     */
-    @Override
-    public UUID getUuid() {
-        return UUID.nameUUIDFromBytes(("DiscordUser" + user.getId()).getBytes(StandardCharsets.UTF_8));
+    public StandaloneDiscordPlatform(JDA jda) {
+        super(jda);
     }
 
     @Override
-    public boolean hasPermission(String permission) {
-        return false; // TODO
+    public Logger getLogger() {
+        // fixme - is this right?
+        return Logger.getGlobal();
     }
 
     @Override
-    public User discordUser() {
-        return user;
+    public TaskScheduler getTaskScheduler() {
+        return scheduler;
     }
 }

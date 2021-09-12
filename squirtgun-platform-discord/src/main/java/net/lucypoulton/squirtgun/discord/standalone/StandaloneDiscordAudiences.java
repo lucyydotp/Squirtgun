@@ -22,35 +22,35 @@
  */
 package net.lucypoulton.squirtgun.discord.standalone;
 
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.lucypoulton.squirtgun.discord.DiscordUser;
+import net.kyori.adventure.audience.Audience;
+import net.lucypoulton.squirtgun.discord.adventure.DiscordAudiences;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
+public class StandaloneDiscordAudiences implements DiscordAudiences {
 
-public class StandaloneDiscordUser extends DiscordUser {
+    private final JDA jda;
 
-    private final User user;
-
-    public StandaloneDiscordUser(User user) {
-        this.user = user;
-    }
-
-    /**
-     * @return a generated UUID, derived from the user's Discord account ID
-     */
-    @Override
-    public UUID getUuid() {
-        return UUID.nameUUIDFromBytes(("DiscordUser" + user.getId()).getBytes(StandardCharsets.UTF_8));
+    public StandaloneDiscordAudiences(JDA jda) {
+        this.jda = jda;
     }
 
     @Override
-    public boolean hasPermission(String permission) {
-        return false; // TODO
+    public @NotNull Audience channel(TextChannel channel) {
+        return null;
     }
 
     @Override
-    public User discordUser() {
-        return user;
+    public @Nullable Audience channel(String channelId) {
+        return null;
+    }
+
+    @Override
+    public @NotNull SquirtgunUser user(User user) {
+        return new StandaloneDiscordUser(user);
     }
 }

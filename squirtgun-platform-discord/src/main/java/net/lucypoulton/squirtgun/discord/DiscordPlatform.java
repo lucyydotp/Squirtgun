@@ -21,7 +21,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package net.lucypoulton.squirtgun.discord;import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.User;
+import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.discord.adventure.DiscordAudiences;
+import net.lucypoulton.squirtgun.discord.adventure.DiscordComponentSerializer;
+import net.lucypoulton.squirtgun.discord.standalone.StandaloneDiscordAudiences;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.AuthMode;
 import net.lucypoulton.squirtgun.platform.EventListener;
@@ -42,9 +47,15 @@ import java.util.UUID;
 public abstract class DiscordPlatform implements Platform {
 
     private final JDA jda;
+    private final DiscordAudiences audiences;
+
+    protected JDA jda() {
+        return jda;
+    }
 
     protected DiscordPlatform(JDA jda) {
         this.jda = jda;
+        audiences = new StandaloneDiscordAudiences(jda);
     }
 
     @Override
@@ -103,5 +114,14 @@ public abstract class DiscordPlatform implements Platform {
     @Override
     public void registerCommand(CommandNode<?> node, FormatProvider provider) {
 
+    }
+
+    @Override
+    public void log(Component component) {
+        getLogger().info(DiscordComponentSerializer.INSTANCE.serialize(component));
+    }
+
+    public DiscordAudiences audiences() {
+        return audiences;
     }
 }

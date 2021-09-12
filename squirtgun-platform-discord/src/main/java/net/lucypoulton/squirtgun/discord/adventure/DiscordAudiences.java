@@ -22,29 +22,21 @@
  */
 package net.lucypoulton.squirtgun.discord.adventure;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.kyori.adventure.audience.Audience;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * TODO
  */
-public class DiscordAudiences {
+public interface DiscordAudiences {
 
-    private final JDA instance;
+    @NotNull Audience channel(TextChannel channel);
 
-    public DiscordAudiences(JDA instance) {
-        this.instance = instance;
-    }
+    @Nullable Audience channel(String channelId);
 
-    public @NotNull Audience channel(TextChannel channel) {
-        return null;
-    }
-
-    public @Nullable Audience channel(String channelId) {
-        return null;
-    }
+    @NotNull SquirtgunUser user(User user);
 }

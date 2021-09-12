@@ -22,7 +22,59 @@
  */
 package net.lucypoulton.squirtgun.discord;
 
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.dv8tion.jda.api.entities.User;
+import net.kyori.adventure.audience.MessageType;
+import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.Component;
+import net.lucypoulton.squirtgun.discord.adventure.DiscordComponentSerializer;
+import net.lucypoulton.squirtgun.platform.Gamemode;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+import org.jetbrains.annotations.NotNull;
 
-public interface DiscordUser extends SquirtgunUser {
+public abstract class DiscordUser implements SquirtgunPlayer {
+    public abstract User discordUser();
+
+    @Override
+    public String getUsername() {
+        return discordUser().getName();
+    }
+
+    /**
+     * Not supported by Discord - always returns false
+     * @return false
+     */
+    @Override
+    public boolean isOnline() {
+        return false;
+    }
+
+    /**
+     * Sends a direct message to a user.
+     */
+    @Override
+    public void sendMessage(final @NotNull Identity source,
+                            final @NotNull Component component,
+                            final @NotNull MessageType type) {
+        discordUser().openPrivateChannel()
+                .queue(channel -> channel.sendMessage(
+                        DiscordComponentSerializer.INSTANCE.serialize(component)).queue()
+                );
+    }
+
+    /**
+     * Discord obviously doesn't have gamemodes, returns a special value
+     * @return a unique Gamemode specific to Discord
+     */
+    @Override
+    public Gamemode getGamemode() {
+        return Gamemode.valueOf("DISCORD");
+    }
+
+    /**
+     * Does nothing - Discord doesn't have gamemodes.
+     */
+    @Override
+    public void setGamemode(Gamemode mode) {
+
+    }
 }
