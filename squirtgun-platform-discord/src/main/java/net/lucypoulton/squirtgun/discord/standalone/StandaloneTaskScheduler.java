@@ -64,6 +64,8 @@ public class StandaloneTaskScheduler implements TaskScheduler {
     @Override
     public void cancel(Task task) {
         Future<?> future = tasks.get(task);
-        if (future != null) future.cancel(true);
+        if (future != null) {
+            future.cancel(true);
+        }
     }
 }

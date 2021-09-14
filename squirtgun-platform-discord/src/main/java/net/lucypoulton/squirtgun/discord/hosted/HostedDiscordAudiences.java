@@ -51,7 +51,9 @@ public class HostedDiscordAudiences implements DiscordAudiences {
     @Override
     public @NotNull DiscordUser user(User user) {
         UUID mcUuid = linkHandler.getMinecraftUuid(user.getId());
-        if (mcUuid == null) return new StandaloneDiscordUser(user);
+        if (mcUuid == null) {
+            return new StandaloneDiscordUser(user);
+        }
 
         return new HostedDiscordUser(platform.parent().getPlayer(mcUuid), user);
     }

@@ -56,7 +56,9 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
     @Override
     public @NotNull String serialize(@NotNull Component component) {
 
-        if (!(component instanceof TextComponent)) return component.toString();
+        if (!(component instanceof TextComponent)) {
+            return component.toString();
+        }
 
         TextComponent text = (TextComponent) component;
 

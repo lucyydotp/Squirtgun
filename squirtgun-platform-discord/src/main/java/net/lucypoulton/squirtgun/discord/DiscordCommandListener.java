@@ -70,12 +70,16 @@ public class DiscordCommandListener extends ListenerAdapter {
         String cmdRaw = event.getMessage().getContentRaw().substring(prefix.length());
         String[] parts = cmdRaw.split(" ", 2);
         CommandNode<?> node = nodes.get(parts[0]);
-        if (node == null) return;
+        if (node == null) {
+            return;
+        }
         Component ret = new StringContext(formatProviders.get(node.getName()),
                         platform.audiences().user(event.getAuthor()),
                         node, parts.length == 2 ? parts[1] : "")
                 .execute();
 
-        if (ret != null) platform.audiences().channel(event.getTextChannel()).sendMessage(ret);
+        if (ret != null) {
+            platform.audiences().channel(event.getTextChannel()).sendMessage(ret);
+        }
     }
 }

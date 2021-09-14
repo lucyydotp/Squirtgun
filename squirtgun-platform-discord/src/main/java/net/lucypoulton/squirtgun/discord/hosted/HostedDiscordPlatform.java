@@ -30,8 +30,10 @@ import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
+import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -68,9 +70,13 @@ public class HostedDiscordPlatform extends DiscordPlatform {
     @Override
     public DiscordUser getPlayer(UUID uuid) {
         String id = linkHandler.getDiscordId(uuid);
-        if (id == null) return null;
+        if (id == null) {
+            return null;
+        }
         User user = jda().getUserById(id);
-        if (user == null) return null;
+        if (user == null) {
+            return null;
+        }
         return audiences().user(user);
     }
 
@@ -78,5 +84,10 @@ public class HostedDiscordPlatform extends DiscordPlatform {
     public @Nullable DiscordUser getPlayer(String name) {
         SquirtgunPlayer player = parent().getPlayer(name);
         return player == null ? null : getPlayer(player.getUuid());
+    }
+
+    @Override
+    public Path getConfigPath(SquirtgunPlugin<?> plugin) {
+        return parent().getConfigPath(plugin);
     }
 }
