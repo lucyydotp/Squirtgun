@@ -36,7 +36,9 @@ import org.jetbrains.annotations.Nullable;
 public class LegacyAmpersandPattern implements FormatPattern {
     @Override
     public @Nullable Component process(final @NotNull String in, final String formattersOverride) {
-        if (!in.contains("&")) return null;
+        if (!in.contains("&")) {
+            return null;
+        }
         return TextFormatter.applyLegacyDecorations(
                 LegacyComponentSerializer.legacyAmpersand().deserialize(in),
                 formattersOverride);

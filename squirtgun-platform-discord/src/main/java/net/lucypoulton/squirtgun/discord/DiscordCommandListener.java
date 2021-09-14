@@ -65,7 +65,9 @@ public class DiscordCommandListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (ignoreBots && event.getAuthor().isBot() ||
                 !canAccept.test(event.getTextChannel()) ||
-                !event.getMessage().getContentRaw().startsWith(prefix)) return;
+                !event.getMessage().getContentRaw().startsWith(prefix)) {
+            return;
+        }
 
         String cmdRaw = event.getMessage().getContentRaw().substring(prefix.length());
         String[] parts = cmdRaw.split(" ", 2);

@@ -104,7 +104,9 @@ public interface Condition<T extends PermissionHolder, U extends PermissionHolde
     default <V extends PermissionHolder> Condition<T, V> and(Condition<? super U, V> other) {
         return ((target, context) -> {
             Result<U> first = this.test(target, context);
-            if (!first.isSuccessful()) return new Result<>(false, null, first.getError());
+            if (!first.isSuccessful()) {
+                return new Result<>(false, null, first.getError());
+            }
 
             return other.test(first.getResult(), context);
         });
@@ -120,7 +122,9 @@ public interface Condition<T extends PermissionHolder, U extends PermissionHolde
     default Condition<T, U> or(Condition<? super T, U> other) {
         return ((target, context) -> {
             Result<U> first = this.test(target, context);
-            if (first.isSuccessful()) return first;
+            if (first.isSuccessful()) {
+                return first;
+            }
 
             return other.test(target, context);
         });

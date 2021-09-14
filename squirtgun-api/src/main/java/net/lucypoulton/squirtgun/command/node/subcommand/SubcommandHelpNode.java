@@ -87,7 +87,9 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
     @Override
     public @Nullable CommandNode<?> next(CommandContext context) {
         String child = context.getArgumentValue(childArgument);
-        if (child == null) return null;
+        if (child == null) {
+            return null;
+        }
 
         Optional<? extends CommandNode<?>> nodeWithGivenName = parentNode.getNodes().stream()
                 .filter(node -> node.getName().equals(child))

@@ -41,8 +41,12 @@ public final class HsvGradientPattern implements FormatPattern {
     final Pattern pattern = Pattern.compile("\\{hsv:([A-Fa-f0-9]{6}):?([klmno]+)?>}(.*)\\{([A-Fa-f0-9]{2})<}");
 
     private static float clamp(final float in) {
-        if (in > 1f) return 1f;
-        if (in < 0) return 0;
+        if (in > 1f) {
+            return 1f;
+        }
+        if (in < 0) {
+            return 0;
+        }
         return in;
     }
 
@@ -64,7 +68,9 @@ public final class HsvGradientPattern implements FormatPattern {
     @Override
     public Component process(final @NotNull String in, final String format) {
         final Matcher matcher = pattern.matcher(in);
-        if (!matcher.find()) return null;
+        if (!matcher.find()) {
+            return null;
+        }
         final int hue1 = Integer.parseInt(matcher.group(1).substring(0, 2), 16);
         final int sat = Integer.parseInt(matcher.group(1).substring(2, 4), 16);
         final int val = Integer.parseInt(matcher.group(1).substring(4, 6), 16);

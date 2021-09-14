@@ -59,7 +59,9 @@ public class SubcommandNodeArgument extends AbstractArgument<CommandNode<?>> {
     @Override
     public CommandNode<?> getValue(Queue<String> args, CommandContext context) {
         String raw = args.poll();
-        if (raw == null || raw.equals("")) return null;
+        if (raw == null || raw.equals("")) {
+            return null;
+        }
         return getValidNodes(raw, context.getTarget(), context)
                 .min(Comparator.comparingInt(a -> a.getName().length()))
                 .orElse(null);
@@ -68,7 +70,9 @@ public class SubcommandNodeArgument extends AbstractArgument<CommandNode<?>> {
     @Override
     public @Nullable List<String> tabComplete(Queue<String> args, CommandContext context) {
         String raw = args.poll();
-        if (raw == null) return null;
+        if (raw == null) {
+            return null;
+        }
         return getValidNodes(raw, context.getTarget(), context)
                 .map(CommandNode::getName)
                 .collect(Collectors.toList());

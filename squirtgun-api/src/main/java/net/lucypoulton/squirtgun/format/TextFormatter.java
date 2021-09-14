@@ -218,7 +218,9 @@ public class TextFormatter {
     @Contract(pure = true)
     public static @Nullable
     TextColor colourFromText(@NotNull final String in) {
-        if (in.length() == 1) return Objects.requireNonNull(LegacyComponentSerializer.parseChar(in.charAt(0))).color();
+        if (in.length() == 1) {
+            return Objects.requireNonNull(LegacyComponentSerializer.parseChar(in.charAt(0))).color();
+        }
         else if (in.length() == 7 && in.startsWith("#")) {
             try {
                 return TextColor.fromCSSHexString(in);
@@ -329,7 +331,9 @@ public class TextFormatter {
      */
     @Contract(pure = true)
     public static Component applyLegacyDecorations(@NotNull final Component in, @Nullable final String decorations) {
-        if (decorations == null) return in;
+        if (decorations == null) {
+            return in;
+        }
         Component out = in;
         for (char c : decorations.toCharArray()) {
             final LegacyFormat format = LegacyComponentSerializer.parseChar(c);

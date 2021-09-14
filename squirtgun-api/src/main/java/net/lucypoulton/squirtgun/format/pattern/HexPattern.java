@@ -37,11 +37,14 @@ public final class HexPattern implements FormatPattern {
 
     @Override
     public Component process(final @NotNull String in, final String formats) {
-        if (in.length() < 8) return null;
-        if (!in.startsWith("{#") || in.charAt(8) != '}') return null;
+        if (in.length() < 8 || !in.startsWith("{#") || in.charAt(8) != '}') {
+            return null;
+        }
         for (int i = 2; i < 8; i++) {
             char c = in.charAt(i);
-            if ((c < '0' || c > '9') && (c < 'A' || c > 'F') && (c < 'a' || c > 'f')) return null;
+            if ((c < '0' || c > '9') && (c < 'A' || c > 'F') && (c < 'a' || c > 'f')) {
+                return null;
+            }
         }
         final TextColor colour = TextFormatter.colourFromText(in.substring(1, 8));
         assert colour != null; // this is just to shut intellij up
