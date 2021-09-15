@@ -87,4 +87,15 @@ public class SerialiserTests {
 
         Assertions.assertEquals("**a**b**c**d", DiscordComponentSerializer.INSTANCE.serialize(component));
     }
+
+    @Test
+    public void testChildDecorations() {
+        Component component = Component.text("a")
+            .decorate(TextDecoration.BOLD)
+            .children(List.of(
+                Component.text("b").decorate(TextDecoration.UNDERLINED)
+            ));
+
+        Assertions.assertEquals("**a__b__**", DiscordComponentSerializer.INSTANCE.serialize(component));
+    }
 }
