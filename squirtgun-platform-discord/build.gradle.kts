@@ -26,7 +26,15 @@ repositories {
 }
 
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    testImplementation("net.kyori:adventure-api:4.9.1")
+
     api(project(":squirtgun-api"))
     api("net.dv8tion:JDA:4.3.0_277")
     implementation("net.kyori:adventure-text-serializer-plain:4.9.1")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

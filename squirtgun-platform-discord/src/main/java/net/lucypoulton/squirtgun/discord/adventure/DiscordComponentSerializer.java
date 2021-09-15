@@ -24,9 +24,12 @@ package net.lucypoulton.squirtgun.discord.adventure;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,29 +56,41 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
         return Component.text(input);
     }
 
-    @Override
-    public @NotNull String serialize(@NotNull Component component) {
+    private @NotNull String serialize(@NotNull Component component, @Nullable Style parentStyle) {
 
-        if (!(component instanceof TextComponent)) {
-            return component.toString();
-        }
+        Style inherited = parentStyle == null ? Style.empty() : parentStyle;
 
-        TextComponent text = (TextComponent) component;
-
-        String formatters = text.decorations().entrySet().stream()
-            .filter(entry -> entry.getValue().equals(TextDecoration.State.TRUE))
+        String formatters = component.decorations().entrySet().stream()
+            // don't add the decoration if it's already present in the parent
+            .filter(entry -> (entry.getValue() == TextDecoration.State.TRUE
+                && !inherited.hasDecoration(entry.getKey())
+            ) || entry.getValue() == TextDecoration.State.FALSE)
             .map(entry -> DECORATION_MARKUP.get(entry.getKey()))
             .collect(Collectors.joining());
+
+        String content = (component instanceof TextComponent) ?
+            ((TextComponent) component).content() :
+            PlainTextComponentSerializer.plainText().serialize(component);
 
         StringBuilder output = new StringBuilder();
 
         output.append(formatters);
-        output.append(text.content().replaceAll("(?<sym>[*_~|])", "\\\\${sym}"));
+        output.append(content.replaceAll("(?<sym>[*_~|])", "\\\\${sym}"));
+
+        Style merged = component.style().merge(inherited, Style.Merge.Strategy.ALWAYS);
+
+        for (Component next : component.children()) {
+            output.append(serialize(next, merged));
+        }
+
         output.append(new StringBuilder(formatters).reverse());
 
-        for (Component next : text.children()) {
-            output.append(serialize(next));
-        }
-        return output.toString();
+        // tidy up output
+        return output.toString().replaceAll("([*_~|])\\1{3}", "");
+    }
+
+    @Override
+    public @NotNull String serialize(@NotNull Component component) {
+        return serialize(component, null);
     }
 }
