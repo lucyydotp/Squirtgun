@@ -53,10 +53,13 @@ public class DiscordCommandListener extends ListenerAdapter {
         platform.jda().addEventListener(this);
     }
 
+    /**
+     * Registers a command, overwriting any nodes with the same name.
+     *
+     * @param node           the command node to register
+     * @param formatProvider the format provider to use for this node
+     */
     public void registerCommand(CommandNode<?> node, FormatProvider formatProvider) {
-        if (nodes.containsKey(node.getName())) {
-            throw new IllegalArgumentException("Node with given name already exists!");
-        }
         nodes.put(node.getName(), node);
         formatProviders.put(node.getName(), formatProvider);
     }
@@ -64,8 +67,8 @@ public class DiscordCommandListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (ignoreBots && event.getAuthor().isBot() ||
-                !canAccept.test(event.getTextChannel()) ||
-                !event.getMessage().getContentRaw().startsWith(prefix)) {
+            !canAccept.test(event.getTextChannel()) ||
+            !event.getMessage().getContentRaw().startsWith(prefix)) {
             return;
         }
 
@@ -76,9 +79,9 @@ public class DiscordCommandListener extends ListenerAdapter {
             return;
         }
         Component ret = new StringContext(formatProviders.get(node.getName()),
-                        platform.audiences().user(event.getAuthor()),
-                        node, parts.length == 2 ? parts[1] : "")
-                .execute();
+            platform.audiences().user(event.getAuthor()),
+            node, parts.length == 2 ? parts[1] : "")
+            .execute();
 
         if (ret != null) {
             platform.audiences().channel(event.getTextChannel()).sendMessage(ret);
