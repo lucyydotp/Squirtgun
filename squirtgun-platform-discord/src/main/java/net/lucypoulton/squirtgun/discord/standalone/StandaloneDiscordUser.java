@@ -25,7 +25,6 @@ package net.lucypoulton.squirtgun.discord.standalone;
 import net.dv8tion.jda.api.entities.User;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
 
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class StandaloneDiscordUser extends DiscordUser {
@@ -37,11 +36,11 @@ public class StandaloneDiscordUser extends DiscordUser {
     }
 
     /**
-     * @return a generated UUID, derived from the user's Discord account ID
+     * @return a UUID with the first 64 bits as zero, the last 64 as the user's Discord account ID
      */
     @Override
     public UUID getUuid() {
-        return UUID.nameUUIDFromBytes(("DiscordUser" + user.getId()).getBytes(StandardCharsets.UTF_8));
+        return new UUID(0L, user.getIdLong());
     }
 
     @Override
