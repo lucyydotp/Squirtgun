@@ -28,10 +28,11 @@ import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.lucypoulton.squirtgun.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.kyori.adventure.text.format.TextDecoration.State;
@@ -53,12 +54,6 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
         TextDecoration.OBFUSCATED, "||"
     );
 
-    private static boolean shouldAdd(State thisState, State otherState) {
-        if (thisState == State.NOT_SET) {
-            return otherState == State.TRUE;
-        }
-        return thisState == State.TRUE;
-    }
 
 
     @Override
@@ -66,40 +61,63 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
         return Component.text(input);
     }
 
-    private @NotNull String serialize(@NotNull Component component, @Nullable Style parentStyle) {
 
-        Style inherited = parentStyle == null ? Style.empty() : parentStyle;
+    private String getStringValue(Component in) {
+        if (in instanceof TextComponent) return ((TextComponent) in).content();
+        return PlainTextComponentSerializer.plainText().serialize(in);
+    }
 
-        String formatters = component.decorations().entrySet().stream()
-            // don't add the decoration if it's already present in the parent
-            .filter(entry -> shouldAdd(entry.getValue(), inherited.decoration(entry.getKey())))
-            .map(entry -> DECORATION_MARKUP.get(entry.getKey()))
-            .collect(Collectors.joining());
+    private Set<TextDecoration> decorateChild(Component parent, Component child) {
+        return parent.mergeStyle(child).decorations().entrySet().stream()
+            .filter(deco -> deco.getValue() == State.TRUE)
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toSet());
+    }
 
-        String content = (component instanceof TextComponent) ?
-            ((TextComponent) component).content() :
-            PlainTextComponentSerializer.plainText().serialize(component);
-
-        StringBuilder output = new StringBuilder();
-
-        output.append(formatters);
-        output.append(content.replaceAll("(?<sym>[*_~|])", "\\\\${sym}"));
-        output.append(new StringBuilder(formatters).reverse());
-
-        Style merged = component.style().merge(inherited, Style.Merge.Strategy.ALWAYS);
-
-        for (Component next : component.children()) {
-            output.append(serialize(next, merged));
+    private List<Pair<String, Set<TextDecoration>>> flatten(Component component, @Nullable Component parent) {
+        if (parent == null) {
+            parent = Component.empty();
         }
 
-        output.append(new StringBuilder(formatters).reverse());
+        List<Pair<String, Set<TextDecoration>>> out = new ArrayList<>();
+        out.add(new Pair<>(getStringValue(component), decorateChild(parent, component)));
 
-        // tidy up output
-        return output.toString().replaceAll("([*_~|])\\1{3}", "");
+        for (Component child : component.children()) {
+            out.addAll(flatten(child, component));
+        }
+        return out;
     }
 
     @Override
     public @NotNull String serialize(@NotNull Component component) {
-        return serialize(component, null);
+        // flatten
+        List<Pair<String, Set<TextDecoration>>> flattened = flatten(component, null);
+
+        Stack<TextDecoration> currentDecorations = new Stack<>();
+        StringBuilder output = new StringBuilder();
+
+        for (Pair<String, Set<TextDecoration>> entry : flattened) {
+
+            // finish all decorations that aren't applicable
+            while ( !currentDecorations.isEmpty() && !entry.value().contains(currentDecorations.peek())) {
+                TextDecoration deco = currentDecorations.pop();
+                output.append(DECORATION_MARKUP.get(deco));
+            }
+
+            // add any missing decorations
+            entry.value().stream().filter(deco -> !currentDecorations.contains(deco)).forEach( deco -> {
+                currentDecorations.push(deco);
+                output.append(DECORATION_MARKUP.get(deco));
+            });
+
+            // add the text
+            output.append(entry.key());
+        }
+
+        // finish any outstanding decorations
+        while (!currentDecorations.isEmpty()) {
+            output.append(DECORATION_MARKUP.get(currentDecorations.pop()));
+        }
+        return output.toString();
     }
 }
