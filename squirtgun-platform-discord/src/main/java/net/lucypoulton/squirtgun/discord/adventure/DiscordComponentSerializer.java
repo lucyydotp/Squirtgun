@@ -37,9 +37,11 @@ import java.util.stream.Collectors;
 import static net.kyori.adventure.text.format.TextDecoration.State;
 
 /**
- * Serialises Components into Discord-formatted markdown. Only {@link TextComponent}s
- * are supported. Discord's text format is far less rich than Minecraft's, so some
- * information, such as colour and events, is discarded.
+ * Serialises Components into Discord-formatted markdown. Discord's text format is
+ * far less rich than Minecraft's, so some information, such as colour and events,
+ * is discarded.
+ *
+ * Deserialisation is not properly implemented currently, and all formatting is ignored.
  */
 public enum DiscordComponentSerializer implements ComponentSerializer<Component, TextComponent, String> {
 

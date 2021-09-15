@@ -23,6 +23,7 @@
 package net.lucypoulton.squirtgun.discord.standalone;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
 import net.lucypoulton.squirtgun.discord.DiscordPlatform;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
@@ -34,6 +35,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 /**
@@ -44,8 +46,9 @@ public class StandaloneDiscordPlatform extends DiscordPlatform {
     private final TaskScheduler scheduler = new StandaloneTaskScheduler(this);
     private final SquirtgunUser console = new StandaloneConsoleWrapper(this);
 
-    public StandaloneDiscordPlatform(JDA jda) {
-        super(jda);
+
+    public StandaloneDiscordPlatform(JDA jda, String commandPrefix, Predicate<Message> commandPredicate) {
+        super(jda, commandPrefix, commandPredicate);
         System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-7s] %5$s %n");
     }
 

@@ -23,24 +23,23 @@
 package net.lucypoulton.squirtgun.discord;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.discord.adventure.DiscordAudiences;
 import net.lucypoulton.squirtgun.discord.adventure.DiscordComponentSerializer;
+import net.lucypoulton.squirtgun.discord.command.DiscordCommandListener;
 import net.lucypoulton.squirtgun.discord.standalone.StandaloneDiscordAudiences;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.AuthMode;
 import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
-import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * A Platform implementation for a JDA instance.
@@ -55,11 +54,17 @@ public abstract class DiscordPlatform implements Platform {
         return jda;
     }
 
-    protected DiscordPlatform(JDA jda) {
+    /**
+     * @param jda              the JDA instance to use to provide bot functionality
+     * @param commandPrefix    the prefix to use for commands
+     * @param commandPredicate a predicate to determine whether a command can be executed -
+     *                         see {@link net.lucypoulton.squirtgun.discord.command.CommandPredicate}
+     */
+    protected DiscordPlatform(JDA jda, String commandPrefix, Predicate<Message> commandPredicate) {
         this.jda = jda;
         audiences = new StandaloneDiscordAudiences();
         // fixme - hardcoded for testing
-        listener = new DiscordCommandListener(this, "~", true, x -> true);
+        listener = new DiscordCommandListener(this, commandPrefix, commandPredicate);
     }
 
     @Override

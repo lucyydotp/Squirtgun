@@ -20,14 +20,15 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.lucypoulton.squirtgun.discord;
+package net.lucypoulton.squirtgun.discord.command;
 
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.discord.DiscordPlatform;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,16 +40,14 @@ public class DiscordCommandListener extends ListenerAdapter {
 
     private final DiscordPlatform platform;
     private final String prefix;
-    private final boolean ignoreBots;
-    private final Predicate<TextChannel> canAccept;
+    private final Predicate<Message> canAccept;
 
     private final Map<String, CommandNode<?>> nodes = new HashMap<>();
     private final Map<String, FormatProvider> formatProviders = new HashMap<>();
 
-    public DiscordCommandListener(DiscordPlatform platform, String prefix, boolean ignoreBots, Predicate<TextChannel> canAccept) {
+    public DiscordCommandListener(DiscordPlatform platform, String prefix, Predicate<Message> canAccept) {
         this.platform = platform;
         this.prefix = prefix;
-        this.ignoreBots = ignoreBots;
         this.canAccept = canAccept;
         platform.jda().addEventListener(this);
     }
@@ -66,8 +65,7 @@ public class DiscordCommandListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (ignoreBots && event.getAuthor().isBot() ||
-            !canAccept.test(event.getTextChannel()) ||
+        if (!canAccept.test(event.getMessage()) ||
             !event.getMessage().getContentRaw().startsWith(prefix)) {
             return;
         }
