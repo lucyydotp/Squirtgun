@@ -49,12 +49,10 @@ public class StandaloneDiscordPlatform extends DiscordPlatform {
         System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-7s] %5$s %n");
     }
 
-    /**
-     * Throws an {@link IllegalStateException} - this method is <b>not supported standalone</b>
-     */
     @Override
     public DiscordUser getPlayer(UUID uuid) {
-        throw new IllegalStateException("Standalone");
+        if (uuid.getMostSignificantBits() != 0L) return null;
+        return new StandaloneDiscordUser(jda().getUserById(uuid.getLeastSignificantBits()));
     }
 
     /**
