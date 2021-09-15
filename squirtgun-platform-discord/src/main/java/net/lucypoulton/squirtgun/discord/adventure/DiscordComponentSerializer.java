@@ -24,7 +24,6 @@ package net.lucypoulton.squirtgun.discord.adventure;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -53,8 +52,6 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
         TextDecoration.STRIKETHROUGH, "~~",
         TextDecoration.OBFUSCATED, "||"
     );
-
-
 
     @Override
     public @NotNull TextComponent deserialize(@NotNull String input) {
@@ -99,13 +96,13 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
         for (Pair<String, Set<TextDecoration>> entry : flattened) {
 
             // finish all decorations that aren't applicable
-            while ( !currentDecorations.isEmpty() && !entry.value().contains(currentDecorations.peek())) {
+            while (!currentDecorations.isEmpty() && !entry.value().contains(currentDecorations.peek())) {
                 TextDecoration deco = currentDecorations.pop();
                 output.append(DECORATION_MARKUP.get(deco));
             }
 
             // add any missing decorations
-            entry.value().stream().filter(deco -> !currentDecorations.contains(deco)).forEach( deco -> {
+            entry.value().stream().filter(deco -> !currentDecorations.contains(deco)).forEach(deco -> {
                 currentDecorations.push(deco);
                 output.append(DECORATION_MARKUP.get(deco));
             });
