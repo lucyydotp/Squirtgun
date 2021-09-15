@@ -28,13 +28,12 @@ import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+
+import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 
 public class StandaloneTaskScheduler implements TaskScheduler {
-    private final ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledExecutorService executor = newSingleThreadScheduledExecutor();
     private final Platform platform;
 
     private final Map<Task, Future<?>> tasks = new HashMap<>();
