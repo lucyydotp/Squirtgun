@@ -72,4 +72,19 @@ public class SerialiserTests {
 
         Assertions.assertEquals("**a**b", DiscordComponentSerializer.INSTANCE.serialize(component));
     }
+
+    @Test
+    public void testNestedOverrides() {
+        Component component = Component.text("a")
+            .decorate(TextDecoration.BOLD)
+            .children(List.of(
+                Component.text("b").decoration(TextDecoration.BOLD, false).children(List.of(
+                    Component.text("c").decoration(TextDecoration.BOLD, true).children(List.of(
+                        Component.text("d").decoration(TextDecoration.BOLD, false)
+                    ))
+                ))
+            ));
+
+        Assertions.assertEquals("**a**b**c**d", DiscordComponentSerializer.INSTANCE.serialize(component));
+    }
 }

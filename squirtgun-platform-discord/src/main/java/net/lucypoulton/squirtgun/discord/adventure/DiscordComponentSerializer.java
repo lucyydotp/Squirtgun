@@ -34,6 +34,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static net.kyori.adventure.text.format.TextDecoration.State;
+
 /**
  * Serialises Components into Discord-formatted markdown. Only {@link TextComponent}s
  * are supported. Discord's text format is far less rich than Minecraft's, so some
@@ -51,6 +53,14 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
         TextDecoration.OBFUSCATED, "||"
     );
 
+    private static boolean shouldAdd(State thisState, State otherState) {
+        if (thisState == State.NOT_SET) {
+            return otherState == State.TRUE;
+        }
+        return thisState == State.TRUE;
+    }
+
+
     @Override
     public @NotNull TextComponent deserialize(@NotNull String input) {
         return Component.text(input);
@@ -62,9 +72,7 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
 
         String formatters = component.decorations().entrySet().stream()
             // don't add the decoration if it's already present in the parent
-            .filter(entry -> (entry.getValue() == TextDecoration.State.TRUE
-                && !inherited.hasDecoration(entry.getKey())
-            ) || entry.getValue() == TextDecoration.State.FALSE)
+            .filter(entry -> shouldAdd(entry.getValue(), inherited.decoration(entry.getKey())))
             .map(entry -> DECORATION_MARKUP.get(entry.getKey()))
             .collect(Collectors.joining());
 
@@ -76,6 +84,7 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
 
         output.append(formatters);
         output.append(content.replaceAll("(?<sym>[*_~|])", "\\\\${sym}"));
+        output.append(new StringBuilder(formatters).reverse());
 
         Style merged = component.style().merge(inherited, Style.Merge.Strategy.ALWAYS);
 
