@@ -98,4 +98,20 @@ public class SerialiserTests {
 
         Assertions.assertEquals("**a__b__**", DiscordComponentSerializer.INSTANCE.serialize(component));
     }
+
+    @Test
+    public void testNestedInheritance() {
+        Component component = Component.text("a").decorate(TextDecoration.BOLD)
+                .children(List.of(
+                        Component.text("b").children(List.of(
+                                Component.text("c").children(List.of(
+                                        Component.text("d").children(List.of(
+                                                Component.text("e")
+                                        ))
+                                ))
+                        ))
+                ));
+
+        Assertions.assertEquals("**abcde**", DiscordComponentSerializer.INSTANCE.serialize(component));
+    }
 }

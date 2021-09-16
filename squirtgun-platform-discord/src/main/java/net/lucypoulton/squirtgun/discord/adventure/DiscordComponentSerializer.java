@@ -24,6 +24,7 @@ package net.lucypoulton.squirtgun.discord.adventure;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -31,7 +32,11 @@ import net.lucypoulton.squirtgun.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import static net.kyori.adventure.text.format.TextDecoration.State;
@@ -66,23 +71,25 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
         return PlainTextComponentSerializer.plainText().serialize(in);
     }
 
-    private Set<TextDecoration> decorateChild(Component parent, Component child) {
-        return parent.mergeStyle(child).decorations().entrySet().stream()
+    private Set<TextDecoration> styleToDecorationSet(Style style) {
+        return style.decorations().entrySet().stream()
             .filter(deco -> deco.getValue() == State.TRUE)
             .map(Map.Entry::getKey)
             .collect(Collectors.toSet());
     }
 
     private List<Pair<String, Set<TextDecoration>>> flatten(Component component, @Nullable Component parent) {
+
         if (parent == null) {
             parent = Component.empty();
         }
 
+        Component merged = parent.mergeStyle(component);
         List<Pair<String, Set<TextDecoration>>> out = new ArrayList<>();
-        out.add(new Pair<>(getStringValue(component), decorateChild(parent, component)));
+        out.add(new Pair<>(getStringValue(component), styleToDecorationSet(merged.style())));
 
         for (Component child : component.children()) {
-            out.addAll(flatten(child, component));
+            out.addAll(flatten(child, parent.mergeStyle(component)));
         }
         return out;
     }
