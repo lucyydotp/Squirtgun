@@ -25,13 +25,17 @@ package net.lucypoulton.squirtgun.format;
 
 import net.lucypoulton.squirtgun.format.blocked.BlockedGradient;
 import net.lucypoulton.squirtgun.format.blocked.BlockedGradientPattern;
-import net.lucypoulton.squirtgun.format.pattern.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyFormat;
+import net.lucypoulton.squirtgun.format.pattern.FormatPattern;
+import net.lucypoulton.squirtgun.format.pattern.HexPattern;
+import net.lucypoulton.squirtgun.format.pattern.HsvGradientPattern;
+import net.lucypoulton.squirtgun.format.pattern.LegacyAmpersandPattern;
+import net.lucypoulton.squirtgun.format.pattern.RgbGradientPattern;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
