@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,8 +46,6 @@ import static net.kyori.adventure.text.format.TextDecoration.State;
  * Serialises Components into Discord-formatted markdown. Discord's text format is
  * far less rich than Minecraft's, so some information, such as colour and events,
  * is discarded.
- *
- * Deserialisation is not properly implemented currently, and all formatting is ignored.
  */
 public enum DiscordComponentSerializer implements ComponentSerializer<Component, TextComponent, String> {
 
@@ -62,7 +61,57 @@ public enum DiscordComponentSerializer implements ComponentSerializer<Component,
 
     @Override
     public @NotNull TextComponent deserialize(@NotNull String input) {
-        return Component.text(input);
+        Set<TextDecoration> decorations = new HashSet<>();
+        StringBuilder textBuffer = new StringBuilder();
+
+        List<TextComponent> out = new ArrayList<>();
+
+        List<Character> charList = new ArrayList<>(2);
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+
+            switch (c) {
+                case '*':
+                case '_':
+                case '~':
+                case '|':
+                    charList.add(c);
+                    continue;
+                default:
+                    if (charList.size() != 0) {
+                        String decoString = charList.stream().map(String::valueOf).collect(Collectors.joining());
+                        TextDecoration decoration = DECORATION_MARKUP.entrySet().stream()
+                                .filter(set -> set.getValue().equals(decoString))
+                                .map(Map.Entry::getKey)
+                                .findFirst().orElse(null);
+
+                        charList.clear();
+
+                        if (textBuffer.length() != 0) {
+                            out.add((TextComponent) Component.text(textBuffer.toString()).decorations(
+                                    decorations.stream().collect(Collectors.toMap(deco -> deco, x -> State.TRUE))
+                            ));
+                        }
+
+                        textBuffer = new StringBuilder();
+
+                        if (decorations.contains(decoration)) {
+                            decorations.remove(decoration);
+                        } else {
+                            decorations.add(decoration);
+                        }
+                    }
+            }
+            textBuffer.append(c);
+        }
+
+        if (textBuffer.length() != 0) {
+            out.add((TextComponent) Component.text(textBuffer.toString()).decorations(
+                    decorations.stream().collect(Collectors.toMap(deco -> deco, x -> State.TRUE))
+            ));
+        }
+
+        return out.size() > 1 ? Component.empty().children(out) : out.get(0);
     }
 
 

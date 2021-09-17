@@ -114,4 +114,18 @@ public class SerialiserTests {
 
         Assertions.assertEquals("**abcde**", DiscordComponentSerializer.INSTANCE.serialize(component));
     }
+
+    @Test
+    public void testBasicDeserialise() {
+        Assertions.assertEquals(DiscordComponentSerializer.INSTANCE.deserialize("**hello**"),
+                Component.text("hello").decorate(TextDecoration.BOLD));
+    }
+
+    @Test
+    public void testOverriddenDeserialise() {
+        Assertions.assertEquals(Component.empty().children(List.of(
+                Component.text("one").decorate(TextDecoration.BOLD),
+                Component.text(" two"))),
+                DiscordComponentSerializer.INSTANCE.deserialize("**one** two"));
+    }
 }
