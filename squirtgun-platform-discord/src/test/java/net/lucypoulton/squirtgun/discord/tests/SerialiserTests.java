@@ -30,11 +30,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static net.lucypoulton.squirtgun.discord.adventure.DiscordComponentSerializer.INSTANCE;
+
 public class SerialiserTests {
     @Test
     public void testBasicText() {
         Assertions.assertEquals("hello",
-            DiscordComponentSerializer.INSTANCE.serialize(Component.text("hello")));
+            INSTANCE.serialize(Component.text("hello")));
     }
 
     @Test
@@ -48,7 +50,7 @@ public class SerialiserTests {
         the order of decorators is not predictable, so instead we check
         that three asterisks and two underscores are present
          */
-        String result = DiscordComponentSerializer.INSTANCE.serialize(component).split("a")[0];
+        String result = INSTANCE.serialize(component).split("a")[0];
 
         Assertions.assertEquals(5, result.length());
         Assertions.assertEquals(2, result.chars().filter(ch -> ch == '_').count());
@@ -61,7 +63,7 @@ public class SerialiserTests {
             .decorate(TextDecoration.BOLD)
             .children(List.of(Component.text("b")));
 
-        Assertions.assertEquals("**ab**", DiscordComponentSerializer.INSTANCE.serialize(component));
+        Assertions.assertEquals("**ab**", INSTANCE.serialize(component));
     }
 
     @Test
@@ -70,7 +72,7 @@ public class SerialiserTests {
             .decorate(TextDecoration.BOLD)
             .children(List.of(Component.text("b").decoration(TextDecoration.BOLD, false)));
 
-        Assertions.assertEquals("**a**b", DiscordComponentSerializer.INSTANCE.serialize(component));
+        Assertions.assertEquals("**a**b", INSTANCE.serialize(component));
     }
 
     @Test
@@ -85,7 +87,7 @@ public class SerialiserTests {
                 ))
             ));
 
-        Assertions.assertEquals("**a**b**c**d", DiscordComponentSerializer.INSTANCE.serialize(component));
+        Assertions.assertEquals("**a**b**c**d", INSTANCE.serialize(component));
     }
 
     @Test
@@ -96,7 +98,7 @@ public class SerialiserTests {
                 Component.text("b").decorate(TextDecoration.UNDERLINED)
             ));
 
-        Assertions.assertEquals("**a__b__**", DiscordComponentSerializer.INSTANCE.serialize(component));
+        Assertions.assertEquals("**a__b__**", INSTANCE.serialize(component));
     }
 
     @Test
@@ -112,20 +114,12 @@ public class SerialiserTests {
                         ))
                 ));
 
-        Assertions.assertEquals("**abcde**", DiscordComponentSerializer.INSTANCE.serialize(component));
+        Assertions.assertEquals("**abcde**", INSTANCE.serialize(component));
     }
 
     @Test
     public void testBasicDeserialise() {
-        Assertions.assertEquals(DiscordComponentSerializer.INSTANCE.deserialize("**hello**"),
+        Assertions.assertEquals(INSTANCE.deserialize("**hello**"),
                 Component.text("hello").decorate(TextDecoration.BOLD));
-    }
-
-    @Test
-    public void testOverriddenDeserialise() {
-        Assertions.assertEquals(Component.empty().children(List.of(
-                Component.text("one").decorate(TextDecoration.BOLD),
-                Component.text(" two"))),
-                DiscordComponentSerializer.INSTANCE.deserialize("**one** two"));
     }
 }
