@@ -24,6 +24,7 @@ package net.lucypoulton.squirtgun.discord.standalone;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.lucypoulton.squirtgun.discord.DiscordPlatform;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
@@ -59,11 +60,17 @@ public class StandaloneDiscordPlatform extends DiscordPlatform {
     }
 
     /**
-     * Throws an {@link IllegalStateException} - this method is <b>not supported standalone</b>
+     * Fetches a user by their Discord username and discriminator, in the format {@code username#0000},
+     * where the username must be between 2 and 32 characters (inclusive) matching the exact casing
+     * and the discriminator must be exactly 4 digits.
      */
     @Override
     public @Nullable DiscordUser getPlayer(String name) {
-        throw new IllegalStateException("Standalone");
+        User user = jda().getUserByTag(name);
+        if (user == null) {
+            return null;
+        }
+        return audiences().user(user);
     }
 
     @Override
