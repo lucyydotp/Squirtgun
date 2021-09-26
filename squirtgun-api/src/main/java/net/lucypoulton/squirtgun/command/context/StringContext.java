@@ -62,6 +62,7 @@ public class StringContext implements CommandContext {
 
     private void populateArguments(CommandNode<?> node, Queue<String> raw, boolean findValues) {
         tail = node;
+        if (!node.getCondition().test(getTarget(), this).isSuccessful()) return;
         for (CommandArgument<?> arg : node.getArguments()) {
             argValues.put(arg, findValues ? arg.getValue(raw, this) : null);
         }
@@ -69,8 +70,6 @@ public class StringContext implements CommandContext {
         if (next == null) {
             return;
         }
-
-        if (!next.getCondition().test(getTarget(), this).isSuccessful()) return;
 
         populateArguments(next, raw, findValues);
     }
@@ -139,7 +138,9 @@ public class StringContext implements CommandContext {
 
         Condition.Result<?> result = getTail().getCondition().test(getTarget(), this);
         if (!result.isSuccessful()) {
-            return getFormat().getPrefix().append(
+            String error = result.getError();
+            return error == null ? null :
+                getFormat().getPrefix().append(
                 getFormat().formatMain(result.getError())
             );
         }

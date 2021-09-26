@@ -29,6 +29,7 @@ import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.discord.DiscordPlatform;
+import net.lucypoulton.squirtgun.discord.DiscordUser;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,15 +41,13 @@ public class DiscordCommandListener extends ListenerAdapter {
 
     private final DiscordPlatform platform;
     private final String prefix;
-    private final Predicate<Message> canAccept;
 
     private final Map<String, CommandNode<?>> nodes = new HashMap<>();
     private final Map<String, FormatProvider> formatProviders = new HashMap<>();
 
-    public DiscordCommandListener(DiscordPlatform platform, String prefix, Predicate<Message> canAccept) {
+    public DiscordCommandListener(DiscordPlatform platform, String prefix) {
         this.platform = platform;
         this.prefix = prefix;
-        this.canAccept = canAccept;
         platform.jda().addEventListener(this);
     }
 
@@ -65,8 +64,7 @@ public class DiscordCommandListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (!canAccept.test(event.getMessage()) ||
-            !event.getMessage().getContentRaw().startsWith(prefix)) {
+        if (!event.getMessage().getContentRaw().startsWith(prefix)) {
             return;
         }
 
@@ -76,9 +74,10 @@ public class DiscordCommandListener extends ListenerAdapter {
         if (node == null) {
             return;
         }
-        Component ret = new StringContext(formatProviders.get(node.getName()),
+        Component ret = new DiscordCommandContext(formatProviders.get(node.getName()),
             platform.audiences().user(event.getAuthor()),
-            node, parts.length == 2 ? parts[1] : "")
+            node, parts.length == 2 ? parts[1] : "",
+            event.getMessage())
             .execute();
 
         if (ret != null) {

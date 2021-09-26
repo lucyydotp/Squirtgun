@@ -48,8 +48,8 @@ public class StandaloneDiscordPlatform extends DiscordPlatform {
     private final SquirtgunUser console = new StandaloneConsoleWrapper(this);
 
 
-    public StandaloneDiscordPlatform(JDA jda, String commandPrefix, Predicate<Message> commandPredicate) {
-        super(jda, commandPrefix, commandPredicate);
+    public StandaloneDiscordPlatform(JDA jda, String commandPrefix) {
+        super(jda, commandPrefix);
         System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-7s] %5$s %n");
     }
 

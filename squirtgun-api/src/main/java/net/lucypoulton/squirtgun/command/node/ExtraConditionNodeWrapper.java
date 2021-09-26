@@ -20,40 +20,48 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package net.lucypoulton.squirtgun.command.node;
 
-import com.google.common.base.Preconditions;
+import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.condition.Condition;
+import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractNode<T extends PermissionHolder> implements CommandNode<T> {
+class ExtraConditionNodeWrapper<T extends PermissionHolder> implements CommandNode<T> {
 
-    private final String name;
-    private final String description;
-    private final Condition<PermissionHolder, ? extends T> condition;
+    private final CommandNode<T> parent;
+    private final Condition<? super T, ? extends T> condition;
 
-    protected AbstractNode(@NotNull String name, @NotNull String description, Condition<PermissionHolder, ? extends T> condition) {
-        Preconditions.checkNotNull(name, "Name must not be null");
-        Preconditions.checkNotNull(description, "Description must not be null");
-        this.name = name;
-        this.description = description;
+    ExtraConditionNodeWrapper(CommandNode<T> parent, Condition<? super T, ? extends T> condition) {
+        this.parent = parent;
         this.condition = condition;
     }
 
     @Override
+    public @Nullable Component execute(CommandContext context) {
+        return parent.execute(context);
+    }
+
+    @Override
     public @NotNull String getName() {
-        return name;
+        return parent.getName();
     }
 
     @Override
     public String getDescription() {
-        return description;
+        return parent.getDescription();
     }
 
     @Override
     public @NotNull Condition<PermissionHolder, ? extends T> getCondition() {
-        return condition;
+        return (target, context) -> {
+            Condition.Result<? extends T> result = parent.getCondition().test(target, context);
+            return condition.test(result.getResult(), context).isSuccessful()
+                // java generics are *quirky*
+                ? new Condition.Result<>(result.isSuccessful(), result.getResult(), result.getError())
+                : new Condition.Result<>(false, null, null);
+        };
     }
 }

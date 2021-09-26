@@ -44,8 +44,8 @@ public class HostedDiscordPlatform extends DiscordPlatform {
     private final Platform parent;
     private final DiscordLinkHandler linkHandler;
 
-    protected HostedDiscordPlatform(JDA jda, Platform parent, String prefix, Predicate<Message> commandPredicate, DiscordLinkHandler linkHandler) {
-        super(jda, prefix, commandPredicate);
+    protected HostedDiscordPlatform(JDA jda, Platform parent, String prefix, DiscordLinkHandler linkHandler) {
+        super(jda, prefix);
         this.parent = parent;
         this.linkHandler = linkHandler;
     }

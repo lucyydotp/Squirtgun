@@ -176,7 +176,7 @@ public class NodeBuilder<T extends PermissionHolder> {
         }
 
         @Override
-        public @NotNull Condition<PermissionHolder, T> getCondition() {
+        public @NotNull Condition<PermissionHolder, ? extends T> getCondition() {
             return condition;
         }
 

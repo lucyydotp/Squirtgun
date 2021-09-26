@@ -20,40 +20,29 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package net.lucypoulton.squirtgun.discord.command;
 
-package net.lucypoulton.squirtgun.command.node;
+import net.dv8tion.jda.api.entities.Message;
+import net.lucypoulton.squirtgun.command.context.StringContext;
+import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.discord.DiscordUser;
+import net.lucypoulton.squirtgun.format.FormatProvider;
 
-import com.google.common.base.Preconditions;
-import net.lucypoulton.squirtgun.command.condition.Condition;
-import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
-import org.jetbrains.annotations.NotNull;
+public class DiscordCommandContext extends StringContext {
 
-public abstract class AbstractNode<T extends PermissionHolder> implements CommandNode<T> {
-
-    private final String name;
-    private final String description;
-    private final Condition<PermissionHolder, ? extends T> condition;
-
-    protected AbstractNode(@NotNull String name, @NotNull String description, Condition<PermissionHolder, ? extends T> condition) {
-        Preconditions.checkNotNull(name, "Name must not be null");
-        Preconditions.checkNotNull(description, "Description must not be null");
-        this.name = name;
-        this.description = description;
-        this.condition = condition;
-    }
+    private final Message message;
 
     @Override
-    public @NotNull String getName() {
-        return name;
+    public DiscordUser getTarget() {
+        return (DiscordUser) super.getTarget();
     }
 
-    @Override
-    public String getDescription() {
-        return description;
+    public DiscordCommandContext(FormatProvider provider, DiscordUser target, CommandNode<?> node, String content, Message message) {
+        super(provider, target, node, content);
+        this.message = message;
     }
 
-    @Override
-    public @NotNull Condition<PermissionHolder, ? extends T> getCondition() {
-        return condition;
+    public Message getMessage() {
+        return message;
     }
 }

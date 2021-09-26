@@ -51,16 +51,6 @@ public interface Condition<T extends PermissionHolder, U extends PermissionHolde
     }
 
     /**
-     * A condition ensuring the target is a {@link SquirtgunPlayer}, without casting.
-     */
-    static Condition<PermissionHolder, PermissionHolder> isPlayerCastless() {
-        return (target, context) ->
-            target instanceof SquirtgunPlayer
-                ? new Result<>(true, target, null)
-                : new Result<>(false, null, "This command can only be run by a player.");
-    }
-
-    /**
      * A condition ensuring the target is the console.
      */
     static Condition<PermissionHolder, PermissionHolder> isConsole() {
@@ -101,7 +91,7 @@ public interface Condition<T extends PermissionHolder, U extends PermissionHolde
      * @param other the second test
      * @return a condition that passes when both conditions pass
      */
-    default <V extends PermissionHolder> Condition<T, V> and(Condition<? super U, V> other) {
+    default <V extends U> Condition<T, V> and(Condition<? super U, V> other) {
         return ((target, context) -> {
             Result<U> first = this.test(target, context);
             if (!first.isSuccessful()) {
@@ -119,14 +109,16 @@ public interface Condition<T extends PermissionHolder, U extends PermissionHolde
      * @param other the second test
      * @return a condition that passes when either or both conditions pass
      */
-    default Condition<T, U> or(Condition<? super T, U> other) {
+    default Condition<T, U> or(Condition<? super T, ? extends U> other) {
         return ((target, context) -> {
             Result<U> first = this.test(target, context);
             if (first.isSuccessful()) {
                 return first;
             }
 
-            return other.test(target, context);
+            // thank you type erasure very cool
+            Result<? extends U> otherResult = other.test(target,context);
+            return new Result<>(otherResult.successful, otherResult.result, otherResult.error);
         });
     }
 

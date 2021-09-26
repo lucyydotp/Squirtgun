@@ -57,14 +57,12 @@ public abstract class DiscordPlatform implements Platform {
     /**
      * @param jda              the JDA instance to use to provide bot functionality
      * @param commandPrefix    the prefix to use for commands
-     * @param commandPredicate a predicate to determine whether a command can be executed -
-     *                         see {@link net.lucypoulton.squirtgun.discord.command.CommandPredicate}
      */
-    protected DiscordPlatform(JDA jda, String commandPrefix, Predicate<Message> commandPredicate) {
+    protected DiscordPlatform(JDA jda, String commandPrefix) {
         this.jda = jda;
         audiences = new StandaloneDiscordAudiences();
         // fixme - hardcoded for testing
-        listener = new DiscordCommandListener(this, commandPrefix, commandPredicate);
+        listener = new DiscordCommandListener(this, commandPrefix);
     }
 
     @Override
