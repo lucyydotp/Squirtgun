@@ -61,7 +61,6 @@ public abstract class DiscordPlatform implements Platform {
     protected DiscordPlatform(JDA jda, String commandPrefix) {
         this.jda = jda;
         audiences = new StandaloneDiscordAudiences();
-        // fixme - hardcoded for testing
         listener = new DiscordCommandListener(this, commandPrefix);
     }
 

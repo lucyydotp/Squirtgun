@@ -29,11 +29,24 @@ import net.lucypoulton.squirtgun.discord.DiscordUser;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * TODO
+ * Obtains audiences from JDA entities.
  */
 public interface DiscordAudiences {
 
+    /**
+     * Creates an audience for a Discord text channel.
+     *
+     * @param channel the channel to create an audience for
+     * @return the audience
+     */
     @NotNull Audience channel(TextChannel channel);
 
+    /**
+     * Creates an audience for a private message with a Discord account.
+     * Note that users can disable private messaging from non-friends, in which case messages will not be received.
+     *
+     * @param user the user to open a private message with
+     * @return the audience
+     */
     @NotNull DiscordUser user(User user);
 }
