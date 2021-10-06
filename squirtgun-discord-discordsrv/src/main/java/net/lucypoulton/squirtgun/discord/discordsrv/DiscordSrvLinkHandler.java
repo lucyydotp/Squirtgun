@@ -20,21 +20,27 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package net.lucypoulton.squirtgun.discord.discordsrv;
 
-pluginManagement {
-    repositories {
-        maven("https://maven.fabricmc.net/")
-        gradlePluginPortal()
+import github.scarsz.discordsrv.objects.managers.AccountLinkManager;
+import net.lucypoulton.squirtgun.discord.hosted.DiscordLinkHandler;
+
+import java.util.UUID;
+
+public class DiscordSrvLinkHandler implements DiscordLinkHandler {
+    private final AccountLinkManager dsrvLinkManager;
+
+    public DiscordSrvLinkHandler(AccountLinkManager dsrvLinkManager) {
+        this.dsrvLinkManager = dsrvLinkManager;
+    }
+
+    @Override
+    public String getDiscordId(UUID uuid) {
+        return dsrvLinkManager.getDiscordId(uuid);
+    }
+
+    @Override
+    public UUID getMinecraftUuid(String discordId) {
+        return dsrvLinkManager.getUuid(discordId);
     }
 }
-
-rootProject.name = "squirtgun"
-
-include(
-    "squirtgun-api",
-    "squirtgun-platform-bukkit",
-    "squirtgun-platform-bungee",
-    "squirtgun-platform-fabric",
-    "squirtgun-platform-discord",
-    "squirtgun-discord-discordsrv"
-)

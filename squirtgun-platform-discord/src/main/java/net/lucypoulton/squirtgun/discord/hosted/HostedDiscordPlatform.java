@@ -23,7 +23,6 @@
 package net.lucypoulton.squirtgun.discord.hosted;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.lucypoulton.squirtgun.discord.DiscordPlatform;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
@@ -36,7 +35,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.UUID;
-import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 public class HostedDiscordPlatform extends DiscordPlatform {
@@ -44,7 +42,7 @@ public class HostedDiscordPlatform extends DiscordPlatform {
     private final Platform parent;
     private final DiscordLinkHandler linkHandler;
 
-    protected HostedDiscordPlatform(JDA jda, Platform parent, String prefix, DiscordLinkHandler linkHandler) {
+    public HostedDiscordPlatform(JDA jda, Platform parent, String prefix, DiscordLinkHandler linkHandler) {
         super(jda, prefix);
         this.parent = parent;
         this.linkHandler = linkHandler;
