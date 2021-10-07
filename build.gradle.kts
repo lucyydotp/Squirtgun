@@ -28,7 +28,7 @@ plugins {
     checkstyle
 }
 
-version = "2.0.0-pre6-SNAPSHOT"
+version = "2.0.0-pre6"
 group = "net.lucypoulton"
 
 subprojects {
