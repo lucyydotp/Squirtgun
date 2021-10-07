@@ -31,8 +31,10 @@ pluginManagement {
 rootProject.name = "squirtgun"
 
 include(
-        "squirtgun-api",
-        "squirtgun-platform-bukkit",
-        "squirtgun-platform-bungee",
-        "squirtgun-platform-fabric"
+    "squirtgun-api",
+    "squirtgun-platform-bukkit",
+    "squirtgun-platform-bungee",
+    "squirtgun-platform-fabric",
+    "squirtgun-platform-discord",
+    "squirtgun-discord-discordsrv"
 )

@@ -32,9 +32,9 @@ public abstract class AbstractNode<T extends PermissionHolder> implements Comman
 
     private final String name;
     private final String description;
-    private final Condition<PermissionHolder, T> condition;
+    private final Condition<PermissionHolder, ? extends T> condition;
 
-    protected AbstractNode(@NotNull String name, @NotNull String description, Condition<PermissionHolder, T> condition) {
+    protected AbstractNode(@NotNull String name, @NotNull String description, Condition<PermissionHolder, ? extends T> condition) {
         Preconditions.checkNotNull(name, "Name must not be null");
         Preconditions.checkNotNull(description, "Description must not be null");
         this.name = name;
@@ -53,7 +53,7 @@ public abstract class AbstractNode<T extends PermissionHolder> implements Comman
     }
 
     @Override
-    public Condition<PermissionHolder, T> getCondition() {
+    public @NotNull Condition<PermissionHolder, ? extends T> getCondition() {
         return condition;
     }
 }

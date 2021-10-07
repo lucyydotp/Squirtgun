@@ -31,7 +31,6 @@ import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.argument.ListArgument;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.format.FormatProvider;
-import net.lucypoulton.squirtgun.format.TextFormatter;
 import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -81,14 +80,16 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
     }
 
     @Override
-    public Condition<PermissionHolder, PermissionHolder> getCondition() {
+    public @NotNull Condition<PermissionHolder, ? extends PermissionHolder> getCondition() {
         return Condition.alwaysTrue();
     }
 
     @Override
     public @Nullable CommandNode<?> next(CommandContext context) {
         String child = context.getArgumentValue(childArgument);
-        if (child == null) return null;
+        if (child == null) {
+            return null;
+        }
 
         Optional<? extends CommandNode<?>> nodeWithGivenName = parentNode.getNodes().stream()
                 .filter(node -> node.getName().equals(child))
@@ -102,7 +103,7 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
     public @Nullable Component execute(CommandContext context) {
         final FormatProvider fmt = context.getFormat();
         Component out = Component.empty()
-                .append(TextFormatter.formatTitle("Commands:", fmt))
+                .append(fmt.formatTitle("Commands:"))
                 .append(Component.newline());
 
         for (CommandNode<?> node : parentNode.getNodes()) {
@@ -117,7 +118,7 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
         }
 
         out = out.append(Component.newline())
-                .append(TextFormatter.formatTitle("*", fmt));
+                .append(fmt.formatFooter("*"));
 
         return out;
     }

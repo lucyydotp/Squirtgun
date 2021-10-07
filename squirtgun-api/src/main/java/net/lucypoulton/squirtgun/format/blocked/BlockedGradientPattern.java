@@ -54,7 +54,9 @@ public class BlockedGradientPattern implements FormatPattern {
     @Override
     public Component process(@NotNull String in, String overrideFormatter) {
         Matcher matcher = pattern.matcher(in);
-        if (!matcher.find()) return null;
+        if (!matcher.find()) {
+            return null;
+        }
 
         String label = matcher.group(1);
 
@@ -69,7 +71,9 @@ public class BlockedGradientPattern implements FormatPattern {
         String content = matcher.group(3);
 
         TextColor[] cols = colours.get(label);
-        if (cols == null) return Component.text(content);
+        if (cols == null) {
+            return Component.text(content);
+        }
 
         float step = content.length() / (float) cols.length;
         List<Integer> points = new ArrayList<>();

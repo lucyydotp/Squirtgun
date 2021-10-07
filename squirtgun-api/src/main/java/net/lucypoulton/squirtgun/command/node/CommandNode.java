@@ -68,7 +68,7 @@ public interface CommandNode<T extends PermissionHolder> {
      *
      * @return the condition
      */
-    Condition<PermissionHolder, T> getCondition();
+    @NotNull Condition<PermissionHolder, ? extends T> getCondition();
 
     /**
      * Gets this command's arguments. By default, returns an empty list.
@@ -84,5 +84,9 @@ public interface CommandNode<T extends PermissionHolder> {
      */
     default @Nullable CommandNode<? extends T> next(CommandContext context) {
         return null;
+    }
+
+    default CommandNode<T> withExtraCondition(Condition<? super T, ? extends T> other) {
+        return new ExtraConditionNodeWrapper<>(this, other);
     }
 }

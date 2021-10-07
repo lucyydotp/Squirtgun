@@ -56,7 +56,9 @@ public class ListArgument extends AbstractArgument<String> {
     @Override
     public @Nullable List<String> tabComplete(Queue<String> value, CommandContext ctx) {
         String top = value.poll();
-        if (top == null) return null;
+        if (top == null) {
+            return null;
+        }
         return values.stream()
                 .filter(x -> x.startsWith(top))
                 .collect(Collectors.toList());

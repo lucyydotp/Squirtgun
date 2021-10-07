@@ -55,7 +55,7 @@ public class HelpNode implements CommandNode<PermissionHolder> {
     public @Nullable Component execute(CommandContext context) {
         FormatProvider format = context.getFormat();
         Component out = Component.empty()
-                .append(TextFormatter.formatTitle("Command Help", format))
+                .append(format.formatTitle("Command Help"))
                 .append(Component.newline());
 
         String fullCommand = parentNode.getName() + " " +
@@ -81,7 +81,7 @@ public class HelpNode implements CommandNode<PermissionHolder> {
         }
 
         out = out.append(Component.newline())
-                .append(TextFormatter.formatTitle("*", context.getFormat()));
+                .append(format.formatFooter("*"));
 
         return out;
     }
@@ -97,7 +97,7 @@ public class HelpNode implements CommandNode<PermissionHolder> {
     }
 
     @Override
-    public Condition<PermissionHolder, PermissionHolder> getCondition() {
+    public @NotNull Condition<PermissionHolder, ? extends PermissionHolder> getCondition() {
         return Condition.alwaysTrue();
     }
 

@@ -24,20 +24,20 @@
 package net.lucypoulton.squirtgun.command.node;
 
 import net.lucypoulton.squirtgun.Squirtgun;
+import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.format.FormatProvider;
-import net.lucypoulton.squirtgun.format.TextFormatter;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
-public class PluginInfoNode extends AbstractNode<SquirtgunUser> {
+public class PluginInfoNode extends AbstractNode<PermissionHolder> {
 
     private final SquirtgunPlugin<?> plugin;
 
     public PluginInfoNode(String name, SquirtgunPlugin<?> plugin) {
-        super(name, "Shows information about this plugin.", null);
+        super(name, "Shows information about this plugin.", Condition.alwaysTrue());
         this.plugin = plugin;
     }
 
@@ -46,7 +46,7 @@ public class PluginInfoNode extends AbstractNode<SquirtgunUser> {
         final FormatProvider fmt = context.getFormat();
         final Component nl = Component.newline();
         return Component.empty()
-                .append(TextFormatter.formatTitle(plugin.getPluginName(), fmt))
+                .append(fmt.formatTitle(plugin.getPluginName()))
                 .append(nl).append(nl)
                 .append(fmt.formatMain(plugin.getPluginName() + " version "))
                 .append(fmt.formatAccent(plugin.getPluginVersion())).append(nl)
@@ -59,6 +59,6 @@ public class PluginInfoNode extends AbstractNode<SquirtgunUser> {
                 .append(fmt.formatMain("Using platform "))
                 .append(fmt.formatAccent(plugin.getPlatform().name()))
                 .append(nl).append(nl)
-                .append(TextFormatter.formatTitle("*", fmt));
+                .append(fmt.formatFooter("*"));
     }
 }

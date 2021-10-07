@@ -71,6 +71,31 @@ public interface FormatProvider {
     Component formatAccent(@NotNull String input, @NotNull TextDecoration[] formatters);
 
     /**
+     * Formats title text. This defaults to the old TextFormatter#formatTitle behaviour (centre-aligned title text with
+     * solid accent-coloured bars either side). This should be overridden for the Discord platform as centre-alignment
+     * does not work there due to a different font.
+     *
+     * @param input the text to act as the title
+     * @return the formatted text
+     * @since 2.0.0
+     */
+    default Component formatTitle(String input) {
+        return TextFormatter.centreText(input, this, " ", new TextDecoration[]{TextDecoration.STRIKETHROUGH});
+    }
+
+    /**
+     * Formats text into a footer, intended to be shown as the last line of a message. By default, this behaves the same
+     * as {@link #formatTitle(String)}.
+     *
+     * @param input the text to act as the footer
+     * @return the formatted text
+     * @since 2.0.0
+     */
+    default Component formatFooter(String input) {
+        return formatTitle(input);
+    }
+
+    /**
      * Get a prefix, which is put before most command messages.
      *
      * @return a preformatted colour sequence

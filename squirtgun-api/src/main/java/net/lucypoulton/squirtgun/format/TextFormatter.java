@@ -25,13 +25,17 @@ package net.lucypoulton.squirtgun.format;
 
 import net.lucypoulton.squirtgun.format.blocked.BlockedGradient;
 import net.lucypoulton.squirtgun.format.blocked.BlockedGradientPattern;
-import net.lucypoulton.squirtgun.format.pattern.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyFormat;
+import net.lucypoulton.squirtgun.format.pattern.FormatPattern;
+import net.lucypoulton.squirtgun.format.pattern.HexPattern;
+import net.lucypoulton.squirtgun.format.pattern.HsvGradientPattern;
+import net.lucypoulton.squirtgun.format.pattern.LegacyAmpersandPattern;
+import net.lucypoulton.squirtgun.format.pattern.RgbGradientPattern;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -161,8 +165,10 @@ public class TextFormatter {
      * @param in     the text to use as a title
      * @param format the format to apply to the string
      * @return a formatted string, ready to send to the player
+     * @deprecated use {@link FormatProvider#formatTitle(String)}
      */
     @Contract(pure = true)
+    @Deprecated
     public static Component formatTitle(@NotNull final String in, @NotNull final FormatProvider format) {
         return centreText(in, format, TITLE_SEPARATOR, new TextDecoration[]{TextDecoration.STRIKETHROUGH});
     }
@@ -216,7 +222,9 @@ public class TextFormatter {
     @Contract(pure = true)
     public static @Nullable
     TextColor colourFromText(@NotNull final String in) {
-        if (in.length() == 1) return Objects.requireNonNull(LegacyComponentSerializer.parseChar(in.charAt(0))).color();
+        if (in.length() == 1) {
+            return Objects.requireNonNull(LegacyComponentSerializer.parseChar(in.charAt(0))).color();
+        }
         else if (in.length() == 7 && in.startsWith("#")) {
             try {
                 return TextColor.fromCSSHexString(in);
@@ -327,7 +335,9 @@ public class TextFormatter {
      */
     @Contract(pure = true)
     public static Component applyLegacyDecorations(@NotNull final Component in, @Nullable final String decorations) {
-        if (decorations == null) return in;
+        if (decorations == null) {
+            return in;
+        }
         Component out = in;
         for (char c : decorations.toCharArray()) {
             final LegacyFormat format = LegacyComponentSerializer.parseChar(c);

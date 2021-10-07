@@ -58,7 +58,7 @@ public class SubcommandNode extends AbstractNode<PermissionHolder> {
      * @param childNodes the child nodes
      */
     protected SubcommandNode(@NotNull String name, @NotNull String description,
-                             Condition<PermissionHolder, PermissionHolder> condition, @NotNull CommandNode<?>... childNodes) {
+                             Condition<PermissionHolder, ?> condition, @NotNull CommandNode<?>... childNodes) {
         super(name, description, condition);
         Preconditions.checkNotNull(childNodes, "Child nodes must not be null");
 
@@ -79,7 +79,7 @@ public class SubcommandNode extends AbstractNode<PermissionHolder> {
     public static SubcommandNode withHelp(
             String name,
             String description,
-            Condition<PermissionHolder, PermissionHolder> condition,
+            Condition<PermissionHolder, ?> condition,
             @NotNull CommandNode<?>... childNodes) {
         SubcommandNode node = new SubcommandNode(name, description, condition, childNodes);
         node.setFallbackNode(new SubcommandHelpNode(node));
@@ -99,7 +99,7 @@ public class SubcommandNode extends AbstractNode<PermissionHolder> {
     public static SubcommandNode withFallback(
             String name,
             String description,
-            Condition<PermissionHolder, PermissionHolder> condition,
+            Condition<PermissionHolder, ?> condition,
             @NotNull CommandNode<?> fallback,
             @NotNull CommandNode<?>... childNodes) {
         SubcommandNode node = new SubcommandNode(name, description, condition, childNodes);
@@ -119,7 +119,7 @@ public class SubcommandNode extends AbstractNode<PermissionHolder> {
     public static SubcommandNode withBasicHelp(
             String name,
             String description,
-            Condition<PermissionHolder, PermissionHolder> condition,
+            Condition<PermissionHolder, ?> condition,
             @NotNull CommandNode<?>... childNodes) {
         return new SubcommandNode(name, description, condition, childNodes);
     }

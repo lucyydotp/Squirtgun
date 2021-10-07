@@ -32,7 +32,13 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 /**
@@ -56,13 +62,14 @@ public class StringContext implements CommandContext {
 
     private void populateArguments(CommandNode<?> node, Queue<String> raw, boolean findValues) {
         tail = node;
+        if (!node.getCondition().test(getTarget(), this).isSuccessful()) return;
         for (CommandArgument<?> arg : node.getArguments()) {
             argValues.put(arg, findValues ? arg.getValue(raw, this) : null);
         }
         CommandNode<?> next = node.next(this);
-        if (next == null) return;
-
-        if (!next.getCondition().test(getTarget(), this).isSuccessful()) return;
+        if (next == null) {
+            return;
+        }
 
         populateArguments(next, raw, findValues);
     }
@@ -115,7 +122,9 @@ public class StringContext implements CommandContext {
 
         int argIdx = 0;
         while (!rawQueue.isEmpty()) {
-            if (argIdx >= argTree.size()) return null;
+            if (argIdx >= argTree.size()) {
+                return null;
+            }
             CommandArgument<?> arg = argTree.get(argIdx);
             results.add(arg.tabComplete(rawQueue, this));
             argIdx++;
@@ -128,9 +137,13 @@ public class StringContext implements CommandContext {
         populateArguments(node, getArgsAsList(raw), true);
 
         Condition.Result<?> result = getTail().getCondition().test(getTarget(), this);
-        if (!result.isSuccessful()) return getFormat().getPrefix().append(
+        if (!result.isSuccessful()) {
+            String error = result.getError();
+            return error == null ? null :
+                getFormat().getPrefix().append(
                 getFormat().formatMain(result.getError())
-        );
+            );
+        }
 
         for (CommandArgument<?> argument : getTail().getArguments()) {
             if (argument.isOptional() || getArgumentValue(argument) != null) continue;
