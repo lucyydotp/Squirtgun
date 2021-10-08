@@ -27,6 +27,10 @@ import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 
 import java.util.UUID;
 
+/**
+ * @deprecated see {@link net.lucypoulton.squirtgun.platform.event}
+ */
+@Deprecated
 @SuppressWarnings("EmptyMethod")
 public abstract class EventListener {
     private final SquirtgunPlugin<?> plugin;
