@@ -49,11 +49,13 @@ subprojects {
         withSourcesJar()
     }
 
+    lateinit var publication: MavenPublication
+
     publishing {
         publications {
             // fabric has a bit of a special task: remapping
             if (name != "squirtgun-platform-fabric") {
-                create<MavenPublication>("mavenJava") {
+                publication = create<MavenPublication>("mavenJava") {
                     from(components["java"])
                     pom {
                         description.set("A multipurpose library designed for Minecraft: Java Edition plugins.")
@@ -100,15 +102,17 @@ subprojects {
             }
         }
 
-        signing {
-            val signingKey: String? by project
-            val signingPassword: String? by project
-            if (signingKey != null && signingPassword != null) {
-                useInMemoryPgpKeys(signingKey, signingPassword)
-                sign(publishing.publications["mavenJava"])
-            }
-            if (signatory == null) {
-                logger.warn("No signatories available, skipping signing.")
+        if (name != "squirtgun-platform-fabric") {
+            signing {
+                val signingKey: String? by project
+                val signingPassword: String? by project
+                if (signingKey != null && signingPassword != null) {
+                    useInMemoryPgpKeys(signingKey, signingPassword)
+                    sign(publication)
+                }
+                if (signatory == null) {
+                    logger.warn("No signatories available, skipping signing.")
+                }
             }
         }
     }

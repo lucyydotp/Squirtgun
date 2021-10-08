@@ -50,9 +50,11 @@ dependencies {
     })
 }
 
+lateinit var publication: MavenPublication
+
 publishing {
     publications {
-        create<MavenPublication>("mavenJava") {
+        publication = create<MavenPublication>("mavenJava") {
             artifact(tasks.remapJar) { builtBy(tasks.remapJar) }
             artifact(tasks.sourcesJar) { builtBy(tasks.remapSourcesJar) }
             artifact(tasks.javadocJar) { builtBy(tasks.javadocJar) }
@@ -100,7 +102,7 @@ signing {
     val signingPassword: String? by project
     if (signingKey != null && signingPassword != null) {
         useInMemoryPgpKeys(signingKey, signingPassword)
-        sign(publishing.publications["mavenJava"])
+        sign(publication)
     }
     if (signatory == null) {
         logger.warn("No signatories available, skipping signing.")
