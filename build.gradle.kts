@@ -99,17 +99,17 @@ subprojects {
                 }
             }
         }
-    }
 
-    signing {
-        val signingKey: String? by project
-        val signingPassword: String? by project
-        if (signingKey != null && signingPassword != null) {
-            useInMemoryPgpKeys(signingKey, signingPassword)
-            sign(publishing.publications["mavenJava"])
-        }
-        if (signatory == null) {
-            logger.warn("No signatories available, skipping signing.")
+        signing {
+            val signingKey: String? by project
+            val signingPassword: String? by project
+            if (signingKey != null && signingPassword != null) {
+                useInMemoryPgpKeys(signingKey, signingPassword)
+                sign(publishing.publications["mavenJava"])
+            }
+            if (signatory == null) {
+                logger.warn("No signatories available, skipping signing.")
+            }
         }
     }
 
