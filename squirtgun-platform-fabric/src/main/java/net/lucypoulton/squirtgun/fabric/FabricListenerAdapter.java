@@ -23,9 +23,9 @@
 
 package net.lucypoulton.squirtgun.fabric;
 
-import net.lucypoulton.squirtgun.platform.EventListener;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.lucypoulton.squirtgun.platform.EventListener;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 
@@ -38,12 +38,9 @@ class FabricListenerAdapter {
 
     private final Set<EventListener> listeners = Collections.newSetFromMap(new IdentityHashMap<>());
 
-    {
+    FabricListenerAdapter() {
         ServerPlayConnectionEvents.JOIN.register(this::playerJoin);
         ServerPlayConnectionEvents.DISCONNECT.register(this::playerDisconnect);
-    }
-
-    FabricListenerAdapter() {
     }
 
     void addListener(final EventListener listener) {

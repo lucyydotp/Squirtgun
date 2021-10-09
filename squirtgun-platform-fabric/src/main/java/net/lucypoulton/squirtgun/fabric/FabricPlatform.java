@@ -23,6 +23,10 @@
 
 package net.lucypoulton.squirtgun.fabric;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
+import net.kyori.adventure.platform.fabric.FabricServerAudiences;
+import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.fabric.task.FabricTaskScheduler;
 import net.lucypoulton.squirtgun.format.FormatProvider;
@@ -32,16 +36,11 @@ import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
-import net.kyori.adventure.platform.fabric.FabricServerAudiences;
-import net.kyori.adventure.text.Component;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,9 +48,12 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
+import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toUnmodifiableList;
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
 
 /**
  * Squirtgun Platform implementation for the Fabric mod loader.
@@ -59,15 +61,15 @@ import static java.util.Objects.requireNonNull;
 public final class FabricPlatform implements Platform {
 
     private static final Logger LOGGER = Logger.getLogger(FabricPlatform.class.getSimpleName());
-    private static final List<String> PROXY_BRIDGING_MODS =
-            List.of("fabricproxy",  // fabricproxy has been superseded by fabricproxy-lite, TODO drop off the list?
-                    "fabricproxy-lite");
+    private static final List<String> PROXY_BRIDGING_MODS = List.of(
+            "fabricproxy",  // fabricproxy has been superseded by fabricproxy-lite, TODO drop off the list?
+            "fabricproxy-lite"
+    );
     private final FabricTaskScheduler taskScheduler;
     private final FabricConsoleWrapper consoleWrapper;
     private final FabricListenerAdapter listenerAdapter = new FabricListenerAdapter();
     private MinecraftServer server;
     private FabricServerAudiences audiences;
-    private List<SquirtgunPlayer> onlinePlayers = List.of();  // default to empty list until server has started
 
     /**
      * Create the Squirtgun's Fabric "platform" for the server.
@@ -80,19 +82,12 @@ public final class FabricPlatform implements Platform {
         this.taskScheduler = new FabricTaskScheduler(this);
         this.consoleWrapper = new FabricConsoleWrapper(this);
         ServerLifecycleEvents.SERVER_STOPPING.register(this::serverStopping);
-        ServerLifecycleEvents.SERVER_STARTED.register(this::serverStarted);
-    }
-
-    private void serverStarted(final MinecraftServer server) {
-        this.onlinePlayers = getServer().getPlayerManager().getPlayerList()
-                .stream()
-                .map(this::asFabricPlayerOrDummy)
-                .collect(Collectors.toList());
     }
 
     private void serverStopping(final MinecraftServer server) {
         this.taskScheduler.shutdown();
         this.server = null;
+        this.audiences.close();
         this.audiences = null;
     }
 
@@ -171,6 +166,8 @@ public final class FabricPlatform implements Platform {
         final Entity entity = requireNonNull(commandSource, "commandSource").getEntity();
         if (entity instanceof ServerPlayerEntity) {
             return getPlayer((ServerPlayerEntity) entity);
+        } else if (entity == null) {
+            return DummyFabricPlayer.INSTANCE;
         } else {
             return getConsole();
         }
@@ -203,7 +200,9 @@ public final class FabricPlatform implements Platform {
 
     @Override
     public List<SquirtgunPlayer> getOnlinePlayers() {
-        return this.onlinePlayers;
+        return getServer().getPlayerManager().getPlayerList().stream()
+                .map(this::asFabricPlayerOrDummy)
+                .collect(toUnmodifiableList());
     }
 
     @Override
@@ -212,9 +211,14 @@ public final class FabricPlatform implements Platform {
     }
 
     @Override
-    public void registerCommand(CommandNode<?> node, FormatProvider provider) {
-        // TODO
-        throw new NotImplementedException("TODO");
+    public void registerCommand(final CommandNode<?> node, final FormatProvider provider) {
+        final var executor = new FabricNodeExecutor(node, provider, this);
+        getServer().getCommandManager().getDispatcher().register(
+                literal(node.getName())
+                        .executes(executor)
+                        .then(argument("args", greedyString())
+                                .suggests(executor).executes(executor))
+        );
     }
 
     private FabricPlayer asFabricPlayerOrDummy(final ServerPlayerEntity player) {
