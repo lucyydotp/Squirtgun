@@ -83,7 +83,8 @@ public final class FabricTaskScheduler implements TaskScheduler {
 
     @Override
     public void cancel(final Task task) {
-        Optional.ofNullable(this.taskMap.remove(task)).ifPresent(future -> future.cancel(false));
+        Optional.ofNullable(this.taskMap.remove(task))
+                .ifPresent(future -> future.cancel(false));
     }
 
     private Runnable runTask(final Task task) {

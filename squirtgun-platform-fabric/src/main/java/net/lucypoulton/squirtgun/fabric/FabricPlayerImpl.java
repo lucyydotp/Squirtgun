@@ -25,9 +25,10 @@ package net.lucypoulton.squirtgun.fabric;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumBiMap;
+import com.google.common.collect.Maps;
 import me.lucko.fabric.api.permissions.v0.Permissions;
-import net.lucypoulton.squirtgun.platform.Gamemode;
 import net.kyori.adventure.audience.Audience;
+import net.lucypoulton.squirtgun.platform.Gamemode;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.NotNull;
@@ -36,13 +37,15 @@ import java.util.UUID;
 
 class FabricPlayerImpl implements FabricPlayer {
 
-    private static final BiMap<GameMode, Gamemode> GAMEMODE_BIMAP = EnumBiMap.create(GameMode.class, Gamemode.class);
+    private static final BiMap<GameMode, Gamemode> GAMEMODE_BIMAP;
 
     static {
-        GAMEMODE_BIMAP.put(GameMode.SURVIVAL, Gamemode.SURVIVAL);
-        GAMEMODE_BIMAP.put(GameMode.CREATIVE, Gamemode.CREATIVE);
-        GAMEMODE_BIMAP.put(GameMode.ADVENTURE, Gamemode.ADVENTURE);
-        GAMEMODE_BIMAP.put(GameMode.SPECTATOR, Gamemode.SPECTATOR);
+        final BiMap<GameMode, Gamemode> gamemodeBiMap = EnumBiMap.create(GameMode.class, Gamemode.class);
+        gamemodeBiMap.put(GameMode.SURVIVAL, Gamemode.SURVIVAL);
+        gamemodeBiMap.put(GameMode.CREATIVE, Gamemode.CREATIVE);
+        gamemodeBiMap.put(GameMode.ADVENTURE, Gamemode.ADVENTURE);
+        gamemodeBiMap.put(GameMode.SPECTATOR, Gamemode.SPECTATOR);
+        GAMEMODE_BIMAP = Maps.unmodifiableBiMap(gamemodeBiMap);
     }
 
     private final ServerPlayerEntity handle;
