@@ -1,8 +1,22 @@
 package net.lucypoulton.squirtgun.platform.event;
 
+/**
+ * A priority for an event handler to dictate which order event handlers are executed in.
+ */
 public enum EventPriority {
-	HIGH,
-	NORMAL,
-	LOW,
-	MONITOR
+    HIGHEST(0),
+    HIGH(1),
+    NORMAL(2),
+    LOW(3),
+    LOWEST(4);
+
+    private final int level;
+
+    EventPriority(int level) {
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return level;
+    }
 }
