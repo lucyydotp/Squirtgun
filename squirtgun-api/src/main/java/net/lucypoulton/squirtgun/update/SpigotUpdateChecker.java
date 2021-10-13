@@ -29,7 +29,7 @@ import net.kyori.adventure.text.Component;
 /**
  * Update checking mechanism for Spigot plugins.
  */
-public class SpigotUpdateChecker extends UpdateChecker {
+public class SpigotUpdateChecker extends VersionStringUpdateChecker {
     /**
      * Creates a new update checker, and schedule update checking every 3 hours.
      *
@@ -40,12 +40,7 @@ public class SpigotUpdateChecker extends UpdateChecker {
      */
     public SpigotUpdateChecker(SquirtgunPlugin<?> plugin, int pluginId, Component updateMessage, String listenerPermission) {
         super(plugin, "https://api.spigotmc.org/legacy/update.php?resource=" + pluginId,
+
                 updateMessage, listenerPermission);
     }
-
-    @Override
-    protected boolean checkDataForUpdate(String input) {
-        return getPlugin().getPluginVersion().equals(input);
-    }
 }
-

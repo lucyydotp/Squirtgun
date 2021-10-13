@@ -23,6 +23,8 @@
 
 package net.lucypoulton.squirtgun.update;
 
+import net.lucypoulton.squirtgun.platform.event.EventHandler;
+import net.lucypoulton.squirtgun.platform.event.player.PlayerJoinEvent;
 import net.lucypoulton.squirtgun.platform.scheduler.Task;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.text.Component;
@@ -59,7 +61,17 @@ public abstract class UpdateChecker {
         this.updateMessage = updateMessage;
         this.listenerPermission = listenerPermission;
 
-        plugin.getPlatform().registerEventListener(new UpdateListener(this, plugin));
+        EventHandler<PlayerJoinEvent> joinEventHandler = new EventHandler.Builder<PlayerJoinEvent>()
+                        .eventType(PlayerJoinEvent.class)
+                        .handle(e -> {
+                            if (checkDataForUpdate() && e.player().hasPermission(getListenerPermission())) {
+                                e.player().sendMessage(getUpdateMessage());
+                            }
+                        }).build();
+
+        plugin.getPlatform().getEventManager().register(joinEventHandler);
+
+
 
         if (plugin.getPluginVersion().contains("-")) {
             plugin.getPlatform().getLogger().warning("Development version detected, skipping update check.");
