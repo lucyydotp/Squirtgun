@@ -21,29 +21,36 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+// For changing versions, upgrading etc: https://fabricmc.net/versions.html
 plugins {
-    id("fabric-loom") version "0.8-SNAPSHOT"
+    id("fabric-loom") version "0.9-SNAPSHOT"
 }
 
-val minecraftVersion = "1.17"
-val yarnBuild = 13
-val loaderVersion = "0.11.6"
-val fabricApiVersion = "0.36.0+1.17"
-val fabricPermissionsApiVersion = "0.1-SNAPSHOT"
-val adventureFabricVersion = "4.1.0-SNAPSHOT"
+val minecraftVersion: String = "1.17.1"
+val yarnBuild: Int = 61
+val loaderVersion: String = "0.12.1"
+val fabricApiVersion: String = "0.40.6+1.17"
+val fabricPermissionsApiVersion: String = "0.1-SNAPSHOT"
+val adventureFabricVersion: String = "4.1.0-SNAPSHOT"
 
 repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${minecraftVersion}")
-    mappings("net.fabricmc:yarn:${minecraftVersion}+build.${yarnBuild}:v2")
-    modImplementation("net.fabricmc:fabric-loader:${loaderVersion}")
+    minecraft("com.mojang:minecraft:$minecraftVersion")
+    mappings("net.fabricmc:yarn:$minecraftVersion+build.$yarnBuild:v2")
+    modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
 
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabricApiVersion}")
-    modApi("me.lucko:fabric-permissions-api:${fabricPermissionsApiVersion}")
-    modImplementation("net.kyori:adventure-platform-fabric:${adventureFabricVersion}")
+    // Only depend on the necessary API
+    // https://github.com/FabricMC/fabric
+    sequenceOf(
+        "lifecycle-events-v1",
+        "networking-api-v1"
+    ).forEach { modImplementation(fabricApi.module("fabric-$it", fabricApiVersion)) }
+
+    modApi("me.lucko:fabric-permissions-api:$fabricPermissionsApiVersion")
+    modImplementation("net.kyori:adventure-platform-fabric:$adventureFabricVersion")
 
     api(include(project(":squirtgun-api")) {
         exclude("net.kyori")

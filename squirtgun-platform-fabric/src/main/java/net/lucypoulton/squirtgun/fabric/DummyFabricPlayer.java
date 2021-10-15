@@ -23,9 +23,9 @@
 
 package net.lucypoulton.squirtgun.fabric;
 
-import net.lucypoulton.squirtgun.platform.Gamemode;
 import net.kyori.adventure.audience.Audience;
-import net.minecraft.util.Util;
+import net.kyori.adventure.identity.Identity;
+import net.lucypoulton.squirtgun.platform.Gamemode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -35,7 +35,7 @@ enum DummyFabricPlayer implements FabricPlayer {
 
     @Override
     public UUID getUuid() {
-        return Util.NIL_UUID;
+        return Identity.nil().uuid();
     }
 
     @Override
