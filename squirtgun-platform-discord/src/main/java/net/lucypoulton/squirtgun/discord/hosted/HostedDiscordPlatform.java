@@ -29,6 +29,7 @@ import net.lucypoulton.squirtgun.discord.DiscordUser;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.platform.event.EventManager;
 import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
@@ -63,10 +64,14 @@ public class HostedDiscordPlatform extends DiscordPlatform {
     }
 
     @Override
+    public EventManager getEventManager() {
+        return parent.getEventManager();
+    }
+
+    @Override
     public SquirtgunUser getConsole() {
         return parent.getConsole();
     }
-
     @Override
     public DiscordUser getPlayer(UUID uuid) {
         String id = linkHandler.getDiscordId(uuid);

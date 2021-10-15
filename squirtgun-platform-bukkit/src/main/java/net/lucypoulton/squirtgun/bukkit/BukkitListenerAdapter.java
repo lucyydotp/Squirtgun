@@ -23,18 +23,12 @@
 
 package net.lucypoulton.squirtgun.bukkit;
 
-import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.event.Event;
-import net.lucypoulton.squirtgun.platform.event.cancellable.CancellableEvent;
 import net.lucypoulton.squirtgun.platform.event.player.PlayerJoinEvent;
 import net.lucypoulton.squirtgun.platform.event.player.PlayerLeaveEvent;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-
-import java.util.UUID;
 
 public class BukkitListenerAdapter implements Listener {
 
@@ -42,13 +36,6 @@ public class BukkitListenerAdapter implements Listener {
 
     public BukkitListenerAdapter(BukkitPlatform platform) {
         this.platform = platform;
-    }
-
-    private void handleCancellable(Cancellable bukkitEvent, CancellableEvent squirtgunEvent) {
-        Event.Result result = platform.getEventManager().dispatch(squirtgunEvent);
-        if (result.failed()) {
-            bukkitEvent.setCancelled(true);
-        }
     }
 
     @EventHandler

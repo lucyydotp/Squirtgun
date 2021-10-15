@@ -31,6 +31,7 @@ import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.platform.event.EventManager;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -64,7 +65,7 @@ public final class FabricPlatform implements Platform {
                     "fabricproxy-lite");
     private final FabricTaskScheduler taskScheduler;
     private final FabricConsoleWrapper consoleWrapper;
-    private final FabricListenerAdapter listenerAdapter = new FabricListenerAdapter();
+    private final EventManager eventManager = new EventManager(this);
     private MinecraftServer server;
     private FabricServerAudiences audiences;
     private List<SquirtgunPlayer> onlinePlayers = List.of();  // default to empty list until server has started
@@ -81,6 +82,7 @@ public final class FabricPlatform implements Platform {
         this.consoleWrapper = new FabricConsoleWrapper(this);
         ServerLifecycleEvents.SERVER_STOPPING.register(this::serverStopping);
         ServerLifecycleEvents.SERVER_STARTED.register(this::serverStarted);
+        new FabricListenerAdapter(this);
     }
 
     private void serverStarted(final MinecraftServer server) {
@@ -150,12 +152,17 @@ public final class FabricPlatform implements Platform {
 
     @Override
     public void registerEventListener(final EventListener listener) {
-        this.listenerAdapter.addListener(listener);
+        // stub
     }
 
     @Override
     public void unregisterEventListener(final EventListener listener) {
-        this.listenerAdapter.removeListener(listener);
+        // stub
+    }
+
+    @Override
+    public EventManager getEventManager() {
+        return eventManager;
     }
 
     /**

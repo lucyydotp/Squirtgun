@@ -63,14 +63,13 @@ public class BukkitPlatform implements Platform {
 
     private final BukkitTaskScheduler scheduler = new BukkitTaskScheduler(this);
 
-    private final BukkitListenerAdapter listenerAdapter = new BukkitListenerAdapter(this);
-
     private final EventManager eventManager = new EventManager(this);
 
     private final BukkitAudiences audiences;
 
     public BukkitPlatform(final JavaPlugin plugin) {
         this.plugin = plugin;
+        BukkitListenerAdapter listenerAdapter = new BukkitListenerAdapter(this);
         plugin.getServer().getPluginManager().registerEvents(listenerAdapter, plugin);
         audiences = BukkitAudiences.create(plugin);
     }

@@ -23,40 +23,39 @@
 
 package net.lucypoulton.squirtgun.bungee;
 
-import net.lucypoulton.squirtgun.platform.EventListener;
+import net.lucypoulton.squirtgun.platform.event.Event;
+import net.lucypoulton.squirtgun.platform.event.player.PlayerJoinEvent;
+import net.lucypoulton.squirtgun.platform.event.player.PlayerLeaveEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+class BungeeListenerAdapter implements Listener {
 
-public class BungeeListenerAdapter implements Listener {
-    private final List<EventListener> listeners = new ArrayList<>();
+    private final BungeePlatform platform;
 
-    public void addListener(EventListener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(EventListener listener) {
-        listeners.remove(listener);
+    BungeeListenerAdapter(BungeePlatform platform) {
+        this.platform = platform;
     }
 
     @EventHandler
     public void onPlayerJoin(LoginEvent e) {
-        UUID uuid = e.getConnection().getUniqueId();
-        for (EventListener listener : listeners) {
-            listener.onPlayerJoin(uuid);
+        PlayerJoinEvent sgEvent = new PlayerJoinEvent(platform.getPlayer(e.getConnection().getUniqueId()));
+        Event.Result result = platform.getEventManager().dispatch(sgEvent);
+        if (result.failed()) {
+            String reason = result.reason();
+            if (reason == null) {
+                reason = "";
+            }
+            e.setCancelled(true);
+            e.setCancelReason(TextComponent.fromLegacyText(reason));
         }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerDisconnectEvent e) {
-        UUID uuid = e.getPlayer().getUniqueId();
-        for (EventListener listener : listeners) {
-            listener.onPlayerLeave(uuid);
-        }
+        platform.getEventManager().dispatch(new PlayerLeaveEvent(platform.getPlayer(e.getPlayer().getUniqueId())));
     }
 }
