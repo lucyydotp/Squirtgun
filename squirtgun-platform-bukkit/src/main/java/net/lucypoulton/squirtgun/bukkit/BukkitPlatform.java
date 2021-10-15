@@ -27,7 +27,6 @@ import net.lucypoulton.squirtgun.bukkit.task.BukkitTaskScheduler;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.AuthMode;
-import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
@@ -110,16 +109,6 @@ public class BukkitPlatform implements Platform {
     @Override
     public TaskScheduler getTaskScheduler() {
         return scheduler;
-    }
-
-    @Override
-    public void registerEventListener(EventListener listener) {
-        // stub
-    }
-
-    @Override
-    public void unregisterEventListener(EventListener listener) {
-        // stub
     }
 
     @Override

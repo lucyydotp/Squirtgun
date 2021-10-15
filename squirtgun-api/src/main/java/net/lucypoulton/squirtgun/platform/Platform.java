@@ -73,24 +73,6 @@ public interface Platform {
     TaskScheduler getTaskScheduler();
 
     /**
-     * Registers an event listener.
-     *
-     * @param listener the listener to register
-     * @deprecated use {@link #getEventManager()} instead
-     */
-    @Deprecated
-    void registerEventListener(EventListener listener);
-
-    /**
-     * Unregisters an event listener. If the listener is not registered, this does nothing.
-     *
-     * @param listener the listener to unregister.
-     * @deprecated use {@link #getEventManager()} instead
-     */
-    @Deprecated
-    void unregisterEventListener(EventListener listener);
-
-    /**
      * Gets the event manager which can be used to dispatch and listen for events.
      */
     EventManager getEventManager();

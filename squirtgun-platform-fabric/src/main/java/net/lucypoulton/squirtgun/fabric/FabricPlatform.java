@@ -27,7 +27,6 @@ import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.fabric.task.FabricTaskScheduler;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.AuthMode;
-import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
@@ -148,16 +147,6 @@ public final class FabricPlatform implements Platform {
     @Override
     public FabricTaskScheduler getTaskScheduler() {
         return this.taskScheduler;
-    }
-
-    @Override
-    public void registerEventListener(final EventListener listener) {
-        // stub
-    }
-
-    @Override
-    public void unregisterEventListener(final EventListener listener) {
-        // stub
     }
 
     @Override
