@@ -31,6 +31,7 @@ import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.platform.event.EventManager;
 import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.audience.Audience;
@@ -62,7 +63,9 @@ public class BukkitPlatform implements Platform {
 
     private final BukkitTaskScheduler scheduler = new BukkitTaskScheduler(this);
 
-    private final BukkitListenerAdapter listenerAdapter = new BukkitListenerAdapter();
+    private final BukkitListenerAdapter listenerAdapter = new BukkitListenerAdapter(this);
+
+    private final EventManager eventManager = new EventManager(this);
 
     private final BukkitAudiences audiences;
 
@@ -112,12 +115,17 @@ public class BukkitPlatform implements Platform {
 
     @Override
     public void registerEventListener(EventListener listener) {
-        listenerAdapter.addListener(listener);
+        // stub
     }
 
     @Override
     public void unregisterEventListener(EventListener listener) {
-        listenerAdapter.removeListener(listener);
+        // stub
+    }
+
+    @Override
+    public EventManager getEventManager() {
+        return eventManager;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.lucypoulton.squirtgun.platform.event;
 
 import net.lucypoulton.squirtgun.platform.event.cancellable.CancellableEvent;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An event.
@@ -15,6 +16,28 @@ public interface Event {
             return () -> !event.isCancelled();
         }
 
+        static Result withReason(boolean success, String reason) {
+            return new Result() {
+                @Override
+                public boolean successful() {
+                    return success;
+                }
+
+                @Override
+                public @Nullable String reason() {
+                    return reason;
+                }
+            };
+        }
+
         boolean successful();
+
+        default boolean failed() {
+            return !successful();
+        }
+
+        default @Nullable String reason() {
+            return null;
+        }
     }
 }
