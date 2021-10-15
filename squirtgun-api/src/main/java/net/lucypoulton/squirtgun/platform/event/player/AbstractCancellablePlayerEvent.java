@@ -4,7 +4,10 @@ import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.event.cancellable.AbstractCancellableEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class AbstractCancellablePlayerEvent extends AbstractCancellableEvent implements PlayerEvent {
+/**
+ * An abstract event, implementing {@link PlayerEvent#player()} and {@link net.lucypoulton.squirtgun.platform.event.cancellable.CancellableEvent} methods.
+ */
+public abstract class AbstractCancellablePlayerEvent extends AbstractCancellableEvent implements PlayerEvent {
 
     private final SquirtgunPlayer player;
 

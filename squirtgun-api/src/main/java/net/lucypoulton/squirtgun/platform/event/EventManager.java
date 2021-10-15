@@ -4,16 +4,20 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.event.cancellable.CancellableEvent;
+
 import java.util.Comparator;
 
+/**
+ * Manages the execution of events and listeners.
+ */
 public class EventManager {
 
     // mojang, have you ever considered using a version of guava that isn't nearly 5 years old
     @SuppressWarnings("UnstableApiUsage")
     private final Multimap<Class<? extends Event>, EventHandler<?>> handlers = MultimapBuilder
-            .hashKeys()
-            .<EventHandler<?>>treeSetValues(Comparator.comparingInt(h -> h.priority().getLevel()))
-            .build();
+        .hashKeys()
+        .<EventHandler<?>>treeSetValues(Comparator.comparingInt(h -> h.priority().getLevel()))
+        .build();
 
     private final Platform platform;
 
@@ -21,21 +25,53 @@ public class EventManager {
         this.platform = platform;
     }
 
+    /**
+     * Registers all of a listener's handlers.
+     *
+     * @param listener the listener to register
+     */
     public void register(EventListener listener) {
         for (EventHandler<?> handler : listener.handlers()) {
             register(handler);
         }
     }
 
+    /**
+     * Registers an event handler.
+     *
+     * @param handler the handler to register
+     */
     public void register(EventHandler<?> handler) {
         handlers.put(handler.eventType(), handler);
     }
 
-
+    /**
+     * Unregisters an event handler.
+     *
+     * @param handler the handler to unregister
+     */
     public void unregister(EventHandler<?> handler) {
         handlers.remove(handler.eventType(), handler);
     }
 
+    private <T extends Event> void attemptExecution(T event, EventHandler<T> handler) {
+        try {
+            handler.execute(event);
+        } catch (Exception e) {
+            platform.getLogger().severe("Exception thrown while handling " + event.getClass().getName() +
+                ":\n" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Dispatches an event, calling all event handlers in the corresponding order.
+     * If the event is cancellable, then {@link Event.Result#FAILURE} will be returned if it is cancelled.
+     *
+     * @param event the event object to dispatch.
+     * @return a result indicating whether the event was cancelled.
+     * If the event is not cancellable, then {@link Event.Result#SUCCESS}.
+     */
     public <T extends Event> Event.Result dispatch(T event) {
 
         if (event instanceof CancellableEvent) {
@@ -46,21 +82,16 @@ public class EventManager {
                 //noinspection unchecked
                 EventHandler<T> handlerCasted = (EventHandler<T>) handler;
                 if (cancellable.willContinue() || handlerCasted.executesOnCancel()) {
-                    handlerCasted.execute(event);
+                    attemptExecution(event, handlerCasted);
                 }
             }
             return Event.Result.ofCancellable(cancellable);
         }
         for (EventHandler<?> handler : this.handlers.get(event.getClass())) {
-            try {
-                // cast is safe due to logic
-                //noinspection unchecked
-                ((EventHandler<T>) handler).execute(event);
-            } catch (Exception e) {
-                platform.getLogger().severe("Exception thrown while handling " + event.getClass().getName() +
-                        ":\n" + e.getMessage());
-                e.printStackTrace();
-            }
+
+            // cast is safe due to logic
+            //noinspection unchecked
+            attemptExecution(event, (EventHandler<T>) handler);
         }
         return Event.Result.SUCCESS;
     }
