@@ -23,8 +23,8 @@
 
 package net.lucypoulton.squirtgun.fabric;
 
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.audience.ForwardingAudience;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
