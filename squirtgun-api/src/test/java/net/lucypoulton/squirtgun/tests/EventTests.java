@@ -49,23 +49,23 @@ public class EventTests {
     private final EnumMap<EventPriority, EventHandler<?>> handlers = new EnumMap<>(EventPriority.class);
 
     {
-        handlers.put(EventPriority.HIGHEST, new EventHandler.Builder<DummyEvent>()
+        handlers.put(EventPriority.HIGHEST, EventHandler.<DummyEvent>builder()
             .priority(EventPriority.HIGHEST)
             .handle(x -> list.add(0))
             .build());
-        handlers.put(EventPriority.HIGH, new EventHandler.Builder<DummyEvent>()
+        handlers.put(EventPriority.HIGH, EventHandler.<DummyEvent>builder()
             .priority(EventPriority.HIGH)
             .handle(x -> list.add(1))
             .build());
-        handlers.put(EventPriority.NORMAL, new EventHandler.Builder<DummyEvent>()
+        handlers.put(EventPriority.NORMAL, EventHandler.<DummyEvent>builder()
             .priority(EventPriority.NORMAL)
             .handle(x -> list.add(2))
             .build());
-        handlers.put(EventPriority.LOW, new EventHandler.Builder<DummyEvent>()
+        handlers.put(EventPriority.LOW, EventHandler.<DummyEvent>builder()
             .priority(EventPriority.LOW)
             .handle(x -> list.add(3))
             .build());
-        handlers.put(EventPriority.LOWEST, new EventHandler.Builder<DummyEvent>()
+        handlers.put(EventPriority.LOWEST, EventHandler.<DummyEvent>builder()
             .priority(EventPriority.LOWEST)
             .handle(x -> list.add(4))
             .build());
@@ -92,21 +92,22 @@ public class EventTests {
 
         AtomicBoolean lastHandlerExec = new AtomicBoolean(false);
 
-        manager.register(new EventHandler<DummyCancellableEvent>(
-            EventPriority.HIGHEST,
-            false,
-            AbstractCancellableEvent::cancel
-        ) {});
-        manager.register(new EventHandler<DummyCancellableEvent>(
-            EventPriority.NORMAL,
-            false,
-            x -> Assertions.fail()
-        ) {});
-        manager.register(new EventHandler<DummyCancellableEvent>(
-            EventPriority.LOW,
-            true,
-            x -> lastHandlerExec.set(true)
-        ) {});
+        manager.register(EventHandler.<DummyCancellableEvent>builder()
+            .priority(EventPriority.HIGHEST)
+            .handle(AbstractCancellableEvent::cancel)
+            .build()
+        );
+        manager.register(EventHandler.<DummyCancellableEvent>builder()
+            .priority(EventPriority.NORMAL)
+            .handle(x -> Assertions.fail())
+            .build()
+        );
+        manager.register(EventHandler.<DummyCancellableEvent>builder()
+            .priority(EventPriority.LOW)
+            .executeOnCancel()
+            .handle(x -> lastHandlerExec.set(true))
+            .build()
+        );
 
         manager.dispatch(new DummyCancellableEvent());
 

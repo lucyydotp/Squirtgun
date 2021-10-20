@@ -19,7 +19,7 @@ public abstract class EventHandler<T extends Event> {
     private final boolean executeOnCancel;
     private final Consumer<T> handlerMethod;
 
-    public EventHandler(EventPriority priority, boolean executeOnCancel, Consumer<T> handlerMethod) {
+    private EventHandler(EventPriority priority, boolean executeOnCancel, Consumer<T> handlerMethod) {
         this.priority = priority;
         this.executeOnCancel = executeOnCancel;
         this.handlerMethod = handlerMethod;
@@ -56,10 +56,21 @@ public abstract class EventHandler<T extends Event> {
         handlerMethod.accept(event);
     }
 
+    /**
+     * Creates a new builder.
+     * @param <T> the type of event to listen for
+     * @return a new builder
+     */
+    public static <T extends Event> Builder<T> builder() {
+        return new Builder<>();
+    }
+
     public static class Builder<T extends Event> {
         private EventPriority priority = EventPriority.NORMAL;
         private boolean executeOnCancel = false;
         private Consumer<T> handlerMethod;
+
+        private Builder() {}
 
         /**
          * Defaults to {@link EventPriority#NORMAL}.
