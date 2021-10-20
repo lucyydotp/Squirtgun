@@ -62,7 +62,6 @@ public abstract class UpdateChecker {
         this.listenerPermission = listenerPermission;
 
         EventHandler<PlayerJoinEvent> joinEventHandler = new EventHandler.Builder<PlayerJoinEvent>()
-                        .eventType(PlayerJoinEvent.class)
                         .handle(e -> {
                             if (checkDataForUpdate() && e.player().hasPermission(getListenerPermission())) {
                                 e.player().sendMessage(getUpdateMessage());

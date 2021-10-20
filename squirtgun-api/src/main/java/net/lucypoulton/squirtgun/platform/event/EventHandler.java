@@ -1,30 +1,37 @@
 package net.lucypoulton.squirtgun.platform.event;
 
+import com.google.common.reflect.TypeToken;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
  * An event handler.
+ * This class is abstract to allow for internal type reflection magic -
+ * create an anonymous class when constructing, for example {@code new EventHandler(...) {}}.
  * @param <T> the event to handle
  */
-public class EventHandler<T extends Event> {
-    private final Class<T> eventType;
+// blame the ancient version of guava minecraft uses.
+@SuppressWarnings("UnstableApiUsage")
+public abstract class EventHandler<T extends Event> {
+    private final TypeToken<T> eventType;
     private final EventPriority priority;
     private final boolean executeOnCancel;
     private final Consumer<T> handlerMethod;
 
-    public EventHandler(Class<T> eventType, EventPriority priority, boolean executeOnCancel, Consumer<T> handlerMethod) {
-        this.eventType = eventType;
+    public EventHandler(EventPriority priority, boolean executeOnCancel, Consumer<T> handlerMethod) {
         this.priority = priority;
         this.executeOnCancel = executeOnCancel;
         this.handlerMethod = handlerMethod;
+        this.eventType = new TypeToken<>(getClass()) {};
     }
 
     /**
      * The type of event that this handler accepts.
      */
+    @SuppressWarnings("unchecked")
     public Class<T> eventType() {
-        return eventType;
+        return (Class<T>) eventType.getRawType();
     }
 
     /**
@@ -50,19 +57,9 @@ public class EventHandler<T extends Event> {
     }
 
     public static class Builder<T extends Event> {
-        private Class<T> eventType;
         private EventPriority priority = EventPriority.NORMAL;
         private boolean executeOnCancel = false;
         private Consumer<T> handlerMethod;
-
-        /**
-         * This is a required parameter.
-         * @see EventHandler#eventType()
-         */
-        public Builder<T> eventType(Class<T> clazz) {
-            this.eventType = clazz;
-            return this;
-        }
 
         /**
          * Defaults to {@link EventPriority#NORMAL}.
@@ -93,12 +90,11 @@ public class EventHandler<T extends Event> {
 
         /**
          * Builds an EventHandler.
-         * @throws NullPointerException if a required parameter ({@link #handle(Consumer)} or {@link #eventType(Class)}) is missing
+         * @throws NullPointerException if a required parameter ({@link #handle(Consumer)}) is missing
          */
         public EventHandler<T> build() {
-            Objects.requireNonNull(eventType);
             Objects.requireNonNull(handlerMethod);
-            return new EventHandler<>(eventType, priority, executeOnCancel, handlerMethod);
+            return new EventHandler<>(priority, executeOnCancel, handlerMethod) {};
         }
     }
 }
