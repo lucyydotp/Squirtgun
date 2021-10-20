@@ -36,12 +36,9 @@ class FabricListenerAdapter {
 
     private final FabricPlatform platform;
 
-    FabricListenerAdapter() {
+    FabricListenerAdapter(FabricPlatform platform) {
         ServerPlayConnectionEvents.JOIN.register(this::playerJoin);
         ServerPlayConnectionEvents.DISCONNECT.register(this::playerDisconnect);
-    }
-
-    FabricListenerAdapter(FabricPlatform platform) {
         this.platform = platform;
     }
 

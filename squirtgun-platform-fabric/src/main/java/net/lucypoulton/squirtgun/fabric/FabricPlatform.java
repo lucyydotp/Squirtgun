@@ -81,6 +81,7 @@ public final class FabricPlatform implements Platform {
         this.audiences = FabricServerAudiences.of(server);
         this.taskScheduler = new FabricTaskScheduler(this);
         this.consoleWrapper = new FabricConsoleWrapper(this);
+        new FabricListenerAdapter(this);
         ServerLifecycleEvents.SERVER_STOPPING.register(this::serverStopping);
     }
 
