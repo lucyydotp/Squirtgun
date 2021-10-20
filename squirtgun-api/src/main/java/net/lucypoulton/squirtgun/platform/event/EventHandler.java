@@ -65,6 +65,15 @@ public abstract class EventHandler<T extends Event> {
         return new Builder<>();
     }
 
+    /**
+     * Creates a new builder from a consumer, with event priority {@link EventPriority#NORMAL}.
+     * @param handler the handler to execute
+     * @param <T> the event to handle
+     */
+    public static <T extends Event> EventHandler<T> executes(Consumer<T> handler) {
+        return new EventHandler<>(EventPriority.NORMAL, false, handler) { };
+    }
+
     public static class Builder<T extends Event> {
         private EventPriority priority = EventPriority.NORMAL;
         private boolean executeOnCancel = false;
