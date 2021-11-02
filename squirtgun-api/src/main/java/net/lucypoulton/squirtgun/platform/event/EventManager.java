@@ -6,19 +6,15 @@ import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.event.cancellable.CancellableEvent;
 
 import java.lang.reflect.Type;
-import java.util.Comparator;
 
 /**
  * Manages the execution of events and listeners.
  */
 public class EventManager {
 
-    // mojang, have you ever considered using a version of guava that isn't nearly 5 years old
+    // mojang, can you please consider not using an ancient, obsolete version of guava
     @SuppressWarnings("UnstableApiUsage")
-    private final Multimap<Type, EventHandler<?>> handlers = MultimapBuilder
-        .hashKeys()
-        .<EventHandler<?>>treeSetValues(Comparator.comparingInt(h -> h.priority().getLevel()))
-        .build();
+    private final Multimap<Type, EventHandler<?>> handlerMap = MultimapBuilder.hashKeys().treeSetValues().build();
 
     private final Platform platform;
 
@@ -43,7 +39,7 @@ public class EventManager {
      * @param handler the handler to register
      */
     public void register(EventHandler<?> handler) {
-        handlers.put(handler.eventType(), handler);
+        handlerMap.put(handler.eventType(), handler);
     }
 
     /**
@@ -52,7 +48,7 @@ public class EventManager {
      * @param handler the handler to unregister
      */
     public void unregister(EventHandler<?> handler) {
-        handlers.remove(handler.eventType(), handler);
+        handlerMap.remove(handler.eventType(), handler);
     }
 
     private <T extends Event> void attemptExecution(T event, EventHandler<T> handler) {
@@ -78,7 +74,7 @@ public class EventManager {
         if (event instanceof CancellableEvent) {
             CancellableEvent cancellable = (CancellableEvent) event;
             // FIXME: this doesn't iterate over superclasses, is this something we want?
-            for (EventHandler<?> handler : this.handlers.get(event.getClass())) {
+            for (EventHandler<?> handler : this.handlerMap.get(event.getClass())) {
                 // cast is safe due to logic
                 //noinspection unchecked
                 EventHandler<T> handlerCasted = (EventHandler<T>) handler;
@@ -88,7 +84,7 @@ public class EventManager {
             }
             return Event.Result.ofCancellable(cancellable);
         }
-        for (EventHandler<?> handler : this.handlers.get(event.getClass())) {
+        for (EventHandler<?> handler : this.handlerMap.get(event.getClass())) {
 
             // cast is safe due to logic
             //noinspection unchecked

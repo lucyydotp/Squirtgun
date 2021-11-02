@@ -33,7 +33,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EventTests {
@@ -49,23 +51,23 @@ public class EventTests {
     private final EnumMap<EventPriority, EventHandler<?>> handlers = new EnumMap<>(EventPriority.class);
 
     {
-        handlers.put(EventPriority.HIGHEST, EventHandler.<DummyEvent>builder()
+        handlers.put(EventPriority.HIGHEST, EventHandler.builder(DummyEvent.class)
             .priority(EventPriority.HIGHEST)
             .handle(x -> list.add(0))
             .build());
-        handlers.put(EventPriority.HIGH, EventHandler.<DummyEvent>builder()
+        handlers.put(EventPriority.HIGH, EventHandler.builder(DummyEvent.class)
             .priority(EventPriority.HIGH)
             .handle(x -> list.add(1))
             .build());
-        handlers.put(EventPriority.NORMAL, EventHandler.<DummyEvent>builder()
+        handlers.put(EventPriority.NORMAL, EventHandler.builder(DummyEvent.class)
             .priority(EventPriority.NORMAL)
             .handle(x -> list.add(2))
             .build());
-        handlers.put(EventPriority.LOW, EventHandler.<DummyEvent>builder()
+        handlers.put(EventPriority.LOW, EventHandler.builder(DummyEvent.class)
             .priority(EventPriority.LOW)
             .handle(x -> list.add(3))
             .build());
-        handlers.put(EventPriority.LOWEST, EventHandler.<DummyEvent>builder()
+        handlers.put(EventPriority.LOWEST, EventHandler.builder(DummyEvent.class)
             .priority(EventPriority.LOWEST)
             .handle(x -> list.add(4))
             .build());
@@ -92,17 +94,17 @@ public class EventTests {
 
         AtomicBoolean lastHandlerExec = new AtomicBoolean(false);
 
-        manager.register(EventHandler.<DummyCancellableEvent>builder()
+        manager.register(EventHandler.builder(DummyCancellableEvent.class)
             .priority(EventPriority.HIGHEST)
             .handle(AbstractCancellableEvent::cancel)
             .build()
         );
-        manager.register(EventHandler.<DummyCancellableEvent>builder()
+        manager.register(EventHandler.builder(DummyCancellableEvent.class)
             .priority(EventPriority.NORMAL)
             .handle(x -> Assertions.fail())
             .build()
         );
-        manager.register(EventHandler.<DummyCancellableEvent>builder()
+        manager.register(EventHandler.builder(DummyCancellableEvent.class)
             .priority(EventPriority.LOW)
             .executeOnCancel()
             .handle(x -> lastHandlerExec.set(true))
@@ -112,5 +114,16 @@ public class EventTests {
         manager.dispatch(new DummyCancellableEvent());
 
         Assertions.assertTrue(lastHandlerExec.get());
+    }
+
+    @Test
+    public void testMultipleEventsWithSamePriority() {
+        EventManager manager = new EventManager(new DummyPlatform());
+        final Set<String> set = new HashSet<>();
+        manager.register(EventHandler.executes(DummyEvent.class, e -> set.add("one")));
+        manager.register(EventHandler.executes(DummyEvent.class, e -> set.add("two")));
+        manager.register(EventHandler.executes(DummyEvent.class, e -> set.add("three")));
+        manager.dispatch(new DummyEvent());
+        Assertions.assertEquals(Set.of("one", "two", "three"), set);
     }
 }
