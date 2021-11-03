@@ -82,7 +82,7 @@ public class CommandTests {
     @DisplayName("Check that a missing permission blocks a next node")
     public void textMissingPermissionForNextNode() {
         Component parent = Component.text("parent");
-		Component child = Component.text("child");
+        Component child = Component.text("child");
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(x -> parent)

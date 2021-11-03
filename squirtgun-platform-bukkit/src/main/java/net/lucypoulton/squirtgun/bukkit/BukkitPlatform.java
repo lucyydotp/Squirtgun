@@ -27,10 +27,10 @@ import net.lucypoulton.squirtgun.bukkit.task.BukkitTaskScheduler;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.AuthMode;
-import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.platform.event.EventManager;
 import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.audience.Audience;
@@ -62,12 +62,13 @@ public class BukkitPlatform implements Platform {
 
     private final BukkitTaskScheduler scheduler = new BukkitTaskScheduler(this);
 
-    private final BukkitListenerAdapter listenerAdapter = new BukkitListenerAdapter();
+    private final EventManager eventManager = new EventManager(this);
 
     private final BukkitAudiences audiences;
 
     public BukkitPlatform(final JavaPlugin plugin) {
         this.plugin = plugin;
+        BukkitListenerAdapter listenerAdapter = new BukkitListenerAdapter(this);
         plugin.getServer().getPluginManager().registerEvents(listenerAdapter, plugin);
         audiences = BukkitAudiences.create(plugin);
     }
@@ -111,13 +112,8 @@ public class BukkitPlatform implements Platform {
     }
 
     @Override
-    public void registerEventListener(EventListener listener) {
-        listenerAdapter.addListener(listener);
-    }
-
-    @Override
-    public void unregisterEventListener(EventListener listener) {
-        listenerAdapter.removeListener(listener);
+    public EventManager getEventManager() {
+        return eventManager;
     }
 
     @Override

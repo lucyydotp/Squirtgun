@@ -23,11 +23,11 @@
 package net.lucypoulton.squirtgun.discord.standalone;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.lucypoulton.squirtgun.discord.DiscordPlatform;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.platform.event.EventManager;
 import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +36,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.UUID;
-import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 /**
@@ -46,7 +45,7 @@ public class StandaloneDiscordPlatform extends DiscordPlatform {
 
     private final TaskScheduler scheduler = new StandaloneTaskScheduler(this);
     private final SquirtgunUser console = new StandaloneConsoleWrapper(this);
-
+    private final EventManager manager = new EventManager(this);
 
     public StandaloneDiscordPlatform(JDA jda, String commandPrefix) {
         super(jda, commandPrefix);
@@ -81,6 +80,11 @@ public class StandaloneDiscordPlatform extends DiscordPlatform {
     @Override
     public TaskScheduler getTaskScheduler() {
         return scheduler;
+    }
+
+    @Override
+    public EventManager getEventManager() {
+        return manager;
     }
 
     @Override

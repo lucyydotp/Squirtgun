@@ -27,10 +27,10 @@ import net.lucypoulton.squirtgun.bungee.task.BungeeTaskScheduler;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.AuthMode;
-import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.platform.event.EventManager;
 import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.audience.Audience;
@@ -56,12 +56,13 @@ public class BungeePlatform implements Platform {
 
     private final BungeeTaskScheduler scheduler = new BungeeTaskScheduler(this);
 
-    private final BungeeListenerAdapter listenerAdapter = new BungeeListenerAdapter();
-
     private final BungeeAudiences audiences;
+
+    private final EventManager manager = new EventManager(this);
 
     public BungeePlatform(final Plugin plugin) {
         this.plugin = plugin;
+        BungeeListenerAdapter listenerAdapter = new BungeeListenerAdapter(this);
         plugin.getProxy().getPluginManager().registerListener(plugin, listenerAdapter);
         audiences = BungeeAudiences.create(plugin);
     }
@@ -97,13 +98,8 @@ public class BungeePlatform implements Platform {
     }
 
     @Override
-    public void registerEventListener(EventListener listener) {
-        listenerAdapter.addListener(listener);
-    }
-
-    @Override
-    public void unregisterEventListener(EventListener listener) {
-        listenerAdapter.removeListener(listener);
+    public EventManager getEventManager() {
+        return manager;
     }
 
     @Override

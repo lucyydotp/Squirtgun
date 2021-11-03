@@ -28,6 +28,7 @@ import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.platform.event.EventManager;
 import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
@@ -72,18 +73,9 @@ public interface Platform {
     TaskScheduler getTaskScheduler();
 
     /**
-     * Registers an event listener.
-     *
-     * @param listener the listener to register
+     * Gets the event manager which can be used to dispatch and listen for events.
      */
-    void registerEventListener(EventListener listener);
-
-    /**
-     * Unregisters an event listener. If the listener is not registered, this does nothing.
-     *
-     * @param listener the listener to unregister.
-     */
-    void unregisterEventListener(EventListener listener);
+    EventManager getEventManager();
 
     /**
      * Gets the console as a permissible audience. This can be used to send messages.

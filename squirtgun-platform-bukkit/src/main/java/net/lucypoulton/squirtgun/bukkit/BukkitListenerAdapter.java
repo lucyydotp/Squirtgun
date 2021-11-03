@@ -23,40 +23,36 @@
 
 package net.lucypoulton.squirtgun.bukkit;
 
-import net.lucypoulton.squirtgun.platform.EventListener;
+import net.lucypoulton.squirtgun.platform.event.Event;
+import net.lucypoulton.squirtgun.platform.event.player.PlayerJoinEvent;
+import net.lucypoulton.squirtgun.platform.event.player.PlayerLeaveEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import org.bukkit.event.player.PlayerLoginEvent;
 
 public class BukkitListenerAdapter implements Listener {
-    private final List<EventListener> listeners = new ArrayList<>();
 
-    public void addListener(EventListener listener) {
-        listeners.add(listener);
-    }
+    private final BukkitPlatform platform;
 
-    public void removeListener(EventListener listener) {
-        listeners.remove(listener);
+    public BukkitListenerAdapter(BukkitPlatform platform) {
+        this.platform = platform;
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) {
-        UUID uuid = e.getPlayer().getUniqueId();
-        for (EventListener listener : listeners) {
-            listener.onPlayerJoin(uuid);
+    public void onPlayerJoin(org.bukkit.event.player.PlayerLoginEvent e) {
+        PlayerJoinEvent sgEvent = new PlayerJoinEvent(platform.getPlayer(e.getPlayer().getUniqueId()));
+        Event.Result result = platform.getEventManager().dispatch(sgEvent);
+        if (result.failed()) {
+            String reason = result.reason();
+            if (reason == null) {
+                reason = "";
+            }
+            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, reason);
         }
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        UUID uuid = e.getPlayer().getUniqueId();
-        for (EventListener listener : listeners) {
-            listener.onPlayerLeave(uuid);
-        }
+    public void onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent e) {
+        platform.getEventManager().dispatch(new PlayerLeaveEvent(platform.getPlayer(e.getPlayer().getUniqueId())));
     }
 }

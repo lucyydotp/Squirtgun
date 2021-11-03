@@ -20,12 +20,12 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.lucypoulton.squirtgun.discord.hosted;
+package net.lucypoulton.squirtgun.tests;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.User;
-import net.lucypoulton.squirtgun.discord.DiscordPlatform;
-import net.lucypoulton.squirtgun.discord.DiscordUser;
+import net.kyori.adventure.text.Component;
+import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.platform.AuthMode;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
@@ -35,64 +35,70 @@ import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class HostedDiscordPlatform extends DiscordPlatform {
+public class DummyPlatform implements Platform {
 
-    private final Platform parent;
-    private final DiscordLinkHandler linkHandler;
 
-    public HostedDiscordPlatform(JDA jda, Platform parent, String prefix, DiscordLinkHandler linkHandler) {
-        super(jda, prefix);
-        this.parent = parent;
-        this.linkHandler = linkHandler;
-    }
-
-    public Platform parent() {
-        return parent;
+    @Override
+    public String name() {
+        return "dummy";
     }
 
     @Override
     public Logger getLogger() {
-        return parent.getLogger();
+        return Logger.getAnonymousLogger();
+    }
+
+    @Override
+    public void log(Component component) {
+
+    }
+
+    @Override
+    public AuthMode getAuthMode() {
+        return AuthMode.ONLINE;
     }
 
     @Override
     public TaskScheduler getTaskScheduler() {
-        return parent.getTaskScheduler();
+        return null;
     }
 
     @Override
     public EventManager getEventManager() {
-        return parent.getEventManager();
+        return null;
     }
 
     @Override
     public SquirtgunUser getConsole() {
-        return parent.getConsole();
-    }
-    @Override
-    public DiscordUser getPlayer(UUID uuid) {
-        String id = linkHandler.getDiscordId(uuid);
-        if (id == null) {
-            return null;
-        }
-        User user = jda().getUserById(id);
-        if (user == null) {
-            return null;
-        }
-        return audiences().user(user);
+        return null;
     }
 
     @Override
-    public @Nullable DiscordUser getPlayer(String name) {
-        SquirtgunPlayer player = parent().getPlayer(name);
-        return player == null ? null : getPlayer(player.getUuid());
+    public SquirtgunPlayer getPlayer(UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public @Nullable SquirtgunPlayer getPlayer(String name) {
+        return null;
+    }
+
+    @Override
+    public List<SquirtgunPlayer> getOnlinePlayers() {
+        return null;
     }
 
     @Override
     public Path getConfigPath(SquirtgunPlugin<?> plugin) {
-        return parent().getConfigPath(plugin);
+        return null;
+    }
+
+    @Override
+    public void registerCommand(CommandNode<?> node, FormatProvider provider) {
+
     }
 }

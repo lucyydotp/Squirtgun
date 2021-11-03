@@ -26,6 +26,7 @@ package net.lucypoulton.squirtgun.plugin;
 import com.google.common.base.Preconditions;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.kyori.adventure.text.Component;
+import net.lucypoulton.squirtgun.platform.event.PluginReloadEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -73,6 +74,13 @@ public abstract class SquirtgunPlugin<P extends Platform> {
      * Gets a list of the authors' names.
      */
     public abstract @NotNull String[] getAuthors();
+
+    /**
+     * Dispatches a {@link PluginReloadEvent}.
+     */
+    public void reload() {
+        getPlatform().getEventManager().dispatch(new PluginReloadEvent(this));
+    }
 
     /**
      * Called when the plugin is enabled. By default, does nothing.

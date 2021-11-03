@@ -25,39 +25,36 @@ package net.lucypoulton.squirtgun.fabric;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.lucypoulton.squirtgun.platform.EventListener;
+import net.lucypoulton.squirtgun.platform.event.Event;
+import net.lucypoulton.squirtgun.platform.event.player.PlayerJoinEvent;
+import net.lucypoulton.squirtgun.platform.event.player.PlayerLeaveEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
-
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Set;
-import java.util.UUID;
+import net.minecraft.text.Text;
 
 class FabricListenerAdapter {
 
-    private final Set<EventListener> listeners = Collections.newSetFromMap(new IdentityHashMap<>());
+    private final FabricPlatform platform;
 
-    FabricListenerAdapter() {
+    FabricListenerAdapter(FabricPlatform platform) {
         ServerPlayConnectionEvents.JOIN.register(this::playerJoin);
         ServerPlayConnectionEvents.DISCONNECT.register(this::playerDisconnect);
-    }
-
-    void addListener(final EventListener listener) {
-        this.listeners.add(listener);
-    }
-
-    void removeListener(final EventListener listener) {
-        this.listeners.remove(listener);
+        this.platform = platform;
     }
 
     private void playerJoin(final ServerPlayNetworkHandler handler, final PacketSender sender, final MinecraftServer server) {
-        final UUID uuid = handler.player.getUuid();
-        this.listeners.forEach(listener -> listener.onPlayerJoin(uuid));
+        PlayerJoinEvent sgEvent = new PlayerJoinEvent(platform.getPlayer(handler.getPlayer()));
+        Event.Result result = platform.getEventManager().dispatch(sgEvent);
+        if (result.failed()) {
+            String reason = result.reason();
+            if (reason == null) {
+                reason = "";
+            }
+            handler.disconnect(Text.of(reason));
+        }
     }
 
     private void playerDisconnect(final ServerPlayNetworkHandler handler, final MinecraftServer server) {
-        final UUID uuid = handler.player.getUuid();
-        this.listeners.forEach(listener -> listener.onPlayerLeave(uuid));
+        platform.getEventManager().dispatch(new PlayerLeaveEvent(platform.getPlayer(handler.getPlayer())));
     }
 }

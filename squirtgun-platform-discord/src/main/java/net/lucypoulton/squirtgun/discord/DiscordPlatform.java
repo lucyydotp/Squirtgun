@@ -23,7 +23,6 @@
 package net.lucypoulton.squirtgun.discord;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Message;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.discord.adventure.DiscordAudiences;
@@ -32,14 +31,12 @@ import net.lucypoulton.squirtgun.discord.command.DiscordCommandListener;
 import net.lucypoulton.squirtgun.discord.standalone.StandaloneDiscordAudiences;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.AuthMode;
-import net.lucypoulton.squirtgun.platform.EventListener;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 /**
  * A Platform implementation for a JDA instance.
@@ -77,20 +74,6 @@ public abstract class DiscordPlatform implements Platform {
     @Override
     public AuthMode getAuthMode() {
         return AuthMode.OFFLINE;
-    }
-
-    /**
-     * This method has not been implemented, events will not be triggered. See issue #40.
-     */
-    @Override
-    public void registerEventListener(EventListener listener) {
-    }
-
-    /**
-     * This method has not been implemented, events will not be triggered. See issue #40.
-     */
-    @Override
-    public void unregisterEventListener(EventListener listener) {
     }
 
     /**

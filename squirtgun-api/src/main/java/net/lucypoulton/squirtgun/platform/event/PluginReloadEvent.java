@@ -20,31 +20,18 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+package net.lucypoulton.squirtgun.platform.event;
 
-package net.lucypoulton.squirtgun.update;
-
-import net.lucypoulton.squirtgun.platform.EventListener;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 
-import java.util.UUID;
-
-class UpdateListener extends EventListener {
-    private final UpdateChecker checker;
+public class PluginReloadEvent implements Event {
     private final SquirtgunPlugin<?> plugin;
 
-    public UpdateListener(UpdateChecker checker, SquirtgunPlugin<?> plugin) {
-        super(plugin);
-        this.checker = checker;
+    public PluginReloadEvent(SquirtgunPlugin<?> plugin) {
         this.plugin = plugin;
     }
 
-    @Override
-    public void onPlayerJoin(UUID uuid) {
-        super.onPlayerJoin(uuid);
-        SquirtgunPlayer player = plugin.getPlatform().getPlayer(uuid);
-        if (checker.checkDataForUpdate() && player.hasPermission(checker.getListenerPermission())) {
-            player.sendMessage(checker.getUpdateMessage());
-        }
+    public SquirtgunPlugin<?> plugin() {
+        return plugin;
     }
 }
