@@ -28,7 +28,7 @@ plugins {
     checkstyle
 }
 
-version = "2.0.0-pre7-SNAPSHOT"
+version = "2.0.0-pre7"
 group = "net.lucypoulton"
 
 subprojects {
@@ -108,10 +108,11 @@ subprojects {
                 val signingPassword: String? by project
                 if (signingKey != null && signingPassword != null) {
                     useInMemoryPgpKeys(signingKey, signingPassword)
-                    sign(publication)
                 }
                 if (signatory == null) {
                     logger.warn("No signatories available, skipping signing.")
+                } else {
+                    sign(publication)
                 }
             }
         }

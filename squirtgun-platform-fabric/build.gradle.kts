@@ -109,9 +109,10 @@ signing {
     val signingPassword: String? by project
     if (signingKey != null && signingPassword != null) {
         useInMemoryPgpKeys(signingKey, signingPassword)
-        sign(publication)
     }
     if (signatory == null) {
         logger.warn("No signatories available, skipping signing.")
+    } else {
+        sign(publication)
     }
 }
