@@ -105,4 +105,19 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
 
         return highest;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder out = new StringBuilder()
+                .append(major()).append(".")
+                .append(minor()).append(".")
+                .append(patch());
+        if (prerelease().length != 0) {
+            out.append("-").append(String.join(".", prerelease()));
+        }
+        if (build() != null) {
+            out.append("+").append(build());
+        }
+        return out.toString();
+    }
 }
