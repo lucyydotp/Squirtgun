@@ -26,24 +26,29 @@ repositories {
 }
 
 dependencies {
-    val adventureVersion = "4.9.1"
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    val adventureVersion = "4.9.3"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 
     testImplementation("net.kyori:adventure-api:$adventureVersion")
     testImplementation("net.kyori:adventure-text-serializer-gson:$adventureVersion")
     testImplementation("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
-    testImplementation("com.google.guava:guava:21.0")
+    @Suppress("GradlePackageUpdate")
+    testImplementation("com.google.guava:guava:21.0") {
+        because("It's the version Minecraft is bundled with")
+    }
 
     api("net.kyori:adventure-api:$adventureVersion")
     api("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
+
     compileOnlyApi("com.google.guava:guava:21.0") {
         because("It's the version Minecraft is bundled with")
     }
+    @Suppress("GradlePackageUpdate")
     compileOnlyApi("com.google.code.gson:gson:2.8.0") {
         because("It's the version Minecraft is bundled with")
     }
-    compileOnlyApi("org.jetbrains:annotations:21.0.1")
+    compileOnlyApi("org.jetbrains:annotations:22.0.0")
 }
 
 tasks {
