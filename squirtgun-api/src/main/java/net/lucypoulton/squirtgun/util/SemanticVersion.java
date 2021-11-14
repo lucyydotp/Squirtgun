@@ -1,5 +1,6 @@
 package net.lucypoulton.squirtgun.util;
 
+import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
@@ -14,8 +15,10 @@ import java.util.regex.Pattern;
  */
 public class SemanticVersion implements Comparable<SemanticVersion> {
 
-    public static Pattern parsePattern =
+    private static final Pattern parsePattern =
             Pattern.compile("^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(-(?<prerelease>[0-9A-Za-z-.]+))?(\\+(?<metadata>[0-9A-Za-z-.]+))?$");
+
+    private static final Pattern validityPattern = Pattern.compile("^[0-9A-Za-z-.]$");
 
     public static SemanticVersion parse(CharSequence input) {
         Matcher matcher = parsePattern.matcher(input);
@@ -42,6 +45,15 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     }
 
     public SemanticVersion(int major, int minor, int patch, @Nullable String build, String... prerelease) {
+        Preconditions.checkArgument(major >= 0, "Major version cannot be below 0");
+        Preconditions.checkArgument(minor >= 0, "Minor version cannot be below 0");
+        Preconditions.checkArgument(patch >= 0, "Patch version cannot be below 0");
+        Preconditions.checkArgument(Arrays.stream(prerelease).allMatch(validityPattern.asMatchPredicate()),
+                "Prerelease contains invalid characters");
+        if (build != null) {
+            Preconditions.checkArgument(validityPattern.matcher(build).matches(),
+                    "Build metadata contains invalid characters");
+        }
         this.major = major;
         this.minor = minor;
         this.patch = patch;
