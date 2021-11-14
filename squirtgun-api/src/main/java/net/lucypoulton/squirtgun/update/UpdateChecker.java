@@ -72,7 +72,7 @@ public abstract class UpdateChecker {
 
 
 
-        if (plugin.getPluginVersion().contains("-")) {
+        if (plugin.getPluginVersion().isPrerelease()) {
             plugin.getPlatform().getLogger().warning("Development version detected, skipping update check.");
             listenerTask = null;
             return;

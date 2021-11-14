@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +17,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     private static final Pattern parsePattern =
             Pattern.compile("^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(-(?<prerelease>[0-9A-Za-z-.]+))?(\\+(?<metadata>[0-9A-Za-z-.]+))?$");
 
-    private static final Pattern validityPattern = Pattern.compile("^[0-9A-Za-z-.]$");
+    private static final Pattern validityPattern = Pattern.compile("^[0-9A-Za-z-.]+$");
 
     public static SemanticVersion parse(CharSequence input) {
         Matcher matcher = parsePattern.matcher(input);
@@ -79,6 +78,10 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
 
     public @Nullable String build() {
         return build;
+    }
+
+    public boolean isPrerelease() {
+        return prerelease().length != 0;
     }
 
     @Override
