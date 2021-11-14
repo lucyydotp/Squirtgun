@@ -23,6 +23,7 @@
 
 package net.lucypoulton.squirtgun;
 
+import net.lucypoulton.squirtgun.util.SemanticVersion;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Scanner;
@@ -34,13 +35,13 @@ public class Squirtgun {
     /**
      * The framework's version.
      */
-    public static final String VERSION;
+    public static final SemanticVersion VERSION;
 
     static {
         InputStream file = Squirtgun.class.getClassLoader().getResourceAsStream("squirtgun-version.txt");
         Objects.requireNonNull(file);
-        VERSION = new Scanner(file)
+        VERSION = SemanticVersion.parse(new Scanner(file)
                 .useDelimiter("\\A")
-                .next();
+                .next());
     }
 }

@@ -34,6 +34,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -72,7 +74,8 @@ public abstract class UpdateChecker {
 
 
 
-        if (plugin.getPluginVersion().contains("-")) {
+        if (Arrays.stream(plugin.getPluginVersion().prerelease())
+            .anyMatch(x -> x.toUpperCase(Locale.ROOT).contains("SNAPSHOT"))) {
             plugin.getPlatform().getLogger().warning("Development version detected, skipping update check.");
             listenerTask = null;
             return;

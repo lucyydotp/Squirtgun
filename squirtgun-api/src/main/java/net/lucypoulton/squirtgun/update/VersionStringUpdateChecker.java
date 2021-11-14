@@ -13,6 +13,6 @@ public class VersionStringUpdateChecker extends UpdateChecker {
 
     @Override
     protected boolean checkDataForUpdate(String input) {
-        return !getPlugin().getPluginVersion().equals(input);
+        return !getPlugin().getPluginVersion().toString().equals(input);
     }
 }

@@ -27,6 +27,7 @@ import com.google.common.base.Preconditions;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.platform.event.PluginReloadEvent;
+import net.lucypoulton.squirtgun.util.SemanticVersion;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -68,7 +69,7 @@ public abstract class SquirtgunPlugin<P extends Platform> {
     /**
      * Gets the plugin's version.
      */
-    public abstract @NotNull String getPluginVersion();
+    public abstract @NotNull SemanticVersion getPluginVersion();
 
     /**
      * Gets a list of the authors' names.
