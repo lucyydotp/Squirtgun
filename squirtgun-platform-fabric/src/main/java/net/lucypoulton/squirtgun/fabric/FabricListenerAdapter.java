@@ -32,6 +32,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.text.Text;
 
+/**
+ * TODO - implement {@link net.lucypoulton.squirtgun.platform.event.player.PlayerChatEvent}
+ */
 class FabricListenerAdapter {
 
     private final FabricPlatform platform;

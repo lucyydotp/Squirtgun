@@ -24,6 +24,7 @@
 package net.lucypoulton.squirtgun.bukkit;
 
 import net.lucypoulton.squirtgun.platform.event.Event;
+import net.lucypoulton.squirtgun.platform.event.player.PlayerChatEvent;
 import net.lucypoulton.squirtgun.platform.event.player.PlayerJoinEvent;
 import net.lucypoulton.squirtgun.platform.event.player.PlayerLeaveEvent;
 import org.bukkit.event.EventHandler;
@@ -54,5 +55,14 @@ public class BukkitListenerAdapter implements Listener {
     @EventHandler
     public void onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent e) {
         platform.getEventManager().dispatch(new PlayerLeaveEvent(platform.getPlayer(e.getPlayer().getUniqueId())));
+    }
+
+    @EventHandler
+    public void onPlayerChat(org.bukkit.event.player.AsyncPlayerChatEvent e) {
+        PlayerChatEvent sgEvent = new PlayerChatEvent(platform.getPlayer(e.getPlayer().getUniqueId()), e.getMessage());
+        Event.Result result = platform.getEventManager().dispatch(sgEvent);
+        if (result.failed()) {
+            e.setCancelled(true);
+        }
     }
 }
