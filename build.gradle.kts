@@ -28,7 +28,7 @@ plugins {
     checkstyle
 }
 
-version = "2.0.0-pre8"
+version = "2.0.0-pre9"
 group = "net.lucypoulton"
 
 subprojects {
@@ -119,10 +119,6 @@ subprojects {
     }
 
     tasks {
-        processResources {
-            eachFile { expand("version" to version) }
-        }
-
         compileJava {
             options.encoding = Charsets.UTF_8.name()
         }

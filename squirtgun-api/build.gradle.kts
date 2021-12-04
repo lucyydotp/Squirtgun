@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 /*
  * Copyright © 2021 Lucy Poulton
  *
@@ -27,8 +29,8 @@ repositories {
 
 dependencies {
     val adventureVersion = "4.9.3"
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 
     testImplementation("net.kyori:adventure-api:$adventureVersion")
     testImplementation("net.kyori:adventure-text-serializer-gson:$adventureVersion")
@@ -52,6 +54,9 @@ dependencies {
 }
 
 tasks {
+    processResources {
+        filter<ReplaceTokens>("tokens" to mapOf("version" to project.version.toString()))
+    }
     test {
         useJUnitPlatform()
     }
