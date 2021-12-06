@@ -24,6 +24,10 @@
 // For changing versions, upgrading etc: https://fabricmc.net/versions.html
 plugins {
     id("fabric-loom") version "0.9-SNAPSHOT"
+    `java-library`
+    `maven-publish`
+    signing
+    checkstyle
 }
 
 val minecraftVersion: String = "1.17.1"
@@ -31,10 +35,11 @@ val yarnBuild: Int = 61
 val loaderVersion: String = "0.12.1"
 val fabricApiVersion: String = "0.40.6+1.17"
 val fabricPermissionsApiVersion: String = "0.1-SNAPSHOT"
-val adventureFabricVersion: String = "4.1.0-SNAPSHOT"
+val adventureFabricVersion: String = "4.1.0"
 
 repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    mavenCentral()
 }
 
 dependencies {
@@ -57,14 +62,19 @@ dependencies {
     })
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 lateinit var publication: MavenPublication
 
 publishing {
     publications {
         publication = create<MavenPublication>("mavenJava") {
             artifact(tasks.remapJar) { builtBy(tasks.remapJar) }
-            artifact(tasks.sourcesJar) { builtBy(tasks.remapSourcesJar) }
-            artifact(tasks.javadocJar) { builtBy(tasks.javadocJar) }
+            //artifact(tasks.sourcesJar) { builtBy(tasks.remapSourcesJar) }
+            //artifact(tasks.javadocJar) { builtBy(tasks.javadocJar) }
 
             pom {
                 withXml {

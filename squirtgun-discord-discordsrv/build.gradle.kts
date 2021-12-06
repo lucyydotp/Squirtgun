@@ -20,6 +20,11 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+plugins {
+    id("squirtgun.publishable")
+}
+
 repositories {
     mavenCentral()
     maven("https://m2.dv8tion.net/releases")
@@ -31,8 +36,8 @@ repositories {
 dependencies {
     api(project(":squirtgun-platform-bukkit"))
     api(project(":squirtgun-platform-discord"))
-    implementation("net.dv8tion:JDA:4.3.0_277")
 
+    implementation("net.dv8tion:JDA:4.3.0_277")
     compileOnlyApi("com.discordsrv:discordsrv:1.24.0")
 }
 

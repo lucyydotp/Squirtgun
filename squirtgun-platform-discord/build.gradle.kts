@@ -20,19 +20,24 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+plugins {
+    id("squirtgun.publishable")
+}
+
 repositories {
     mavenCentral()
     maven("https://m2.dv8tion.net/releases")
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
-    testImplementation("net.kyori:adventure-api:4.9.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation("net.kyori:adventure-api")
 
     api(project(":squirtgun-api"))
     api("net.dv8tion:JDA:4.3.0_277")
-    implementation("net.kyori:adventure-text-serializer-plain:4.9.1")
+    implementation("net.kyori:adventure-text-serializer-plain")
 }
 
 tasks.test {

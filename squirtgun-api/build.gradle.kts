@@ -23,34 +23,31 @@ import org.apache.tools.ant.filters.ReplaceTokens
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+plugins {
+    id("squirtgun.publishable")
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    val adventureVersion = "4.9.3"
+    api(platform(project(":squirtgun-bom")))
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 
-    testImplementation("net.kyori:adventure-api:$adventureVersion")
-    testImplementation("net.kyori:adventure-text-serializer-gson:$adventureVersion")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
-    @Suppress("GradlePackageUpdate")
-    testImplementation("com.google.guava:guava:21.0") {
-        because("It's the version Minecraft is bundled with")
-    }
+    testImplementation("net.kyori:adventure-api:")
+    testImplementation("net.kyori:adventure-text-serializer-gson")
+    testImplementation("net.kyori:adventure-text-serializer-legacy")
+    testImplementation("com.google.guava:guava")
 
-    api("net.kyori:adventure-api:$adventureVersion")
-    api("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
+    api("net.kyori:adventure-api")
+    api("net.kyori:adventure-text-serializer-legacy")
 
-    compileOnlyApi("com.google.guava:guava:21.0") {
-        because("It's the version Minecraft is bundled with")
-    }
-    @Suppress("GradlePackageUpdate")
-    compileOnlyApi("com.google.code.gson:gson:2.8.0") {
-        because("It's the version Minecraft is bundled with")
-    }
-    compileOnlyApi("org.jetbrains:annotations:22.0.0")
+    compileOnlyApi("com.google.guava:guava")
+    compileOnlyApi("com.google.code.gson:gson")
+    compileOnlyApi("org.jetbrains:annotations")
 }
 
 tasks {
