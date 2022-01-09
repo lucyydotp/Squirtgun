@@ -3,7 +3,6 @@ package net.lucypoulton.squirtgun.tests;
 import net.lucypoulton.squirtgun.util.SemanticVersion;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import java.util.Arrays;
 
 public class VersionTests {
     @Test

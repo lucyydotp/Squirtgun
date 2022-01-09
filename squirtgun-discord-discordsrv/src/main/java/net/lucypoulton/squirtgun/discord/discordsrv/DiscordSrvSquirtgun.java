@@ -25,7 +25,7 @@ package net.lucypoulton.squirtgun.discord.discordsrv;
 import github.scarsz.discordsrv.DiscordSRV;
 import net.dv8tion.jda.api.JDA;
 import net.lucypoulton.squirtgun.discord.hosted.HostedDiscordPlatform;
-import net.lucypoulton.squirtgun.platform.Platform;
+import net.lucypoulton.squirtgun.minecraft.platform.Platform;
 import org.jetbrains.annotations.Nullable;
 
 public class DiscordSrvSquirtgun {

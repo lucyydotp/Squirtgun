@@ -26,7 +26,7 @@ package net.lucypoulton.squirtgun.fabric;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
 import org.jetbrains.annotations.NotNull;
 
 /**

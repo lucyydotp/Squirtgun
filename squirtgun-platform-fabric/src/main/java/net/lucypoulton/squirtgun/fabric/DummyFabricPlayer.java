@@ -25,7 +25,7 @@ package net.lucypoulton.squirtgun.fabric;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
-import net.lucypoulton.squirtgun.platform.Gamemode;
+import net.lucypoulton.squirtgun.minecraft.platform.Gamemode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;

@@ -28,7 +28,7 @@ import com.google.common.collect.EnumBiMap;
 import com.google.common.collect.Maps;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.kyori.adventure.audience.Audience;
-import net.lucypoulton.squirtgun.platform.Gamemode;
+import net.lucypoulton.squirtgun.minecraft.platform.Gamemode;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.NotNull;

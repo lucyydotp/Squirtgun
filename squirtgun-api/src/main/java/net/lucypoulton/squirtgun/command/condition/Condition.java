@@ -22,43 +22,20 @@
  */
 package net.lucypoulton.squirtgun.command.condition;
 
+import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
-import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 
 /**
  * A condition that must be satisfied in order for a command to run.
  * <p>
- * Conditions are transformative - they have an input and an output type. For example,
- * {@link #isPlayer()} accepts a PermissionHolder and outputs a SquirtgunPlayer, this
- * means that a CommandNode of type SquirtgunPlayer can be chained after one of type
- * PermissionHolder. If the condition is not met, then a message is displayed.
+ * Conditions are transformative - they have an input and an output type.
+ * If the condition is not met, then a message is displayed.
  *
  * @param <T> the input holder type
  * @param <U> the outputted holder type
  */
 @FunctionalInterface
 public interface Condition<T extends PermissionHolder, U extends PermissionHolder> {
-
-    /**
-     * A condition ensuring the target is a {@link SquirtgunPlayer}.
-     */
-    static Condition<PermissionHolder, SquirtgunPlayer> isPlayer() {
-        return (target, context) ->
-            target instanceof SquirtgunPlayer
-                ? new Result<>(true, (SquirtgunPlayer) target, null)
-                : new Result<>(false, null, "This command can only be run by a player.");
-    }
-
-    /**
-     * A condition ensuring the target is the console.
-     */
-    static Condition<PermissionHolder, PermissionHolder> isConsole() {
-        return (target, context) ->
-            target instanceof SquirtgunPlayer
-                ? new Result<>(false, null, "This command can only be run from the console.")
-                : new Result<>(true, target, null);
-    }
 
     /**
      * A condition that will always pass, carrying out no casting.

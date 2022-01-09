@@ -30,12 +30,11 @@ import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.fabric.task.FabricTaskScheduler;
 import net.lucypoulton.squirtgun.format.FormatProvider;
-import net.lucypoulton.squirtgun.platform.AuthMode;
-import net.lucypoulton.squirtgun.platform.Platform;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
-import net.lucypoulton.squirtgun.platform.event.EventManager;
-import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
+import net.lucypoulton.squirtgun.minecraft.platform.AuthMode;
+import net.lucypoulton.squirtgun.minecraft.platform.Platform;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.minecraft.platform.event.EventManager;
+import net.lucypoulton.squirtgun.minecraft.plugin.SquirtgunPlugin;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
@@ -51,7 +50,6 @@ import java.util.logging.Logger;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.greedyString;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toUnmodifiableList;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -195,10 +193,9 @@ public final class FabricPlatform implements Platform {
     }
 
     @Override
-    public List<SquirtgunPlayer> getOnlinePlayers() {
+    public List<FabricPlayer> getOnlinePlayers() {
         return getServer().getPlayerManager().getPlayerList().stream()
-                .map(this::asFabricPlayerOrDummy)
-                .collect(toUnmodifiableList());
+                .map(this::asFabricPlayerOrDummy).toList();
     }
 
     @Override

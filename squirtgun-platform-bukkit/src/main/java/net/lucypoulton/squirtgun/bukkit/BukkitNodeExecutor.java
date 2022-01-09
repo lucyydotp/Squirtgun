@@ -24,12 +24,12 @@
 package net.lucypoulton.squirtgun.bukkit;
 
 import com.google.common.collect.ImmutableList;
+import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
-import net.kyori.adventure.text.Component;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;

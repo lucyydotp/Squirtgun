@@ -23,9 +23,9 @@
 
 package net.lucypoulton.squirtgun.bungee;
 
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
 import org.jetbrains.annotations.NotNull;
 
 /**

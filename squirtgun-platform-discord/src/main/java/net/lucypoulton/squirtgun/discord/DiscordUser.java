@@ -27,8 +27,8 @@ import net.kyori.adventure.audience.MessageType;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.discord.adventure.DiscordComponentSerializer;
-import net.lucypoulton.squirtgun.platform.Gamemode;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.minecraft.platform.Gamemode;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class DiscordUser implements SquirtgunPlayer {

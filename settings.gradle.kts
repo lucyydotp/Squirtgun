@@ -33,6 +33,7 @@ rootProject.name = "squirtgun"
 include(
     "squirtgun-bom",
     "squirtgun-api",
+    "squirtgun-minecraft",
     "squirtgun-platform-bukkit",
     "squirtgun-platform-bungee",
     "squirtgun-platform-fabric",

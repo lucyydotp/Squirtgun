@@ -24,11 +24,11 @@
 package net.lucypoulton.squirtgun.command.node;
 
 import com.google.common.base.Preconditions;
-import net.lucypoulton.squirtgun.command.context.CommandContext;
+import net.kyori.adventure.text.Component;
+import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.condition.Condition;
-import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
-import net.kyori.adventure.text.Component;
+import net.lucypoulton.squirtgun.command.context.CommandContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

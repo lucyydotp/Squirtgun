@@ -24,7 +24,7 @@ package net.lucypoulton.squirtgun.discord.hosted;
 
 import net.dv8tion.jda.api.entities.User;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunPlayer;
 
 import java.util.UUID;
 

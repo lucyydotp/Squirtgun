@@ -35,7 +35,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
     testImplementation("net.kyori:adventure-api")
 
-    api(project(":squirtgun-api"))
+    api(project(":squirtgun-minecraft"))
     api("net.dv8tion:JDA:4.3.0_277")
     implementation("net.kyori:adventure-text-serializer-plain")
 }

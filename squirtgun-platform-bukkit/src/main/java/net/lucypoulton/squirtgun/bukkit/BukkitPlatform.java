@@ -23,19 +23,19 @@
 
 package net.lucypoulton.squirtgun.bukkit;
 
-import net.lucypoulton.squirtgun.bukkit.task.BukkitTaskScheduler;
-import net.lucypoulton.squirtgun.command.node.CommandNode;
-import net.lucypoulton.squirtgun.format.FormatProvider;
-import net.lucypoulton.squirtgun.platform.AuthMode;
-import net.lucypoulton.squirtgun.platform.Platform;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
-import net.lucypoulton.squirtgun.platform.event.EventManager;
-import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
-import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
+import net.lucypoulton.squirtgun.bukkit.task.BukkitTaskScheduler;
+import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.minecraft.platform.AuthMode;
+import net.lucypoulton.squirtgun.minecraft.platform.Platform;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.minecraft.platform.event.EventManager;
+import net.lucypoulton.squirtgun.minecraft.platform.scheduler.TaskScheduler;
+import net.lucypoulton.squirtgun.minecraft.plugin.SquirtgunPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;

@@ -25,8 +25,8 @@ package net.lucypoulton.squirtgun.fabric.task;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
 import net.lucypoulton.squirtgun.fabric.FabricPlatform;
-import net.lucypoulton.squirtgun.platform.scheduler.Task;
-import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
+import net.lucypoulton.squirtgun.minecraft.platform.scheduler.Task;
+import net.lucypoulton.squirtgun.minecraft.platform.scheduler.TaskScheduler;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.LinkedHashMap;

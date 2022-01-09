@@ -28,7 +28,7 @@ import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.lucypoulton.squirtgun.discord.DiscordPlatform;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
 import org.jetbrains.annotations.NotNull;
 
 public class StandaloneConsoleWrapper implements SquirtgunUser, Audience {

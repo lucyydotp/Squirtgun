@@ -23,10 +23,10 @@
 
 package net.lucypoulton.squirtgun.bungee;
 
-import net.lucypoulton.squirtgun.platform.Gamemode;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
+import net.lucypoulton.squirtgun.minecraft.platform.Gamemode;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunPlayer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 

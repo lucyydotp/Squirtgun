@@ -22,6 +22,8 @@
  */
 
 /**
+ * FIXME - update this!
+ *
  * Squirtgun is a general-purpose, cross-platform Minecraft Java edition library,
  * designed to make plugin development a little easier. Originally known as LucyCommonLib,
  * named after the original author, it's now been updated beyond all recognition and is

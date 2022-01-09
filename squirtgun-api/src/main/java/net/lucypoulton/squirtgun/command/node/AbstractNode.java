@@ -24,8 +24,8 @@
 package net.lucypoulton.squirtgun.command.node;
 
 import com.google.common.base.Preconditions;
+import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.condition.Condition;
-import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractNode<T extends PermissionHolder> implements CommandNode<T> {

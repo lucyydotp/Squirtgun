@@ -23,10 +23,10 @@
 
 package net.lucypoulton.squirtgun.bukkit;
 
-import net.lucypoulton.squirtgun.platform.event.Event;
-import net.lucypoulton.squirtgun.platform.event.player.PlayerChatEvent;
-import net.lucypoulton.squirtgun.platform.event.player.PlayerJoinEvent;
-import net.lucypoulton.squirtgun.platform.event.player.PlayerLeaveEvent;
+import net.lucypoulton.squirtgun.minecraft.platform.event.Event;
+import net.lucypoulton.squirtgun.minecraft.platform.event.player.PlayerChatEvent;
+import net.lucypoulton.squirtgun.minecraft.platform.event.player.PlayerJoinEvent;
+import net.lucypoulton.squirtgun.minecraft.platform.event.player.PlayerLeaveEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;

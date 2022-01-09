@@ -34,5 +34,5 @@ dependencies {
     compileOnlyApi("net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT")
 
     api("net.kyori:adventure-platform-bungeecord:4.0.0")
-    api(project(":squirtgun-api"))
+    api(project(":squirtgun-minecraft"))
 }

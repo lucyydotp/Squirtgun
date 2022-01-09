@@ -25,15 +25,15 @@ package net.lucypoulton.squirtgun.fabric;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.lucypoulton.squirtgun.platform.event.Event;
-import net.lucypoulton.squirtgun.platform.event.player.PlayerJoinEvent;
-import net.lucypoulton.squirtgun.platform.event.player.PlayerLeaveEvent;
+import net.lucypoulton.squirtgun.minecraft.platform.event.Event;
+import net.lucypoulton.squirtgun.minecraft.platform.event.player.PlayerJoinEvent;
+import net.lucypoulton.squirtgun.minecraft.platform.event.player.PlayerLeaveEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.text.Text;
 
 /**
- * TODO - implement {@link net.lucypoulton.squirtgun.platform.event.player.PlayerChatEvent}
+ * TODO - implement {@link net.lucypoulton.squirtgun.minecraft.platform.event.player.PlayerChatEvent}
  */
 class FabricListenerAdapter {
 

@@ -24,9 +24,9 @@ package net.lucypoulton.squirtgun.discord.command;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
-import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 
 import java.util.Arrays;
 

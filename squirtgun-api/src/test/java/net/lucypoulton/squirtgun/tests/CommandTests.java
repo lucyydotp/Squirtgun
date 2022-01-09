@@ -23,12 +23,12 @@
 
 package net.lucypoulton.squirtgun.tests;
 
+import net.kyori.adventure.text.Component;
+import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.command.node.NodeBuilder;
-import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
-import net.kyori.adventure.text.Component;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

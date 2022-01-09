@@ -24,8 +24,8 @@
 package net.lucypoulton.squirtgun.bukkit.task;
 
 import net.lucypoulton.squirtgun.bukkit.BukkitPlatform;
-import net.lucypoulton.squirtgun.platform.scheduler.Task;
-import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
+import net.lucypoulton.squirtgun.minecraft.platform.scheduler.Task;
+import net.lucypoulton.squirtgun.minecraft.platform.scheduler.TaskScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;

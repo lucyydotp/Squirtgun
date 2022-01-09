@@ -22,9 +22,9 @@
  */
 package net.lucypoulton.squirtgun.discord.standalone;
 
-import net.lucypoulton.squirtgun.platform.Platform;
-import net.lucypoulton.squirtgun.platform.scheduler.Task;
-import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
+import net.lucypoulton.squirtgun.minecraft.platform.Platform;
+import net.lucypoulton.squirtgun.minecraft.platform.scheduler.Task;
+import net.lucypoulton.squirtgun.minecraft.platform.scheduler.TaskScheduler;
 
 import java.util.HashMap;
 import java.util.Map;

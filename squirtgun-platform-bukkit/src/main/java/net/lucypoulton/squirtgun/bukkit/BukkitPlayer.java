@@ -23,10 +23,10 @@
 
 package net.lucypoulton.squirtgun.bukkit;
 
-import net.lucypoulton.squirtgun.platform.Gamemode;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
+import net.lucypoulton.squirtgun.minecraft.platform.Gamemode;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

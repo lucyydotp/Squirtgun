@@ -24,8 +24,8 @@
 package net.lucypoulton.squirtgun.bungee.task;
 
 import net.lucypoulton.squirtgun.bungee.BungeePlatform;
-import net.lucypoulton.squirtgun.platform.scheduler.Task;
-import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
+import net.lucypoulton.squirtgun.minecraft.platform.scheduler.Task;
+import net.lucypoulton.squirtgun.minecraft.platform.scheduler.TaskScheduler;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import org.jetbrains.annotations.Nullable;
 

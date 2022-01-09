@@ -24,7 +24,6 @@ package net.lucypoulton.squirtgun.discord.tests;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.lucypoulton.squirtgun.discord.adventure.DiscordComponentSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

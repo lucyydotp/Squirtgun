@@ -26,12 +26,12 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.lucypoulton.squirtgun.discord.DiscordPlatform;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
-import net.lucypoulton.squirtgun.platform.Platform;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
-import net.lucypoulton.squirtgun.platform.audience.SquirtgunUser;
-import net.lucypoulton.squirtgun.platform.event.EventManager;
-import net.lucypoulton.squirtgun.platform.scheduler.TaskScheduler;
-import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
+import net.lucypoulton.squirtgun.minecraft.platform.Platform;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
+import net.lucypoulton.squirtgun.minecraft.platform.event.EventManager;
+import net.lucypoulton.squirtgun.minecraft.platform.scheduler.TaskScheduler;
+import net.lucypoulton.squirtgun.minecraft.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;

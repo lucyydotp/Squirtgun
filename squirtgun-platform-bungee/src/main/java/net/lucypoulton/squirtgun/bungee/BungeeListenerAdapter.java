@@ -23,9 +23,9 @@
 
 package net.lucypoulton.squirtgun.bungee;
 
-import net.lucypoulton.squirtgun.platform.event.Event;
-import net.lucypoulton.squirtgun.platform.event.player.PlayerJoinEvent;
-import net.lucypoulton.squirtgun.platform.event.player.PlayerLeaveEvent;
+import net.lucypoulton.squirtgun.minecraft.platform.event.Event;
+import net.lucypoulton.squirtgun.minecraft.platform.event.player.PlayerJoinEvent;
+import net.lucypoulton.squirtgun.minecraft.platform.event.player.PlayerLeaveEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;

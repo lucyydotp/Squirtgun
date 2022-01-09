@@ -35,5 +35,5 @@ dependencies {
     compileOnlyApi("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
 
     api("net.kyori:adventure-platform-bukkit:4.0.0")
-    api(project(":squirtgun-api"))
+    api(project(":squirtgun-minecraft"))
 }

@@ -57,7 +57,7 @@ dependencies {
     modApi("me.lucko:fabric-permissions-api:$fabricPermissionsApiVersion")
     modImplementation("net.kyori:adventure-platform-fabric:$adventureFabricVersion")
 
-    api(include(project(":squirtgun-api")) {
+    api(include(project(":squirtgun-minecraft")) {
         exclude("net.kyori")
     })
 }
