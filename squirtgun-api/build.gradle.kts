@@ -42,9 +42,6 @@ dependencies {
     testImplementation("net.kyori:adventure-text-serializer-legacy")
     testImplementation("com.google.guava:guava")
 
-    api("net.kyori:adventure-api")
-    api("net.kyori:adventure-text-serializer-legacy")
-
     compileOnlyApi("com.google.guava:guava")
     compileOnlyApi("com.google.code.gson:gson")
     compileOnlyApi("org.jetbrains:annotations")

@@ -23,12 +23,12 @@
 
 package net.lucypoulton.squirtgun.command.context;
 
-import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,27 +133,27 @@ public class StringContext implements CommandContext {
     }
 
     @Override
-    public Component execute() {
+    public TextNode[] execute() {
         populateArguments(node, getArgsAsList(raw), true);
 
         Condition.Result<?> result = getTail().getCondition().test(getTarget(), this);
         if (!result.isSuccessful()) {
             String error = result.getError();
-            return error == null ? null :
-                getFormat().getPrefix().append(
-                getFormat().formatMain(result.getError())
-            );
+            return error == null ? null : new TextNode[]{
+                    getFormat().prefix(),
+                    getFormat().main(result.getError())
+            };
         }
 
         for (CommandArgument<?> argument : getTail().getArguments()) {
             if (argument.isOptional() || getArgumentValue(argument) != null) continue;
-            return getFormat().getPrefix().append(
-                    getFormat().formatMain("Usage: " + getTail().getName() + " " +
+            return new TextNode[]{getFormat().prefix(),
+                    getFormat().main("Usage: " + getTail().getName() + " " +
                             getTail().getArguments().stream()
                                     .map(Object::toString)
                                     .collect(Collectors.joining(" "))
                     )
-            );
+            };
         }
 
         return getTail().execute(this);

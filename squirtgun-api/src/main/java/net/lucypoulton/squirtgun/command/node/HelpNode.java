@@ -23,16 +23,16 @@
 
 package net.lucypoulton.squirtgun.command.node;
 
-import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.format.FormatProvider;
-import net.lucypoulton.squirtgun.format.TextFormatter;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,38 +52,31 @@ public class HelpNode implements CommandNode<PermissionHolder> {
     }
 
     @Override
-    public @Nullable Component execute(CommandContext context) {
+    public @Nullable TextNode[] execute(CommandContext context) {
         FormatProvider format = context.getFormat();
-        Component out = Component.empty()
-                .append(format.formatTitle("Command Help"))
-                .append(Component.newline());
+        List<TextNode> nodes = new ArrayList<>();
+        nodes.add(format.title("Command Help\n"));
 
         String fullCommand = parentNode.getName() + " " +
                 parentNode.getArguments().stream()
                         .map(Object::toString)
                         .collect(Collectors.joining(" "));
 
-        out = out.append(TextFormatter.centreText(parentNode.getDescription(), format, " "))
-                .append(Component.newline())
-                .append(format.formatAccent("Usage"))
-                .append(format.formatMain(": " + fullCommand))
-                .append(Component.newline());
+        nodes.add(format.title("Command Help"));
+        nodes.add(format.subtitle(parentNode.getDescription()));
+        nodes.add(format.accent("Usage"));
+        nodes.add(format.main(": " + fullCommand + "\n"));
+
 
         if (parentNode.getArguments().size() != 0) {
-            out = out.append(Component.newline())
-                    .append(TextFormatter.centreText("Arguments", format, " "))
-                    .append(Component.newline());
+            nodes.add(format.subtitle("Arguments"));
             for (CommandArgument<?> argument : parentNode.getArguments()) {
-                out = out.append(format.formatAccent(argument.getName()))
-                        .append(format.formatMain(" - " + argument.getDescription()))
-                        .append(Component.newline());
+                nodes.add(format.accent(argument.getName()));
+                nodes.add(format.main(" - " + argument.getDescription() + "\n"));
             }
         }
 
-        out = out.append(Component.newline())
-                .append(format.formatFooter("*"));
-
-        return out;
+        return nodes.toArray(new TextNode[0]);
     }
 
     @Override

@@ -24,11 +24,11 @@
 package net.lucypoulton.squirtgun.command.node;
 
 import com.google.common.base.Preconditions;
-import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +50,7 @@ public class NodeBuilder<T extends PermissionHolder> {
     private String name;
     private String description;
     private Condition<PermissionHolder, T> condition;
-    private Function<CommandContext, @Nullable Component> executes;
+    private Function<CommandContext, @Nullable TextNode[]> executes;
     private CommandNode<T> next;
 
     /**
@@ -95,7 +95,7 @@ public class NodeBuilder<T extends PermissionHolder> {
      *                 case nothing will be sent.
      * @return this
      */
-    public NodeBuilder<T> executes(@NotNull Function<CommandContext, @Nullable Component> executes) {
+    public NodeBuilder<T> executes(@NotNull Function<CommandContext, @Nullable TextNode[]> executes) {
         Preconditions.checkNotNull(executes, "Executes function must not be null");
         this.executes = executes;
         return this;
@@ -142,14 +142,14 @@ public class NodeBuilder<T extends PermissionHolder> {
         private final String name;
         private final String description;
         private final Condition<PermissionHolder, T> condition;
-        private final Function<CommandContext, @Nullable Component> executes;
+        private final Function<CommandContext, @Nullable TextNode[]> executes;
         private final @Nullable CommandNode<T> next;
         private final List<CommandArgument<?>> arguments;
 
         private BuiltCommandNode(String name,
                                  String description,
                                  Condition<PermissionHolder, T> condition,
-                                 Function<CommandContext, @Nullable Component> executes,
+                                 Function<CommandContext, @Nullable TextNode[]> executes,
                                  @Nullable CommandNode<T> next,
                                  List<CommandArgument<?>> arguments) {
             this.name = name;
@@ -161,7 +161,7 @@ public class NodeBuilder<T extends PermissionHolder> {
         }
 
         @Override
-        public @Nullable Component execute(CommandContext context) {
+        public @Nullable TextNode[] execute(CommandContext context) {
             return executes.apply(context);
         }
 

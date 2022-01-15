@@ -29,7 +29,6 @@ import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.fabric.task.FabricTaskScheduler;
-import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.minecraft.platform.AuthMode;
 import net.lucypoulton.squirtgun.minecraft.platform.Platform;
 import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;

@@ -24,7 +24,6 @@ package net.lucypoulton.squirtgun.discord;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.lucypoulton.squirtgun.format.FormatProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

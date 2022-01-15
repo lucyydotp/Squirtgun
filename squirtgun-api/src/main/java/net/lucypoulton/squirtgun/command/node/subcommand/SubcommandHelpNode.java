@@ -24,7 +24,6 @@
 package net.lucypoulton.squirtgun.command.node.subcommand;
 
 import com.google.common.collect.ImmutableList;
-import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.argument.ListArgument;
@@ -33,9 +32,11 @@ import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.command.node.HelpNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -100,26 +101,20 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
     }
 
     @Override
-    public @Nullable Component execute(CommandContext context) {
-        final FormatProvider fmt = context.getFormat();
-        Component out = Component.empty()
-                .append(fmt.formatTitle("Commands:"))
-                .append(Component.newline());
+    public @Nullable TextNode[] execute(CommandContext context) {
+        final FormatProvider format = context.getFormat();
+        List<TextNode> out = new ArrayList<>();
+
+        out.add(format.title("Commands"));
 
         for (CommandNode<?> node : parentNode.getNodes()) {
             if (node.getCondition().test(context.getTarget(), context).isSuccessful()) {
-                Component innerComp =
-                        fmt.formatMain(parentNode.getName() + " ")
-                                .append(fmt.formatAccent(node.getName()))
-                                .append(fmt.formatMain(" - " + node.getDescription()))
-                                .append(Component.text("\n"));
-                out = out.append(innerComp);
+                out.add(format.main(parentNode.getName() + " "));
+                out.add(format.accent(node.getName()));
+                out.add(format.main(" - " + node.getDescription() + '\n'));
             }
         }
 
-        out = out.append(Component.newline())
-                .append(fmt.formatFooter("*"));
-
-        return out;
+        return out.toArray(new TextNode[0]);
     }
 }

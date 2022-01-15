@@ -22,10 +22,10 @@
  */
 package net.lucypoulton.squirtgun.command.node;
 
-import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +40,7 @@ class ExtraConditionNodeWrapper<T extends PermissionHolder> implements CommandNo
     }
 
     @Override
-    public @Nullable Component execute(CommandContext context) {
+    public @Nullable TextNode[] execute(CommandContext context) {
         return parent.execute(context);
     }
 

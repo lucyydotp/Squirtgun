@@ -23,11 +23,11 @@
 
 package net.lucypoulton.squirtgun.command.node;
 
-import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +49,7 @@ public interface CommandNode<T extends PermissionHolder> {
      * @param context the context that this command was executed in
      * @return a component to optionally
      */
-    @Nullable Component execute(CommandContext context);
+    @Nullable TextNode[] execute(CommandContext context);
 
     /**
      * Gets this node's name, which will be used as a literal if needed.

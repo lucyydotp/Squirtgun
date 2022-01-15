@@ -23,15 +23,17 @@
 
 package net.lucypoulton.squirtgun.minecraft.command;
 
-import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.Squirtgun;
 import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.command.node.AbstractNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import net.lucypoulton.squirtgun.minecraft.plugin.SquirtgunPlugin;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class PluginInfoNode extends AbstractNode<PermissionHolder> {
 
@@ -43,23 +45,19 @@ public class PluginInfoNode extends AbstractNode<PermissionHolder> {
     }
 
     @Override
-    public @Nullable Component execute(CommandContext context) {
-        final FormatProvider fmt = context.getFormat();
-        final Component nl = Component.newline();
-        return Component.empty()
-                .append(fmt.formatTitle(plugin.getPluginName()))
-                .append(nl).append(nl)
-                .append(fmt.formatMain(plugin.getPluginName() + " version "))
-                .append(fmt.formatAccent(plugin.getPluginVersion().toString())).append(nl)
-                .append(fmt.formatMain("Written by "))
-                .append(fmt.formatAccent(String.join(", ", plugin.getAuthors())))
-                .append(nl)
-                .append(fmt.formatMain("Built with Squirtgun version "))
-                .append(fmt.formatAccent(Squirtgun.VERSION.toString()))
-                .append(nl)
-                .append(fmt.formatMain("Using platform "))
-                .append(fmt.formatAccent(plugin.getPlatform().name()))
-                .append(nl).append(nl)
-                .append(fmt.formatFooter("*"));
+    public @Nullable TextNode[] execute(CommandContext context) {
+        final FormatProvider format = context.getFormat();
+        return List.of(
+                format.title(plugin.getPluginName()),
+                format.main(plugin.getPluginName() + " version "),
+                format.accent(plugin.getPluginVersion() + "\n"),
+                format.main("Written by "),
+                format.accent(String.join(", ", plugin.getAuthors()) + "\n"),
+                format.main("Built with Squirtgun version "),
+                format.accent(Squirtgun.VERSION.toString()),
+                format.main(", using platform "),
+                format.accent(plugin.getPlatform().name())
+
+        ).toArray(new TextNode[0]);
     }
 }

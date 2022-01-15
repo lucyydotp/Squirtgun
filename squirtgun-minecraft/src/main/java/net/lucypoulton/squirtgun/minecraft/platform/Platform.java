@@ -111,7 +111,7 @@ public interface Platform {
     /**
      * Registers a command node with the server.
      *
-     * @param node the mpde to execute
+     * @param node the node to execute
      */
     void registerCommand(CommandNode<?> node, FormatProvider provider);
 }

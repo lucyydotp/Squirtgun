@@ -31,7 +31,6 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
-import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;

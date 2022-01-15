@@ -23,12 +23,13 @@
 
 package net.lucypoulton.squirtgun.tests;
 
-import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.PermissionHolder;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.command.node.NodeBuilder;
+import net.lucypoulton.squirtgun.format.node.TextNode;
+import net.lucypoulton.squirtgun.tests.format.TestFormatter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,51 +39,51 @@ public class CommandTests {
     @Test
     @DisplayName("Check simple built command nodes work")
     public void testSimpleBuiltNodes() {
-        Component component = Component.text("hello");
+        TextNode[] textNode = {TextNode.text("hello")};
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
-                .executes(ctx -> component)
+                .executes(ctx -> textNode)
                 .condition(Condition.alwaysTrue())
                 .build();
 
-        Component returned = new StringContext(new TestFormatter(),
+        TextNode[] returned = new StringContext(new TestFormatter(),
                 x -> true, node, "test").execute();
-        Assertions.assertEquals(returned, component);
+        Assertions.assertArrayEquals(returned, textNode);
     }
 
     @Test
     @DisplayName("Check that commands fail when a required permission is not present")
     public void testCommandNoPermission() {
-        Component component = Component.text("hello");
+        TextNode[] textNode = {TextNode.text("hello")};
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
-                .executes(ctx -> component)
+                .executes(ctx -> textNode)
                 .condition(Condition.hasPermission("test.permission"))
                 .build();
-        Component returned = new StringContext(new TestFormatter(),
+        TextNode[] returned = new StringContext(new TestFormatter(),
                 x -> false, node, "test").execute();
-        Assertions.assertNotEquals(component, returned);
+        Assertions.assertNotEquals(textNode, returned);
     }
 
     @Test
     @DisplayName("Check that commands succeed when a required permission is present")
     public void testCommandWithPermission() {
-        Component component = Component.text("hello");
+        TextNode textNode = TextNode.text("hello");
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
-                .executes(ctx -> component)
+                .executes(ctx -> new TextNode[]{textNode})
                 .condition(Condition.hasPermission("test.permission"))
                 .build();
-        Component returned = new StringContext(new TestFormatter(),
+        TextNode[] returned = new StringContext(new TestFormatter(),
                 x -> true, node, "test").execute();
-        Assertions.assertEquals(component, returned);
+        Assertions.assertEquals(textNode, returned[0]);
     }
 
     @Test
     @DisplayName("Check that a missing permission blocks a next node")
     public void textMissingPermissionForNextNode() {
-        Component parent = Component.text("parent");
-        Component child = Component.text("child");
+        TextNode[] parent = {TextNode.text("parent")};
+        TextNode[] child = {TextNode.text("child")};
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(x -> parent)
@@ -94,8 +95,8 @@ public class CommandTests {
                         .build()
                 )
                 .build();
-        Component returned = new StringContext(new TestFormatter(),
+        TextNode[] returned = new StringContext(new TestFormatter(),
                 x -> false, node, "test2").execute();
-        Assertions.assertNotEquals(child, returned);
+        Assertions.assertNotEquals(child[0], returned[0]);
     }
 }

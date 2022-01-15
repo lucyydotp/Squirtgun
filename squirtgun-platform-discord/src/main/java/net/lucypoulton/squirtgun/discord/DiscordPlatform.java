@@ -29,7 +29,6 @@ import net.lucypoulton.squirtgun.discord.adventure.DiscordAudiences;
 import net.lucypoulton.squirtgun.discord.adventure.DiscordComponentSerializer;
 import net.lucypoulton.squirtgun.discord.command.DiscordCommandListener;
 import net.lucypoulton.squirtgun.discord.standalone.StandaloneDiscordAudiences;
-import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.minecraft.platform.AuthMode;
 import net.lucypoulton.squirtgun.minecraft.platform.Platform;
 import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunPlayer;

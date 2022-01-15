@@ -26,7 +26,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
-import net.lucypoulton.squirtgun.format.FormatProvider;
 
 public class DiscordCommandContext extends StringContext {
 

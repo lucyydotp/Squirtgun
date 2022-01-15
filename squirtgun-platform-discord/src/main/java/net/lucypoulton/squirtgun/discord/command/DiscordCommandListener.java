@@ -27,7 +27,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.discord.DiscordPlatform;
-import net.lucypoulton.squirtgun.format.FormatProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

@@ -70,7 +70,7 @@ public interface CommandArgument<T> {
     @Nullable List<String> tabComplete(Queue<String> args, CommandContext context);
 
     /**
-     * Gets whether this argument is optional or not. This should not change how the argument behaves.
+     * @return whether this argument is optional or not. This should not change how the argument behaves.
      */
     boolean isOptional();
 }
