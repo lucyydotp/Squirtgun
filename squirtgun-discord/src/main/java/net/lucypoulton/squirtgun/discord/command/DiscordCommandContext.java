@@ -20,33 +20,29 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.lucypoulton.squirtgun.discord.adventure;
+package net.lucypoulton.squirtgun.discord.command;
 
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.kyori.adventure.audience.Audience;
+import net.dv8tion.jda.api.entities.Message;
+import net.lucypoulton.squirtgun.command.context.StringContext;
+import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.discord.DiscordUser;
-import org.jetbrains.annotations.NotNull;
+import net.lucypoulton.squirtgun.format.FormatProvider;
 
-/**
- * Obtains audiences from JDA entities.
- */
-public interface DiscordAudiences {
+public class DiscordCommandContext extends StringContext {
 
-    /**
-     * Creates an audience for a Discord text channel.
-     *
-     * @param channel the channel to create an audience for
-     * @return the audience
-     */
-    @NotNull Audience channel(TextChannel channel);
+    private final Message message;
 
-    /**
-     * Creates an audience for a private message with a Discord account.
-     * Note that users can disable private messaging from non-friends, in which case messages will not be received.
-     *
-     * @param user the user to open a private message with
-     * @return the audience
-     */
-    @NotNull DiscordUser user(User user);
+    @Override
+    public DiscordUser getTarget() {
+        return (DiscordUser) super.getTarget();
+    }
+
+    public DiscordCommandContext(FormatProvider provider, DiscordUser target, CommandNode<?> node, String content, Message message) {
+        super(provider, target, node, content);
+        this.message = message;
+    }
+
+    public Message getMessage() {
+        return message;
+    }
 }

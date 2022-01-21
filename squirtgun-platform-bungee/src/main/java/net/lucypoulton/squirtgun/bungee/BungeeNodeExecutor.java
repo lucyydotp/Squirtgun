@@ -28,6 +28,8 @@ import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
@@ -59,7 +61,7 @@ public class BungeeNodeExecutor extends Command implements TabExecutor {
     @Override
     public void execute(CommandSender sender, String[] args) {
         SquirtgunUser user = platform.getUser(sender);
-        Component ret = new StringContext(formatter, user, node, String.join(" ", args)).execute();
+        TextNode ret = new StringContext(formatter, user, node, String.join(" ", args)).execute();
         if (ret != null) {
             user.sendMessage(ret);
         }

@@ -39,28 +39,28 @@ public class CommandTests {
     @Test
     @DisplayName("Check simple built command nodes work")
     public void testSimpleBuiltNodes() {
-        TextNode[] textNode = {TextNode.text("hello")};
+        TextNode textNode = TextNode.text("hello");
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(ctx -> textNode)
                 .condition(Condition.alwaysTrue())
                 .build();
 
-        TextNode[] returned = new StringContext(new TestFormatter(),
+        TextNode returned = new StringContext(new TestFormatter(),
                 x -> true, node, "test").execute();
-        Assertions.assertArrayEquals(returned, textNode);
+        Assertions.assertEquals(returned, textNode);
     }
 
     @Test
     @DisplayName("Check that commands fail when a required permission is not present")
     public void testCommandNoPermission() {
-        TextNode[] textNode = {TextNode.text("hello")};
+        TextNode textNode = TextNode.text("hello");
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(ctx -> textNode)
                 .condition(Condition.hasPermission("test.permission"))
                 .build();
-        TextNode[] returned = new StringContext(new TestFormatter(),
+        TextNode returned = new StringContext(new TestFormatter(),
                 x -> false, node, "test").execute();
         Assertions.assertNotEquals(textNode, returned);
     }
@@ -71,19 +71,19 @@ public class CommandTests {
         TextNode textNode = TextNode.text("hello");
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
-                .executes(ctx -> new TextNode[]{textNode})
+                .executes(ctx -> textNode)
                 .condition(Condition.hasPermission("test.permission"))
                 .build();
-        TextNode[] returned = new StringContext(new TestFormatter(),
+        TextNode returned = new StringContext(new TestFormatter(),
                 x -> true, node, "test").execute();
-        Assertions.assertEquals(textNode, returned[0]);
+        Assertions.assertEquals(textNode, returned);
     }
 
     @Test
     @DisplayName("Check that a missing permission blocks a next node")
     public void textMissingPermissionForNextNode() {
-        TextNode[] parent = {TextNode.text("parent")};
-        TextNode[] child = {TextNode.text("child")};
+        TextNode parent = TextNode.text("parent");
+        TextNode child = TextNode.text("child");
         CommandNode<PermissionHolder> node = new NodeBuilder<>()
                 .name("test")
                 .executes(x -> parent)
@@ -95,8 +95,8 @@ public class CommandTests {
                         .build()
                 )
                 .build();
-        TextNode[] returned = new StringContext(new TestFormatter(),
+        TextNode returned = new StringContext(new TestFormatter(),
                 x -> false, node, "test2").execute();
-        Assertions.assertNotEquals(child[0], returned[0]);
+        Assertions.assertNotEquals(child, returned);
     }
 }

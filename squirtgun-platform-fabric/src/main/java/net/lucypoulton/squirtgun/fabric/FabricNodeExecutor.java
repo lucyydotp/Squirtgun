@@ -31,6 +31,8 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +67,7 @@ public class FabricNodeExecutor implements Command<ServerCommandSource>, Suggest
         input = i > -1 ? input.substring(i + 1) : "";
 
         final SquirtgunUser source = this.platform.fromCommandSource(context.getSource());
-        final Component result = new StringContext(this.formatProvider, source, this.commandNode, input).execute();
+        final TextNode result = new StringContext(this.formatProvider, source, this.commandNode, input).execute();
         if (result != null) {
             source.sendMessage(result);
         }

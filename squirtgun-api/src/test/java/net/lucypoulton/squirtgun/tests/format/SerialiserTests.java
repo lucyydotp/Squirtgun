@@ -8,6 +8,8 @@ import java.util.Set;
 
 import static net.lucypoulton.squirtgun.format.FormattingFlag.BOLD;
 import static net.lucypoulton.squirtgun.format.FormattingFlag.ITALIC;
+import static net.lucypoulton.squirtgun.format.node.TextNode.decorated;
+import static net.lucypoulton.squirtgun.format.node.TextNode.text;
 import static net.lucypoulton.squirtgun.format.serialiser.MarkdownSerialiser.markdown;
 import static net.lucypoulton.squirtgun.format.serialiser.PlainTextSerialiser.plain;
 
@@ -18,14 +20,14 @@ import static net.lucypoulton.squirtgun.format.serialiser.PlainTextSerialiser.pl
 public class SerialiserTests {
     @Test
     public void testSimpleSerialise() {
-        TextNode[] node = {TextNode.text("hello "), TextNode.text("world!")};
+        TextNode[] node = {text("hello "), text("world!")};
         Assertions.assertEquals("hello world!", plain().serialise(node));
         Assertions.assertEquals("hello world!", markdown().serialise(node));
     }
 
     @Test
     public void testBasicDecorations() {
-        TextNode component = TextNode.decorated("a", BOLD, ITALIC);
+        TextNode component = decorated("a", BOLD, ITALIC);
 
         /*
         the order of decorators is not predictable, so instead we check
@@ -41,9 +43,9 @@ public class SerialiserTests {
     @Test
     public void testCommonFormatters() {
         TextNode component = TextNode.ofChildren(
-                TextNode.decorated("one", BOLD),
-                TextNode.decorated("two", BOLD, ITALIC),
-                TextNode.decorated("three", BOLD)
+                decorated("one", BOLD),
+                decorated("two", BOLD, ITALIC),
+                decorated("three", BOLD)
         );
         Assertions.assertEquals("**one_two_three**", markdown().serialise(component));
     }
@@ -51,11 +53,22 @@ public class SerialiserTests {
     @Test
     public void testInheritedFormatters() {
         TextNode component = TextNode.ofChildren(Set.of(BOLD),
-                TextNode.text("one"),
-                TextNode.decorated("two", ITALIC),
-                TextNode.text("three"));
+                text("one"),
+                decorated("two", ITALIC),
+                text("three"));
 
         Assertions.assertEquals("**one_two_three**", markdown().serialise(component));
+    }
+
+    @Test
+    public void testNestedInheritance() {
+        TextNode component = TextNode.ofChildren(Set.of(BOLD),
+                TextNode.ofChildren(
+                        text("one"),
+                        text("two"))
+        );
+
+        Assertions.assertEquals("**onetwo**", markdown().serialise(component));
     }
 }
 

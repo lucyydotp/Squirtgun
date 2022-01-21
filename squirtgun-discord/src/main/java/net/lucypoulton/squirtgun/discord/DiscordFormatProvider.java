@@ -20,28 +20,39 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.lucypoulton.squirtgun.discord.command;
+package net.lucypoulton.squirtgun.discord;
 
-import net.dv8tion.jda.api.entities.Message;
-import net.lucypoulton.squirtgun.command.context.StringContext;
-import net.lucypoulton.squirtgun.command.node.CommandNode;
-import net.lucypoulton.squirtgun.discord.DiscordUser;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.format.FormattingFlag;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 
-public class DiscordCommandContext extends StringContext {
+public enum DiscordFormatProvider implements FormatProvider {
+    INSTANCE;
 
-    private final Message message;
+    private static final TextNode EMPTY = TextNode.text("");
 
     @Override
-    public DiscordUser getTarget() {
-        return (DiscordUser) super.getTarget();
+    public TextNode prefix() {
+        return EMPTY;
     }
 
-    public DiscordCommandContext(FormatProvider provider, DiscordUser target, CommandNode<?> node, String content, Message message) {
-        super(provider, target, node, content);
-        this.message = message;
+    @Override
+    public TextNode main(String content) {
+        return TextNode.text(content);
     }
 
-    public Message getMessage() {
-        return message;
+    @Override
+    public TextNode accent(String content) {
+        return TextNode.decorated(content, FormattingFlag.BOLD);
+    }
+
+    @Override
+    public TextNode title(String content) {
+        return TextNode.decorated(content + "\n", FormattingFlag.BOLD);
+    }
+
+    @Override
+    public TextNode subtitle(String content) {
+        return title(content);
     }
 }

@@ -49,7 +49,7 @@ public interface CommandNode<T extends PermissionHolder> {
      * @param context the context that this command was executed in
      * @return a component to optionally
      */
-    @Nullable TextNode[] execute(CommandContext context);
+    TextNode execute(CommandContext context);
 
     /**
      * Gets this node's name, which will be used as a literal if needed.

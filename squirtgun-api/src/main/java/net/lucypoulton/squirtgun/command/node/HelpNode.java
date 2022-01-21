@@ -30,7 +30,6 @@ import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.format.node.TextNode;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +51,7 @@ public class HelpNode implements CommandNode<PermissionHolder> {
     }
 
     @Override
-    public @Nullable TextNode[] execute(CommandContext context) {
+    public TextNode execute(CommandContext context) {
         FormatProvider format = context.getFormat();
         List<TextNode> nodes = new ArrayList<>();
         nodes.add(format.title("Command Help\n"));
@@ -76,7 +75,7 @@ public class HelpNode implements CommandNode<PermissionHolder> {
             }
         }
 
-        return nodes.toArray(new TextNode[0]);
+        return TextNode.ofChildren(nodes.toArray(new TextNode[0]));
     }
 
     @Override

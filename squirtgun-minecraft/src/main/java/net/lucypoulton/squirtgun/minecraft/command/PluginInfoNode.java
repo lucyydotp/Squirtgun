@@ -31,7 +31,6 @@ import net.lucypoulton.squirtgun.command.node.AbstractNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.format.node.TextNode;
 import net.lucypoulton.squirtgun.minecraft.plugin.SquirtgunPlugin;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -45,9 +44,9 @@ public class PluginInfoNode extends AbstractNode<PermissionHolder> {
     }
 
     @Override
-    public @Nullable TextNode[] execute(CommandContext context) {
+    public TextNode execute(CommandContext context) {
         final FormatProvider format = context.getFormat();
-        return List.of(
+        return TextNode.ofChildren(
                 format.title(plugin.getPluginName()),
                 format.main(plugin.getPluginName() + " version "),
                 format.accent(plugin.getPluginVersion() + "\n"),
@@ -57,7 +56,6 @@ public class PluginInfoNode extends AbstractNode<PermissionHolder> {
                 format.accent(Squirtgun.VERSION.toString()),
                 format.main(", using platform "),
                 format.accent(plugin.getPlatform().name())
-
-        ).toArray(new TextNode[0]);
+        );
     }
 }

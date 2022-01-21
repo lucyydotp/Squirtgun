@@ -101,7 +101,7 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
     }
 
     @Override
-    public @Nullable TextNode[] execute(CommandContext context) {
+    public TextNode execute(CommandContext context) {
         final FormatProvider format = context.getFormat();
         List<TextNode> out = new ArrayList<>();
 
@@ -115,6 +115,6 @@ public class SubcommandHelpNode implements CommandNode<PermissionHolder> {
             }
         }
 
-        return out.toArray(new TextNode[0]);
+        return TextNode.ofChildren(out.toArray(new TextNode[0]));
     }
 }

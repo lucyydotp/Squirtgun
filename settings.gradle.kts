@@ -37,6 +37,5 @@ include(
     "squirtgun-platform-bukkit",
     "squirtgun-platform-bungee",
     "squirtgun-platform-fabric",
-    "squirtgun-platform-discord",
-    "squirtgun-discord-discordsrv"
+    "squirtgun-discord",
 )

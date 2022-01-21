@@ -158,7 +158,7 @@ public class SubcommandNode extends AbstractNode<PermissionHolder> {
     }
 
     @Override
-    public @Nullable TextNode[] execute(CommandContext context) {
+    public TextNode execute(CommandContext context) {
         return null;
     }
 }

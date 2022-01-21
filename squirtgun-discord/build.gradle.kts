@@ -20,50 +20,24 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.lucypoulton.squirtgun.discord.hosted;
 
-import net.dv8tion.jda.api.entities.User;
-import net.lucypoulton.squirtgun.discord.DiscordUser;
-import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunPlayer;
+plugins {
+    id("squirtgun.publishable")
+}
 
-import java.util.UUID;
+repositories {
+    mavenCentral()
+    maven("https://m2.dv8tion.net/releases")
+}
 
-/**
- * A SquirtgunUser that's linked to a parent user.
- */
-public class HostedDiscordUser extends DiscordUser {
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 
-    private final SquirtgunPlayer parent;
-    private final User user;
+    api(project(":squirtgun-api"))
+    api("net.dv8tion:JDA:4.3.0_277")
+}
 
-    public HostedDiscordUser(SquirtgunPlayer parent, User user) {
-        this.parent = parent;
-        this.user = user;
-    }
-
-    /**
-     * Gets the user's Minecraft username
-     */
-    @Override
-    public String getUsername() {
-        return parent.getUsername();
-    }
-
-    /**
-     * Gets the user's Minecraft UUID
-     */
-    @Override
-    public UUID getUuid() {
-        return parent.getUuid();
-    }
-
-    @Override
-    public boolean hasPermission(String permission) {
-        return parent.hasPermission(permission);
-    }
-
-    @Override
-    public User discordUser() {
-        return user;
-    }
+tasks.test {
+    useJUnitPlatform()
 }

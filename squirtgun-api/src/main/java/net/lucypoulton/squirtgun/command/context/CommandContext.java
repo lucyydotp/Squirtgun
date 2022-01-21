@@ -84,7 +84,7 @@ public interface CommandContext {
     /**
      * Executes the command.
      */
-    TextNode[] execute();
+    TextNode execute();
 
     /**
      * Gets the last node in the chain that has been reached.

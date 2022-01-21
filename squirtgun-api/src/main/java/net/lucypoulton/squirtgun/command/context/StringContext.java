@@ -133,27 +133,27 @@ public class StringContext implements CommandContext {
     }
 
     @Override
-    public TextNode[] execute() {
+    public TextNode execute() {
         populateArguments(node, getArgsAsList(raw), true);
 
         Condition.Result<?> result = getTail().getCondition().test(getTarget(), this);
         if (!result.isSuccessful()) {
             String error = result.getError();
-            return error == null ? null : new TextNode[]{
+            return error == null ? null : TextNode.ofChildren(
                     getFormat().prefix(),
                     getFormat().main(result.getError())
-            };
+            );
         }
 
         for (CommandArgument<?> argument : getTail().getArguments()) {
             if (argument.isOptional() || getArgumentValue(argument) != null) continue;
-            return new TextNode[]{getFormat().prefix(),
+            return TextNode.ofChildren(getFormat().prefix(),
                     getFormat().main("Usage: " + getTail().getName() + " " +
                             getTail().getArguments().stream()
                                     .map(Object::toString)
                                     .collect(Collectors.joining(" "))
-                    )
-            };
+                    ));
+
         }
 
         return getTail().execute(this);

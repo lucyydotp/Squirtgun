@@ -28,6 +28,7 @@ import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.bungee.task.BungeeTaskScheduler;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.minecraft.platform.AuthMode;
 import net.lucypoulton.squirtgun.minecraft.platform.Platform;
 import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunPlayer;

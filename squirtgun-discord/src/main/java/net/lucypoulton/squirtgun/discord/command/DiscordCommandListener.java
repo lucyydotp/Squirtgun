@@ -22,11 +22,14 @@
  */
 package net.lucypoulton.squirtgun.discord.command;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
-import net.lucypoulton.squirtgun.discord.DiscordPlatform;
+import net.lucypoulton.squirtgun.discord.DiscordTextConsumers;
+import net.lucypoulton.squirtgun.discord.DiscordUser;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -34,16 +37,16 @@ import java.util.Map;
 
 public class DiscordCommandListener extends ListenerAdapter {
 
-    private final DiscordPlatform platform;
     private final String prefix;
+    private final JDA jda;
 
     private final Map<String, CommandNode<?>> nodes = new HashMap<>();
     private final Map<String, FormatProvider> formatProviders = new HashMap<>();
 
-    public DiscordCommandListener(DiscordPlatform platform, String prefix) {
-        this.platform = platform;
+    public DiscordCommandListener(JDA jda, String prefix) {
+        this.jda = jda;
         this.prefix = prefix;
-        platform.jda().addEventListener(this);
+        jda.addEventListener(this);
     }
 
     /**
@@ -69,14 +72,14 @@ public class DiscordCommandListener extends ListenerAdapter {
         if (node == null) {
             return;
         }
-        Component ret = new DiscordCommandContext(formatProviders.get(node.getName()),
-            platform.audiences().user(event.getAuthor()),
+        TextNode ret = new DiscordCommandContext(formatProviders.get(node.getName()),
+            new DiscordUser(event.getMember()),
             node, parts.length == 2 ? parts[1] : "",
             event.getMessage())
             .execute();
 
         if (ret != null) {
-            platform.audiences().channel(event.getTextChannel()).sendMessage(ret);
+            DiscordTextConsumers.channel(event.getTextChannel()).send(ret);
         }
     }
 }

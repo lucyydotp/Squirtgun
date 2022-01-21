@@ -29,6 +29,7 @@ import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.command.context.StringContext;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.format.node.TextNode;
 import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunUser;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -64,7 +65,7 @@ public class BukkitNodeExecutor implements TabExecutor {
                              @NotNull String label,
                              @NotNull String[] args) {
         SquirtgunUser sender = platform.getUser(bukkitSender);
-        Component ret = new StringContext(formatter, sender, node, String.join(" ", args)).execute();
+        TextNode ret = new StringContext(formatter, sender, node, String.join(" ", args)).execute();
         if (ret != null) {
             sender.sendMessage(ret);
         }

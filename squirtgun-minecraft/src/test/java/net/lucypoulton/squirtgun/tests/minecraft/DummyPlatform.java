@@ -1,4 +1,6 @@
-package net.lucypoulton.squirtgun.tests.minecraft;/*
+package net.lucypoulton.squirtgun.tests.minecraft;
+
+/*
  * Copyright © 2021 Lucy Poulton
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -23,6 +25,7 @@ package net.lucypoulton.squirtgun.tests.minecraft;/*
 
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.minecraft.platform.AuthMode;
 import net.lucypoulton.squirtgun.minecraft.platform.Platform;
 import net.lucypoulton.squirtgun.minecraft.platform.audience.SquirtgunPlayer;

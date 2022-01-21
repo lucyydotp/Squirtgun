@@ -44,7 +44,7 @@ public class DiscordConditions {
      * Only allows human users - no bot accounts.
      */
     public static Condition<DiscordUser, DiscordUser> NO_BOTS = (target, ctx) ->
-        new Condition.Result<>(!target.discordUser().isBot(), target, null);
+        new Condition.Result<>(!target.getUser().isBot(), target, null);
 
     /**
      * Only allows the command to come from a specific set of channels.

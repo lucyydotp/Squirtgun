@@ -31,7 +31,7 @@ import net.lucypoulton.squirtgun.format.node.TextNode;
  * An empty interface extending PermissionHolder and Audience.
  */
 public interface SquirtgunUser extends PermissionHolder, Audience {
-    default void sendMessage(TextNode[] message) {
+    default void sendMessage(TextNode message) {
         // TODO - proper translation
 
     }

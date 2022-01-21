@@ -27,7 +27,6 @@ import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.format.node.TextNode;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 class ExtraConditionNodeWrapper<T extends PermissionHolder> implements CommandNode<T> {
 
@@ -40,7 +39,7 @@ class ExtraConditionNodeWrapper<T extends PermissionHolder> implements CommandNo
     }
 
     @Override
-    public @Nullable TextNode[] execute(CommandContext context) {
+    public TextNode execute(CommandContext context) {
         return parent.execute(context);
     }
 
