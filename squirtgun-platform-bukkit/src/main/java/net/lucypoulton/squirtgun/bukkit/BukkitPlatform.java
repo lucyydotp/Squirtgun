@@ -128,13 +128,10 @@ public class BukkitPlatform implements Platform {
 
     @Override
     public SquirtgunPlayer getPlayer(String name) {
-        OfflinePlayer player = Bukkit.getPlayer(name);
-        if (player == null) {
-            player = Arrays.stream(Bukkit.getOfflinePlayers())
-                    .filter(p -> name.equals(p.getName()))
-                    .findFirst().orElse(null);
-        }
-        if (player == null) {
+        // md why
+        @SuppressWarnings("deprecation")
+        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+        if (!player.hasPlayedBefore()) {
             return null;
         }
         Audience audience = player instanceof Player ? audiences.player((Player) player) : Audience.empty();
